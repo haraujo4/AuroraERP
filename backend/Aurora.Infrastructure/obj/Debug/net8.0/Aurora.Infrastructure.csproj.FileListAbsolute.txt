@@ -1,0 +1,17 @@
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Infrastructure.deps.json
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Infrastructure.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Infrastructure.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Application.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Domain.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Application.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Domain.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.csproj.AssemblyReference.cache
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.AssemblyInfoInputs.cache
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.AssemblyInfo.cs
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.csproj.CoreCompileInputs.cache
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.csproj.CopyComplete
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/refint/Aurora.Infrastructure.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/ref/Aurora.Infrastructure.dll

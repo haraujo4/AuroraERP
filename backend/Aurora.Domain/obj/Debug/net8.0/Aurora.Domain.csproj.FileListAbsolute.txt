@@ -1,0 +1,11 @@
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/bin/Debug/net8.0/Aurora.Domain.deps.json
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/bin/Debug/net8.0/Aurora.Domain.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/bin/Debug/net8.0/Aurora.Domain.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.AssemblyInfoInputs.cache
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.AssemblyInfo.cs
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.csproj.CoreCompileInputs.cache
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/refint/Aurora.Domain.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/Aurora.Domain.pdb
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/Debug/net8.0/ref/Aurora.Domain.dll

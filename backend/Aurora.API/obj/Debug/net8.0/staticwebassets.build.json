@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "nVgaPBimdZVZQ1szgOvSVdq6g0kYge0bGcZPEy64FKM=",
+  "Source": "Aurora.API",
+  "BasePath": "_content/Aurora.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
