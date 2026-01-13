@@ -34,57 +34,63 @@ const TaxRuleList: React.FC = () => {
     );
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
+        <div className="h-full flex flex-col bg-bg-primary">
+            <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Regras Fiscais (Tax Engine)</h1>
-                    <p className="text-sm text-gray-500">Configuração de taxas por Estado e NCM</p>
+                    <h1 className="text-xl font-bold text-text-primary">Regras Fiscais (Tax Engine)</h1>
+                    <p className="text-xs text-text-secondary">Configuração de taxas por Estado e NCM</p>
                 </div>
                 <button
                     onClick={() => navigate('/fiscal/tax-rules/new')}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary shadow-sm"
                 >
-                    <Plus size={20} />
+                    <Plus size={16} />
                     Nova Regra
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <table className="w-full text-left text-sm text-gray-600">
-                    <thead className="bg-gray-50 text-gray-900 font-medium border-b border-gray-200">
-                        <tr>
-                            <th className="px-6 py-4">Origem</th>
-                            <th className="px-6 py-4">Destino</th>
-                            <th className="px-6 py-4">NCM</th>
-                            <th className="px-6 py-4">Operação</th>
-                            <th className="px-6 py-4">CFOP</th>
-                            <th className="px-6 py-4">ICMS</th>
-                            <th className="px-6 py-4">IPI</th>
-                            <th className="px-6 py-4">PIS/COFINS</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {filteredRules.map((rule) => (
-                            <tr key={rule.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium">{rule.sourceState}</td>
-                                <td className="px-6 py-4 font-medium">{rule.destState}</td>
-                                <td className="px-6 py-4">{rule.ncmCode || 'Todos'}</td>
-                                <td className="px-6 py-4">{rule.operationType}</td>
-                                <td className="px-6 py-4">{rule.cfop}</td>
-                                <td className="px-6 py-4 text-blue-600">{rule.icmsRate}%</td>
-                                <td className="px-6 py-4">{rule.ipiRate}%</td>
-                                <td className="px-6 py-4">{rule.pisRate}% / {rule.cofinsRate}%</td>
-                            </tr>
-                        ))}
-                        {filteredRules.length === 0 && !loading && (
-                            <tr>
-                                <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
-                                    Nenhuma regra fiscal configurada.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+            <div className="flex-1 overflow-auto p-4">
+                {loading ? (
+                    <div className="text-center py-8">Carregando...</div>
+                ) : (
+                    <div className="bg-white rounded-lg shadow border border-border-default overflow-hidden">
+                        <table className="w-full">
+                            <thead className="bg-bg-secondary border-b border-border-default">
+                                <tr>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Origem</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Destino</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">NCM</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Operação</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">CFOP</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">ICMS</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">IPI</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">PIS/COFINS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredRules.map((rule) => (
+                                    <tr key={rule.id} className="border-b border-border-default hover:bg-bg-subtle">
+                                        <td className="px-4 py-3 font-medium text-sm">{rule.sourceState}</td>
+                                        <td className="px-4 py-3 font-medium text-sm">{rule.destState}</td>
+                                        <td className="px-4 py-3 text-sm">{rule.ncmCode || 'Todos'}</td>
+                                        <td className="px-4 py-3 text-sm">{rule.operationType}</td>
+                                        <td className="px-4 py-3 text-sm">{rule.cfop}</td>
+                                        <td className="px-4 py-3 text-blue-600 text-sm font-bold">{rule.icmsRate}%</td>
+                                        <td className="px-4 py-3 text-sm">{rule.ipiRate}%</td>
+                                        <td className="px-4 py-3 text-sm">{rule.pisRate}% / {rule.cofinsRate}%</td>
+                                    </tr>
+                                ))}
+                                {filteredRules.length === 0 && (
+                                    <tr>
+                                        <td colSpan={8} className="px-4 py-8 text-center text-text-secondary">
+                                            Nenhuma regra fiscal encontrada.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
         </div>
     );

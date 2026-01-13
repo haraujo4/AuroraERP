@@ -39,6 +39,23 @@ namespace Aurora.Domain.Entities.Security
             LastLogin = DateTime.UtcNow;
         }
 
+        public void UpdateDetails(string email, bool isActive)
+        {
+            Email = email;
+            IsActive = isActive;
+        }
+
+        public void ChangePassword(string newPasswordHash)
+        {
+            PasswordHash = newPasswordHash;
+        }
+
+        public void SetRoles(List<Role> roles)
+        {
+            _roles.Clear();
+            _roles.AddRange(roles);
+        }
+
         public void Deactivate()
         {
             IsActive = false;

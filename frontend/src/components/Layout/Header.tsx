@@ -131,11 +131,17 @@ export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange
                                 </div>
 
                                 <div className="py-1">
-                                    <button className="w-full flex items-center gap-3 px-4 py-2 text-xs text-text-secondary hover:bg-bg-main transition-colors">
+                                    <button
+                                        onClick={() => { setIsUserMenuOpen(false); navigate('/profile'); }}
+                                        className="w-full flex items-center gap-3 px-4 py-2 text-xs text-text-secondary hover:bg-bg-main transition-colors"
+                                    >
                                         <UserIcon size={14} />
                                         <span>Meu Perfil</span>
                                     </button>
-                                    <button className="w-full flex items-center gap-3 px-4 py-2 text-xs text-text-secondary hover:bg-bg-main transition-colors">
+                                    <button
+                                        onClick={() => { setIsUserMenuOpen(false); navigate('/settings'); }}
+                                        className="w-full flex items-center gap-3 px-4 py-2 text-xs text-text-secondary hover:bg-bg-main transition-colors"
+                                    >
                                         <Settings size={14} />
                                         <span>Configurações</span>
                                     </button>

@@ -53,6 +53,10 @@ import MRPRun from './pages/Planning/MRPRun';
 import Login from "./pages/Security/Login";
 import { authService } from "./services/authService";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import { ProfilePage } from "./pages/Settings/Profile/ProfilePage";
+import { SettingsLayout } from "./pages/Settings/SettingsLayout";
+import { UserList } from "./pages/Settings/Users/UserList";
+import { CompanySettings } from "./pages/Settings/Company/CompanySettings";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = authService.isAuthenticated();
@@ -156,6 +160,14 @@ function App() {
 
           <Route path="fiscal/tax-rules" element={<TaxRuleList />} />
           <Route path="fiscal/tax-rules/new" element={<TaxRuleForm />} />
+
+          {/* User Profile & Settings */}
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="settings" element={<SettingsLayout />}>
+            <Route index element={<Navigate to="users" replace />} />
+            <Route path="users" element={<UserList />} />
+            <Route path="company" element={<CompanySettings />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

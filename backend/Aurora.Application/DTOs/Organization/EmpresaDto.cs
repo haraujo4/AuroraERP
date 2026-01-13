@@ -30,6 +30,14 @@ namespace Aurora.Application.DTOs.Organization
         public string MoedaLocal { get; set; } = string.Empty;
     }
 
+    public class UpdateEmpresaDto
+    {
+        public string RazaoSocial { get; set; } = string.Empty;
+        public string NomeFantasia { get; set; } = string.Empty;
+        public string CNPJ { get; set; } = string.Empty;
+        public AddressDto EnderecoFiscal { get; set; } = new();
+    }
+
     public class AddressDto
     {
         public string Street { get; set; } = string.Empty;

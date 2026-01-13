@@ -38,6 +38,14 @@ namespace Aurora.Domain.Entities.Organization
             GrupoEmpresarialId = grupoId;
         }
 
+        public void UpdateDetails(string razaoSocial, string nomeFantasia, string cnpj, Address endereco)
+        {
+            RazaoSocial = razaoSocial;
+            NomeFantasia = nomeFantasia;
+            CNPJ = cnpj;
+            EnderecoFiscal = endereco;
+        }
+
         // EF Core
         private Empresa() 
         {
@@ -50,7 +58,9 @@ namespace Aurora.Domain.Entities.Organization
             CNAEPrincipal = null!;
             NaturezaJuridica = null!;
             RegimeTributario = null!;
-            EnderecoFiscal = null!;
+            
+            // Initializing to avoid null warning in constructor
+             EnderecoFiscal = null!;
             MoedaLocal = null!;
             GrupoEmpresarial = null!;
         }

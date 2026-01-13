@@ -38,5 +38,13 @@ namespace Aurora.API.Controllers.Organization
             var result = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetByGroup), new { grupoId = result.GrupoEmpresarialId }, result);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<EmpresaDto>> Update(Guid id, [FromBody] UpdateEmpresaDto dto)
+        {
+            var result = await _service.UpdateAsync(id, dto);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
     }
 }

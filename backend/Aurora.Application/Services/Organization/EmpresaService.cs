@@ -97,6 +97,59 @@ namespace Aurora.Application.Services.Organization
                 GrupoEmpresarialId = entity.GrupoEmpresarialId,
                 Codigo = entity.Codigo,
                 RazaoSocial = entity.RazaoSocial,
+                NomeFantasia = entity.NomeFantasia,
+                CNPJ = entity.CNPJ,
+                EnderecoFiscal = new AddressDto {
+                     Street = entity.EnderecoFiscal.Street,
+                     Number = entity.EnderecoFiscal.Number,
+                     Complement = entity.EnderecoFiscal.Complement,
+                     Neighborhood = entity.EnderecoFiscal.Neighborhood,
+                     City = entity.EnderecoFiscal.City,
+                     State = entity.EnderecoFiscal.State,
+                     Country = entity.EnderecoFiscal.Country,
+                     ZipCode = entity.EnderecoFiscal.ZipCode
+                },
+                IsActive = entity.IsActive
+            };
+        }
+
+        public async Task<EmpresaDto?> UpdateAsync(Guid id, UpdateEmpresaDto dto)
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null) return null;
+
+            var address = new Address(
+                dto.EnderecoFiscal.Street,
+                dto.EnderecoFiscal.Number,
+                dto.EnderecoFiscal.Complement,
+                dto.EnderecoFiscal.Neighborhood,
+                dto.EnderecoFiscal.City,
+                dto.EnderecoFiscal.State,
+                dto.EnderecoFiscal.Country,
+                dto.EnderecoFiscal.ZipCode
+            );
+
+            entity.UpdateDetails(dto.RazaoSocial, dto.NomeFantasia, dto.CNPJ, address);
+            await _repository.UpdateAsync(entity);
+
+            return new EmpresaDto
+            {
+                Id = entity.Id,
+                GrupoEmpresarialId = entity.GrupoEmpresarialId,
+                Codigo = entity.Codigo,
+                RazaoSocial = entity.RazaoSocial,
+                NomeFantasia = entity.NomeFantasia,
+                CNPJ = entity.CNPJ,
+                EnderecoFiscal = new AddressDto {
+                     Street = entity.EnderecoFiscal.Street,
+                     Number = entity.EnderecoFiscal.Number,
+                     Complement = entity.EnderecoFiscal.Complement,
+                     Neighborhood = entity.EnderecoFiscal.Neighborhood,
+                     City = entity.EnderecoFiscal.City,
+                     State = entity.EnderecoFiscal.State,
+                     Country = entity.EnderecoFiscal.Country,
+                     ZipCode = entity.EnderecoFiscal.ZipCode
+                },
                 IsActive = entity.IsActive
             };
         }
