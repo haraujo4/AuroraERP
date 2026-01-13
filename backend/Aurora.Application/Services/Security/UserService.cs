@@ -24,6 +24,9 @@ namespace Aurora.Application.Services.Security
         {
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = new User(request.Username, request.Email, passwordHash);
+            
+            if (request.EmpresaId.HasValue)
+                user.SetContext(request.EmpresaId.Value, request.FilialId);
 
             foreach (var roleName in request.Roles)
             {
@@ -42,11 +45,16 @@ namespace Aurora.Application.Services.Security
 
         public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto request)
         {
-            var users = await _userRepo.GetAllAsync(u => u.Roles);
+            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Empresa, u => u.Filial);
             var user = users.FirstOrDefault(u => u.Id == id);
             if (user == null) return null;
 
             user.UpdateDetails(request.Email, request.IsActive);
+
+            if (request.EmpresaId.HasValue)
+                user.SetContext(request.EmpresaId.Value, request.FilialId);
+            else
+                user.ClearContext();
 
             // Update Roles
             var newRoles = request.Roles.Select(r => new Role(r, $"Role {r}")).ToList();
@@ -88,13 +96,13 @@ namespace Aurora.Application.Services.Security
 
         public async Task<List<UserDto>> GetAllAsync()
         {
-            var users = await _userRepo.GetAllAsync(u => u.Roles);
+            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Empresa, u => u.Filial);
             return users.Select(MapToDto).ToList();
         }
 
         public async Task<UserDto?> GetByIdAsync(Guid id)
         {
-            var user = await _userRepo.GetByIdAsync(id, u => u.Roles);
+            var user = await _userRepo.GetByIdAsync(id, u => u.Roles, u => u.Empresa, u => u.Filial);
             return user == null ? null : MapToDto(user);
         }
 
@@ -114,7 +122,11 @@ namespace Aurora.Application.Services.Security
                 Email = user.Email,
                 Roles = user.Roles.Select(r => r.Name).ToList(),
                 IsActive = user.IsActive,
-                LastLogin = user.LastLogin
+                LastLogin = user.LastLogin,
+                EmpresaId = user.EmpresaId,
+                EmpresaName = user.Empresa?.NomeFantasia,
+                FilialId = user.FilialId,
+                FilialName = user.Filial?.Descricao
             };
         }
     }

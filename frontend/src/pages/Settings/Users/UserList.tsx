@@ -11,6 +11,8 @@ interface User {
     roles: string[];
     isActive: boolean;
     lastLogin?: string;
+    empresaName?: string;
+    filialName?: string;
 }
 
 export function UserList() {
@@ -82,6 +84,8 @@ export function UserList() {
                         <tr>
                             <th className="px-6 py-3">Usuário</th>
                             <th className="px-6 py-3">Email</th>
+                            <th className="px-6 py-3">Empresa</th>
+                            <th className="px-6 py-3">Filial</th>
                             <th className="px-6 py-3">Função</th>
                             <th className="px-6 py-3">Status</th>
                             <th className="px-6 py-3">Último Login</th>
@@ -91,17 +95,19 @@ export function UserList() {
                     <tbody className="divide-y divide-gray-100">
                         {isLoading ? (
                             <tr>
-                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">Carregando usuários...</td>
+                                <td colSpan={8} className="px-6 py-8 text-center text-gray-500">Carregando usuários...</td>
                             </tr>
                         ) : filteredUsers.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">Nenhum usuário encontrado.</td>
+                                <td colSpan={8} className="px-6 py-8 text-center text-gray-500">Nenhum usuário encontrado.</td>
                             </tr>
                         ) : (
                             filteredUsers.map((user) => (
                                 <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
                                     <td className="px-6 py-3 font-medium text-gray-900">{user.username}</td>
                                     <td className="px-6 py-3 text-gray-600">{user.email}</td>
+                                    <td className="px-6 py-3 text-gray-600">{user.empresaName || '-'}</td>
+                                    <td className="px-6 py-3 text-gray-600">{user.filialName || '-'}</td>
                                     <td className="px-6 py-3">
                                         <div className="flex gap-1">
                                             {user.roles.map(role => (

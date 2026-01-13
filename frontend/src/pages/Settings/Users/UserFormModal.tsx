@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { api } from '../../../services/api';
+import { OrganizationService } from '../../../services/organizationService';
+import type { Empresa, Branch } from '../../../types/organization';
 
 interface UserFormModalProps {
     isOpen: boolean;
@@ -13,7 +15,39 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
+    const [companies, setCompanies] = useState<Empresa[]>([]);
+    const [branches, setBranches] = useState<Branch[]>([]);
+    const [selectedCompany, setSelectedCompany] = useState('');
+    const [selectedBranch, setSelectedBranch] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            loadCompanies();
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (selectedCompany) {
+            loadBranches(selectedCompany);
+        } else {
+            setBranches([]);
+            setSelectedBranch('');
+        }
+    }, [selectedCompany]);
+
+    const loadCompanies = async () => {
+        const groups = await OrganizationService.getGroups();
+        if (groups.length > 0) {
+            const comps = await OrganizationService.getCompaniesByGroup(groups[0].id);
+            setCompanies(comps);
+        }
+    };
+
+    const loadBranches = async (companyId: string) => {
+        const allBranches = await OrganizationService.getBranches();
+        setBranches(allBranches.filter(b => b.empresaId === companyId));
+    };
 
     if (!isOpen) return null;
 
@@ -25,7 +59,9 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
                 username,
                 email,
                 password,
-                roles: isAdmin ? ['Admin', 'User'] : ['User']
+                roles: isAdmin ? ['Admin', 'User'] : ['User'],
+                empresaId: selectedCompany || null,
+                filialId: selectedBranch || null
             });
             onSuccess();
             onClose();
@@ -34,6 +70,8 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
             setEmail('');
             setPassword('');
             setIsAdmin(false);
+            setSelectedCompany('');
+            setSelectedBranch('');
         } catch (error: any) {
             alert(error.response?.data?.message || 'Erro ao criar usuário');
         } finally {
@@ -58,7 +96,7 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
                             type="text"
                             value={username}
                             onChange={e => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
+                            className="w-full px-3 py-2 border border-border-input rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
                             required
                         />
                     </div>
@@ -68,7 +106,7 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
+                            className="w-full px-3 py-2 border border-border-input rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
                             required
                         />
                     </div>
@@ -78,10 +116,40 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
+                            className="w-full px-3 py-2 border border-border-input rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
                             required
                             minLength={6}
                         />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                            <select
+                                value={selectedCompany}
+                                onChange={e => setSelectedCompany(e.target.value)}
+                                className="w-full px-3 py-2 border border-border-input rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none bg-white"
+                            >
+                                <option value="">Selecione...</option>
+                                {companies.map(c => (
+                                    <option key={c.id} value={c.id}>{c.nomeFantasia}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Filial</label>
+                            <select
+                                value={selectedBranch}
+                                onChange={e => setSelectedBranch(e.target.value)}
+                                className="w-full px-3 py-2 border border-border-input rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none bg-white"
+                                disabled={!selectedCompany}
+                            >
+                                <option value="">Selecione...</option>
+                                {branches.map(b => (
+                                    <option key={b.id} value={b.id}>{b.descricao}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-2 pt-2">
@@ -90,7 +158,7 @@ export function UserFormModal({ isOpen, onClose, onSuccess }: UserFormModalProps
                             id="isAdmin"
                             checked={isAdmin}
                             onChange={e => setIsAdmin(e.target.checked)}
-                            className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
+                            className="w-4 h-4 text-brand-primary border-border-input rounded focus:ring-brand-primary"
                         />
                         <label htmlFor="isAdmin" className="text-sm text-gray-700 select-none">
                             Conceder acesso de Administrador

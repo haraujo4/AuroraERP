@@ -1,5 +1,5 @@
 import api from './api';
-import type { GrupoEmpresarial, CreateGrupoEmpresarialDto, Empresa } from '../types/organization';
+import type { GrupoEmpresarial, CreateGrupoEmpresarialDto, Empresa, Branch } from '../types/organization';
 
 export const OrganizationService = {
     // Groups
@@ -31,15 +31,15 @@ export const OrganizationService = {
 
     // Branch (Filial)
     getBranches: async () => {
-        const response = await api.get('/organization/branches');
+        const response = await api.get<Branch[]>('/organization/branches');
         return response.data;
     },
     getBranchesByCompany: async (companyId: string) => {
-        const response = await api.get(`/organization/branches/by-company/${companyId}`);
+        const response = await api.get<Branch[]>(`/organization/branches/by-company/${companyId}`);
         return response.data;
     },
     createBranch: async (data: any) => {
-        const response = await api.post('/organization/branches', data);
+        const response = await api.post<Branch>('/organization/branches', data);
         return response.data;
     },
 

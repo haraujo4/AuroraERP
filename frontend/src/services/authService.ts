@@ -6,6 +6,8 @@ export interface User {
     token: string;
     companyName?: string;
     branchName?: string;
+    empresaId?: string;
+    filialId?: string;
 }
 
 export const authService = {

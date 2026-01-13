@@ -23,6 +23,10 @@ namespace Aurora.Application.Interfaces.Security
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
         public List<string> Roles { get; set; } = new();
+        public Guid? EmpresaId { get; set; }
+        public string? EmpresaName { get; set; }
+        public Guid? FilialId { get; set; }
+        public string? FilialName { get; set; }
     }
 
     public class CreateUserDto
@@ -31,6 +35,8 @@ namespace Aurora.Application.Interfaces.Security
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public List<string> Roles { get; set; } = new();
+        public Guid? EmpresaId { get; set; }
+        public Guid? FilialId { get; set; }
     }
 
     public class UpdateUserDto
@@ -38,6 +44,8 @@ namespace Aurora.Application.Interfaces.Security
         public string Email { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public List<string> Roles { get; set; } = new();
+        public Guid? EmpresaId { get; set; }
+        public Guid? FilialId { get; set; }
     }
 
     public class ChangePasswordDto
