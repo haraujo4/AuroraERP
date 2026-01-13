@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/mrp`;
+import api from './api';
 
 export interface MRPRecommendation {
     materialId: string;
@@ -19,7 +17,7 @@ export interface MRPResult {
 
 export const mrpService = {
     async runMRP(): Promise<MRPResult> {
-        const response = await axios.post(`${API_URL}/run`);
+        const response = await api.post('/mrp/run');
         return response.data;
     }
 };

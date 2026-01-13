@@ -1,21 +1,19 @@
-import axios from 'axios';
+import api from './api';
 import type { Empresa, CreateEmpresaDto } from '../types/organization';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/organization/companies`;
 
 export const companyService = {
     getAll: async (): Promise<Empresa[]> => {
-        const response = await axios.get(API_URL);
+        const response = await api.get('/organization/companies');
         return response.data;
     },
 
     getById: async (id: string): Promise<Empresa> => {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await api.get(`/organization/companies/${id}`);
         return response.data;
     },
 
     create: async (company: CreateEmpresaDto): Promise<Empresa> => {
-        const response = await axios.post(API_URL, company);
+        const response = await api.post('/organization/companies', company);
         return response.data;
     }
 };

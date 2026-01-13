@@ -1,37 +1,35 @@
-import axios from 'axios';
+import api from './api';
 import type { SalesContract, CreateSalesContractDto } from '../types/sales-contracts';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/sales/contracts`;
 
 export const salesContractService = {
     getAll: async (): Promise<SalesContract[]> => {
-        const response = await axios.get(API_URL);
+        const response = await api.get('/sales/contracts');
         return response.data;
     },
 
     getById: async (id: string): Promise<SalesContract> => {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await api.get(`/sales/contracts/${id}`);
         return response.data;
     },
 
     create: async (contract: CreateSalesContractDto): Promise<SalesContract> => {
-        const response = await axios.post(API_URL, contract);
+        const response = await api.post('/sales/contracts', contract);
         return response.data;
     },
 
     update: async (id: string, contract: CreateSalesContractDto): Promise<SalesContract> => {
-        const response = await axios.put(`${API_URL}/${id}`, contract);
+        const response = await api.put(`/sales/contracts/${id}`, contract);
         return response.data;
     },
 
     updateStatus: async (id: string, status: string): Promise<SalesContract> => {
-        const response = await axios.patch(`${API_URL}/${id}/status`, status, {
+        const response = await api.patch(`/sales/contracts/${id}/status`, status, {
             headers: { 'Content-Type': 'application/json' }
         });
         return response.data;
     },
 
     delete: async (id: string): Promise<void> => {
-        await axios.delete(`${API_URL}/${id}`);
+        await api.delete(`/sales/contracts/${id}`);
     }
 };

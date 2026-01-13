@@ -1,34 +1,32 @@
-import axios from 'axios';
+import api from './api';
 import type { Branch, CreateBranchDto, CreateDepositoDto } from '../types/organization';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/organization/branches`;
 
 export const branchService = {
     getAll: async (): Promise<Branch[]> => {
-        const response = await axios.get(API_URL);
+        const response = await api.get('/organization/branches');
         return response.data;
     },
 
     getById: async (id: string): Promise<Branch> => {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await api.get(`/organization/branches/${id}`);
         return response.data;
     },
 
     create: async (branch: CreateBranchDto): Promise<Branch> => {
-        const response = await axios.post(API_URL, branch);
+        const response = await api.post('/organization/branches', branch);
         return response.data;
     },
 
     update: async (id: string, branch: CreateBranchDto): Promise<void> => {
-        await axios.put(`${API_URL}/${id}`, branch);
+        await api.put(`/organization/branches/${id}`, branch);
     },
 
     getDepositos: async (id: string): Promise<any[]> => {
-        const response = await axios.get(`${API_URL}/${id}/depositos`);
+        const response = await api.get(`/organization/branches/${id}/depositos`);
         return response.data;
     },
 
     createDeposito: async (id: string, data: CreateDepositoDto): Promise<void> => {
-        await axios.post(`${API_URL}/${id}/depositos`, data);
+        await api.post(`/organization/branches/${id}/depositos`, data);
     }
 };

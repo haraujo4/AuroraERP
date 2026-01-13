@@ -1,30 +1,28 @@
-import axios from 'axios';
+import api from './api';
 import type { Material, CreateMaterial } from '../types/materials';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/logistics/materials`;
 
 export const materialService = {
     getAll: async (): Promise<Material[]> => {
-        const response = await axios.get(API_URL);
+        const response = await api.get('/logistics/materials');
         return response.data;
     },
 
     getById: async (id: string): Promise<Material> => {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await api.get(`/logistics/materials/${id}`);
         return response.data;
     },
 
     create: async (material: CreateMaterial): Promise<Material> => {
-        const response = await axios.post(API_URL, material);
+        const response = await api.post('/logistics/materials', material);
         return response.data;
     },
 
     update: async (id: string, material: CreateMaterial): Promise<Material> => {
-        const response = await axios.put(`${API_URL}/${id}`, material);
+        const response = await api.put(`/logistics/materials/${id}`, material);
         return response.data;
     },
 
     delete: async (id: string): Promise<void> => {
-        await axios.delete(`${API_URL}/${id}`);
+        await api.delete(`/logistics/materials/${id}`);
     }
 };

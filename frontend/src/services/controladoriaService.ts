@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/controladoria`;
+import api from './api';
 
 export interface DreLine {
     accountCode: string;
@@ -31,14 +29,14 @@ export interface PerformanceData {
 
 export const controladoriaService = {
     async getDre(startDate: string, endDate: string, costCenterId?: string, profitCenterId?: string): Promise<DreData> {
-        const response = await axios.get(`${API_URL}/dre`, {
+        const response = await api.get('/controladoria/dre', {
             params: { startDate, endDate, costCenterId, profitCenterId }
         });
         return response.data;
     },
 
     async getCostCenterPerformance(startDate: string, endDate: string): Promise<PerformanceData[]> {
-        const response = await axios.get(`${API_URL}/performance/cost-center`, {
+        const response = await api.get('/controladoria/performance/cost-center', {
             params: { startDate, endDate }
         });
         return response.data;

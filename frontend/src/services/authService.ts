@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/auth`;
+import api from './api';
 
 export interface User {
     username: string;
@@ -10,7 +8,7 @@ export interface User {
 
 export const authService = {
     async login(username: string, password: string): Promise<User> {
-        const response = await axios.post(`${API_URL}/login`, { username, password });
+        const response = await api.post('/auth/login', { username, password });
         const user = response.data;
         if (user.token) {
             localStorage.setItem('user', JSON.stringify(user));
@@ -25,7 +23,11 @@ export const authService = {
     getCurrentUser(): User | null {
         const userStr = localStorage.getItem('user');
         if (!userStr) return null;
-        return JSON.parse(userStr);
+        try {
+            return JSON.parse(userStr);
+        } catch (e) {
+            return null;
+        }
     },
 
     getToken(): string | null {
@@ -37,17 +39,3 @@ export const authService = {
         return !!this.getToken();
     }
 };
-
-// Axios Interceptor for JWT
-axios.interceptors.request.use(
-    (config) => {
-        const token = authService.getToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
