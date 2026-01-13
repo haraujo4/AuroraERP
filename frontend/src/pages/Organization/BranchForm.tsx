@@ -236,10 +236,11 @@ export function BranchForm() {
                             <label className="block text-sm font-medium text-text-secondary">Código *</label>
                             <input
                                 type="text"
-                                required
-                                className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none"
-                                value={formData.codigo}
+                                value={id ? formData.codigo : (formData.codigo || 'Gerado Automaticamente')}
                                 onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+                                disabled={!id}
+                                required={!!id}
+                                className={`w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none ${!id ? 'bg-bg-alt text-text-secondary cursor-not-allowed' : ''}`}
                             />
                         </div>
 
@@ -337,10 +338,9 @@ export function BranchForm() {
                                     <label className="block text-xs font-medium text-text-secondary mb-1">Código *</label>
                                     <input
                                         type="text"
-                                        required
-                                        className="w-full p-2 border border-border-input rounded focus:border-brand-primary outline-none"
-                                        value={newDeposito.codigo}
-                                        onChange={e => setNewDeposito({ ...newDeposito, codigo: e.target.value })}
+                                        value={newDeposito.codigo || 'DEPxxxx (Auto)'}
+                                        disabled
+                                        className="w-full p-2 border border-border-input rounded focus:border-brand-primary outline-none bg-bg-alt text-text-secondary cursor-not-allowed"
                                     />
                                 </div>
                                 <div>

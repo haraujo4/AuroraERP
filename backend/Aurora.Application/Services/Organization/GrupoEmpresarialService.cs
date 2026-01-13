@@ -6,16 +6,19 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
     public class GrupoEmpresarialService : IGrupoEmpresarialService
     {
         private readonly IGrupoEmpresarialRepository _repository;
+        private readonly ICodeGenerationService _codeGenService;
 
-        public GrupoEmpresarialService(IGrupoEmpresarialRepository repository)
+        public GrupoEmpresarialService(IGrupoEmpresarialRepository repository, ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<GrupoEmpresarialDto>> GetAllAsync()
@@ -56,8 +59,10 @@ namespace Aurora.Application.Services.Organization
 
         public async Task<GrupoEmpresarialDto> CreateAsync(CreateGrupoEmpresarialDto dto)
         {
+            var code = await _codeGenService.GenerateNextCodeAsync<GrupoEmpresarial>("GRP");
+
             var entity = new GrupoEmpresarial(
-                dto.Codigo,
+                code,
                 dto.RazaoSocialConsolidada,
                 dto.NomeFantasia,
                 dto.PaisConsolidacao,

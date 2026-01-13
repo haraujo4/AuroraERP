@@ -100,7 +100,13 @@ export function CostCenterForm() {
 
                     <div className="space-y-1">
                         <label className="block text-sm font-medium text-text-secondary">Código *</label>
-                        <input type="text" name="codigo" value={formData.codigo} onChange={handleChange} required maxLength={10} className="w-full p-2 border border-border-input rounded focus:border-brand-primary outline-none" />
+                        <input
+                            type="text"
+                            name="codigo"
+                            value={formData.codigo || 'CCxxxx (Auto)'}
+                            disabled
+                            className="w-full p-2 border border-border-input rounded bg-bg-alt text-text-secondary cursor-not-allowed outline-none"
+                        />
                     </div>
 
                     <div className="space-y-1">

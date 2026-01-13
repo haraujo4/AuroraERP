@@ -157,7 +157,15 @@ export function CompanyForm() {
 
                     <div className="space-y-1">
                         <label className="block text-sm font-medium text-text-secondary">Código *</label>
-                        <input type="text" name="codigo" value={formData.codigo} onChange={handleChange} required maxLength={10} className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none" />
+                        <input
+                            type="text"
+                            name="codigo"
+                            value={isEdit ? formData.codigo : (formData.codigo || 'Gerado Automaticamente')}
+                            onChange={handleChange}
+                            disabled={!isEdit}
+                            required={isEdit}
+                            className={`w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none ${!isEdit ? 'bg-bg-alt text-text-secondary cursor-not-allowed' : ''}`}
+                        />
                     </div>
 
                     <div className="space-y-1 col-span-2">

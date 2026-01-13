@@ -189,11 +189,11 @@ export function MaterialForm() {
                                     <input
                                         type="text"
                                         name="code"
-                                        value={formData.code}
+                                        value={isEditing ? formData.code : (formData.code || 'MATxxxx (Auto)')}
                                         onChange={handleChange}
-                                        disabled={isEditing}
-                                        className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent disabled:bg-bg-secondary"
-                                        required
+                                        disabled={true} // Always disabled for both New and Edit
+                                        className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-bg-secondary text-text-secondary cursor-not-allowed"
+                                        required={isEditing}
                                     />
                                 </div>
                                 <div className="col-span-2">

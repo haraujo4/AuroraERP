@@ -113,11 +113,11 @@ export function GroupForm() {
                         <input
                             type="text"
                             name="codigo"
-                            value={formData.codigo}
+                            value={isEdit ? formData.codigo : (formData.codigo || 'GRPxxxx (Auto)')}
                             onChange={handleChange}
-                            disabled={isEdit}
-                            className={cn("w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none", isEdit && "bg-gray-100")}
-                            required
+                            disabled={true}
+                            className={cn("w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none bg-bg-alt text-text-secondary cursor-not-allowed")}
+                            required={isEdit}
                             maxLength={10}
                         />
                     </div>

@@ -115,7 +115,13 @@ export function BusinessPartnerForm() {
 
                     <div className="space-y-1">
                         <label className="block text-sm font-medium text-text-secondary">Código *</label>
-                        <input type="text" name="codigo" value={formData.codigo} onChange={handleChange} required maxLength={20} className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none" />
+                        <input
+                            type="text"
+                            name="codigo"
+                            value={formData.codigo || 'BPxxxx (Gerado Automaticamente)'}
+                            disabled
+                            className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none bg-bg-alt text-text-secondary cursor-not-allowed"
+                        />
                     </div>
 
                     <div className="space-y-1">
