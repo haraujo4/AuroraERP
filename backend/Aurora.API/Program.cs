@@ -155,6 +155,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Access-Control-Allow-Private-Network", "true");
+    await next();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
