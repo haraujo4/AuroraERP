@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Shield, ShieldAlert, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, Shield, ShieldAlert, Edit2 } from 'lucide-react';
 import { api } from '../../../services/api';
 
 import { UserFormModal } from './UserFormModal';
@@ -113,8 +113,8 @@ export function UserList() {
                                     </td>
                                     <td className="px-6 py-3">
                                         <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border ${user.isActive
-                                                ? 'bg-green-50 text-green-700 border-green-100'
-                                                : 'bg-red-50 text-red-700 border-red-100'
+                                            ? 'bg-green-50 text-green-700 border-green-100'
+                                            : 'bg-red-50 text-red-700 border-red-100'
                                             }`}>
                                             <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-green-500' : 'bg-red-500'}`} />
                                             {user.isActive ? 'Ativo' : 'Inativo'}

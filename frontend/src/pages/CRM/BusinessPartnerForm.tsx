@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { BusinessPartnerService } from '../../services/businessPartnerService';
 import type { CreateBusinessPartnerDto, CreateAddressDto } from '../../types/crm';
 import { Save, ArrowLeft } from 'lucide-react';
+import { cepService } from '../../services/cepService';
+import { toast } from 'react-hot-toast';
 
 export function BusinessPartnerForm() {
     const navigate = useNavigate();
@@ -40,6 +42,29 @@ export function BusinessPartnerForm() {
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setAddress(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleCepBlur = async () => {
+        const cep = address.zipCode;
+        if (cep && cep.replace(/\D/g, '').length === 8) {
+            try {
+                const fetchedAddress = await cepService.getAddressByCep(cep);
+                if (fetchedAddress) {
+                    setAddress(prev => ({
+                        ...prev,
+                        street: fetchedAddress.logradouro,
+                        neighborhood: fetchedAddress.bairro,
+                        city: fetchedAddress.localidade,
+                        state: fetchedAddress.uf
+                    }));
+                    toast.success('Endereço encontrado!');
+                } else {
+                    toast.error('CEP não encontrado.');
+                }
+            } catch (error) {
+                toast.error('Erro ao buscar CEP.');
+            }
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -133,7 +158,7 @@ export function BusinessPartnerForm() {
 
                     <div className="space-y-1">
                         <label className="block text-sm font-medium text-text-secondary">CEP *</label>
-                        <input type="text" name="zipCode" value={address.zipCode} onChange={handleAddressChange} required className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none" />
+                        <input type="text" name="zipCode" value={address.zipCode} onChange={handleAddressChange} onBlur={handleCepBlur} maxLength={9} placeholder="00000-000" required className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none" />
                     </div>
 
                     <div className="space-y-1 col-span-1">

@@ -111,5 +111,13 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'mrp', label: 'Execução MRP (MD01)', path: '/planning/mrp' },
         ]
     },
+    {
+        id: 'hr',
+        label: 'Recursos Humanos',
+        icon: Users,
+        subItems: [
+            { id: 'employees', label: 'Colaboradores (PA30)', path: '/hr/employees' },
+        ]
+    },
     { id: 'expedition', label: 'Expedição', icon: Truck, subItems: [{ id: 'deliveries', label: 'Entregas (VL01N)', path: '/logistics/deliveries' }] },
 ];

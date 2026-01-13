@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Branch } from '../../types/organization';
 import { branchService } from '../../services/branchService';
 import { Link, useOutletContext } from 'react-router-dom';
-import { Plus, Building2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export function BranchList() {
     const { searchTerm } = useOutletContext<{ searchTerm: string }>();
@@ -29,7 +29,7 @@ export function BranchList() {
         searchTerm === '' ||
         branch.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         branch.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        branch.city.toLowerCase().includes(searchTerm.toLowerCase())
+        (branch.city || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading) return <div>Carregando filiais...</div>;

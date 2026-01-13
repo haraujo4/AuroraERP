@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { productionService } from '../../../services/productionService';
 import { materialService } from '../../../services/materialService';
-import type { CreateBillOfMaterial, CreateBillOfMaterialItem } from '../../../types/production';
+import type { CreateBillOfMaterial } from '../../../types/production';
 import type { Material } from '../../../types/materials';
 
 export function BillOfMaterialForm() {

@@ -65,6 +65,11 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseOrderItem> PurchaseOrderItems { get; set; }
 
+        // Human Resources
+        public DbSet<Aurora.Domain.Entities.HR.Department> Departments { get; set; }
+        public DbSet<Aurora.Domain.Entities.HR.JobTitle> JobTitles { get; set; }
+        public DbSet<Aurora.Domain.Entities.HR.Employee> Employees { get; set; }
+
         // Fiscal
         public DbSet<Aurora.Domain.Entities.Fiscal.TaxRule> TaxRules { get; set; }
         public DbSet<Aurora.Domain.Entities.Fiscal.FiscalDocument> FiscalDocuments { get; set; }

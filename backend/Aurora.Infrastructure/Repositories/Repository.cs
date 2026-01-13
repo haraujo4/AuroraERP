@@ -18,7 +18,20 @@ namespace Aurora.Infrastructure.Repositories
         public Repository(AuroraDbContext context)
         {
             _context = context;
-            _dbSet = context.Set<T>();
+            try
+            {
+                _dbSet = context.Set<T>();
+            }
+            catch (Exception ex)
+            {
+                var innerMsg = ex.InnerException?.Message ?? "No inner exception";
+                Console.WriteLine($"Error initializing Repository for type {typeof(T).Name}: {ex.Message}");
+                Console.WriteLine($"Inner Exception: {innerMsg}");
+                Console.WriteLine(ex.StackTrace);
+                if (ex.InnerException != null) Console.WriteLine(ex.InnerException.StackTrace);
+
+                throw new InvalidOperationException($"Failed to create Set for {typeof(T).Name}", ex);
+            }
         }
 
         public virtual async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)

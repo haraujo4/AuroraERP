@@ -59,6 +59,12 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Production.IProductionS
 builder.Services.AddScoped<Aurora.Application.Interfaces.Purchasing.IPurchasingService, Aurora.Application.Services.Purchasing.PurchasingService>();
 // Planning Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Planning.IMRPService, Aurora.Application.Services.Planning.MRPService>();
+// Communication Services
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<Aurora.Application.Interfaces.Events.IEventBus, Aurora.Infrastructure.Events.InMemoryEventBus>();
+// Communication
+builder.Services.AddScoped<Aurora.Application.Interfaces.Communication.INotificationService, Aurora.API.Services.Communication.NotificationService>();
+
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentService, Aurora.Application.Services.Fiscal.FiscalDocumentService>();
@@ -106,14 +112,28 @@ builder.Services.AddDbContext<AuroraDbContext>((sp, options) => {
            .AddInterceptors(interceptor);
 });
 
+// Event Handlers
+builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.Identity.UserCreatedEvent>, Aurora.Application.EventHandlers.Identity.UserCreatedEventHandler>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.HR.EmployeeAdmittedEvent>, Aurora.Application.EventHandlers.HR.EmployeeAdmittedEventHandler>();
+
+// HR Services
+builder.Services.AddScoped<Aurora.Application.Interfaces.HR.IEmployeeService, Aurora.Application.Services.HR.EmployeeService>();
+
+// Fiscal Services
+builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentService, Aurora.Application.Services.Fiscal.FiscalDocumentService>();
+
+// ... (existing code)
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.AllowAnyOrigin()
+            builder.SetIsOriginAllowed(_ => true)
                    .AllowAnyMethod()
-                   .AllowAnyHeader();
+                   .AllowAnyHeader()
+                   .AllowCredentials();
         });
 });
 
@@ -139,12 +159,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<Aurora.API.Hubs.NotificationHub>("/hubs/notifications");
 
 // Seed initial data
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await Aurora.Infrastructure.Persistence.DataSeeder.SeedUsersAsync(services);
+    try 
+    {
+        await Aurora.Infrastructure.Persistence.DataSeeder.SeedUsersAsync(services);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred during seeding: {ex.Message}");
+        Console.WriteLine(ex.StackTrace);
+    }
 }
 
 app.UseHttpsRedirection();

@@ -7,7 +7,7 @@ import {
 import { cn } from '../../utils';
 import { findTransaction } from '../../utils/transactionRegistry';
 import { MENU_ITEMS } from '../../utils/menuItems';
-import type { SubItem, MenuItem } from '../../utils/menuItems';
+import type { SubItem } from '../../utils/menuItems';
 
 interface SidebarProps {
     isOpen: boolean;

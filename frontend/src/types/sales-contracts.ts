@@ -1,4 +1,4 @@
-import { BusinessPartner } from "../crm";
+
 
 export interface SalesContract {
     id: string;

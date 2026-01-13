@@ -53,20 +53,36 @@ export interface PurchaseOrderItem {
     receivedQuantity: number;
 }
 
-export enum PurchasingStatus {
-    Draft = 'Draft',
-    PendingApproval = 'PendingApproval',
-    Approved = 'Approved',
-    Rejected = 'Rejected',
-    Ordered = 'Ordered',
-    Partial = 'Partial',
-    Completed = 'Completed',
-    Cancelled = 'Cancelled'
-}
+export type PurchasingStatus =
+    | 'Draft'
+    | 'PendingApproval'
+    | 'Approved'
+    | 'Rejected'
+    | 'Ordered'
+    | 'Partial'
+    | 'Completed'
+    | 'Cancelled';
 
-export enum PurchaseType {
-    Standard = 'Standard',
-    Service = 'Service',
-    Consignment = 'Consignment',
-    Subcontracting = 'Subcontracting'
-}
+export const PurchasingStatus = {
+    Draft: 'Draft',
+    PendingApproval: 'PendingApproval',
+    Approved: 'Approved',
+    Rejected: 'Rejected',
+    Ordered: 'Ordered',
+    Partial: 'Partial',
+    Completed: 'Completed',
+    Cancelled: 'Cancelled'
+} as const;
+
+export type PurchaseType =
+    | 'Standard'
+    | 'Service'
+    | 'Consignment'
+    | 'Subcontracting';
+
+export const PurchaseType = {
+    Standard: 'Standard',
+    Service: 'Service',
+    Consignment: 'Consignment',
+    Subcontracting: 'Subcontracting'
+} as const;

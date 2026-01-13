@@ -2,7 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Users, Building2, ChevronLeft, ShieldAlert } from 'lucide-react';
 import { cn } from '../../utils';
 import { authService } from '../../services/authService';
-import { useEffect } from 'react';
+
 
 export function SettingsLayout() {
     const navigate = useNavigate();

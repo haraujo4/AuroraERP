@@ -4,6 +4,8 @@ import { branchService } from '../../services/branchService';
 import { companyService } from '../../services/companyService';
 import type { Empresa, CreateBranchDto, Deposito, CreateDepositoDto } from '../../types/organization';
 import { ArrowLeft, Save, Warehouse, Building2, Plus } from 'lucide-react';
+import { cepService } from '../../services/cepService';
+import { toast } from 'react-hot-toast';
 
 export function BranchForm() {
     const navigate = useNavigate();
@@ -112,6 +114,29 @@ export function BranchForm() {
         } catch (error) {
             console.error('Failed to save branch', error);
             alert('Failed to save branch');
+        }
+    };
+
+    const handleCepBlur = async () => {
+        const cep = formData.zipCode;
+        if (cep && cep.replace(/\D/g, '').length === 8) {
+            try {
+                const address = await cepService.getAddressByCep(cep);
+                if (address) {
+                    setFormData(prev => ({
+                        ...prev,
+                        street: address.logradouro,
+                        neighborhood: address.bairro,
+                        city: address.localidade,
+                        state: address.uf
+                    }));
+                    toast.success('Endereço encontrado!');
+                } else {
+                    toast.error('CEP não encontrado.');
+                }
+            } catch (error) {
+                toast.error('Erro ao buscar CEP.');
+            }
         }
     };
 
@@ -240,6 +265,9 @@ export function BranchForm() {
                                 className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none"
                                 value={formData.zipCode}
                                 onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
+                                onBlur={handleCepBlur}
+                                maxLength={9}
+                                placeholder="00000-000"
                             />
                         </div>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import fiscalService from '../../../services/fiscalService';
-import { STATES, OperationTypes, CstIcmsValues } from '../../../types/fiscal';
+import { STATES, CstIcmsValues } from '../../../types/fiscal';
 import type { OperationType, CstIcms } from '../../../types/fiscal';
 
 const TaxRuleForm: React.FC = () => {

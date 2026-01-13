@@ -1,42 +1,23 @@
+using Aurora.Application.Interfaces.Security;
+using Aurora.Application.Interfaces.Repositories;
+using Aurora.Application.Interfaces.Events;
+using Aurora.Domain.Entities.Security;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Aurora.Application.Interfaces.Repositories;
-using Aurora.Application.Interfaces.Security;
-using Aurora.Domain.Entities.Security;
+using System.Linq;
 
 namespace Aurora.Application.Services.Security
 {
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepo;
-        private readonly IRepository<Role> _roleRepo;
+        private readonly IEventBus _eventBus;
 
-        public UserService(IRepository<User> userRepo, IRepository<Role> roleRepo)
+        public UserService(IRepository<User> userRepo, IEventBus eventBus)
         {
             _userRepo = userRepo;
-            _roleRepo = roleRepo;
-        }
-
-        public async Task<List<UserDto>> GetAllAsync()
-        {
-            var users = await _userRepo.GetAllAsync(u => u.Roles);
-            return users.Select(MapToDto).ToList();
-        }
-
-        public async Task<UserDto?> GetByIdAsync(Guid id)
-        {
-            var users = await _userRepo.GetAllAsync(u => u.Roles); // Repository pattern limitation, optimizing later
-            var user = users.FirstOrDefault(u => u.Id == id);
-            return user == null ? null : MapToDto(user);
-        }
-
-        public async Task<UserDto?> GetByUsernameAsync(string username)
-        {
-            var users = await _userRepo.GetAllAsync(u => u.Roles);
-            var user = users.FirstOrDefault(u => u.Username == username);
-            return user == null ? null : MapToDto(user);
+            _eventBus = eventBus;
         }
 
         public async Task<UserDto> CreateAsync(CreateUserDto request)
@@ -44,21 +25,20 @@ namespace Aurora.Application.Services.Security
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = new User(request.Username, request.Email, passwordHash);
 
-            // Handle Roles
-            // For simplicity, creating dummy roles if not found or reusing. 
-            // Ideally we should lookup from DB. In Aurora simplified:
-            // We'll create ad-hoc roles or reusing if we had a role lookup.
-            // Since Role repo is generic, let's just make new Role objects for now or try to match?
-            // User entity AddRole adds to list.
-            
             foreach (var roleName in request.Roles)
             {
                 user.AddRole(new Role(roleName, $"Role {roleName}"));
             }
 
             await _userRepo.AddAsync(user);
+
+            // Publish Event (using the correct namespace if needed)
+            await _eventBus.PublishAsync(new Aurora.Application.Events.Identity.UserCreatedEvent(user.Username, user.Email));
+
             return MapToDto(user);
         }
+
+        // ... Method CreateAsync ends, UpdateAsync starts...
 
         public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto request)
         {
@@ -82,11 +62,6 @@ namespace Aurora.Application.Services.Security
             var user = users.FirstOrDefault(u => u.Id == id);
             if (user == null) return false;
 
-            // Verify current password if necessary (usually Checked by UI/Controller before calling? Or logic resides here)
-            // If admin is resetting, CurrentPassword might be empty/ignored.
-            // If user changing own password, we should verify.
-            // Let's assume this method is strict: Verify Current if provided.
-            
             if (!string.IsNullOrEmpty(request.CurrentPassword))
             {
                 if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
@@ -111,6 +86,25 @@ namespace Aurora.Application.Services.Security
             return true;
         }
 
+        public async Task<List<UserDto>> GetAllAsync()
+        {
+            var users = await _userRepo.GetAllAsync(u => u.Roles);
+            return users.Select(MapToDto).ToList();
+        }
+
+        public async Task<UserDto?> GetByIdAsync(Guid id)
+        {
+            var user = await _userRepo.GetByIdAsync(id, u => u.Roles);
+            return user == null ? null : MapToDto(user);
+        }
+
+        public async Task<UserDto?> GetByUsernameAsync(string username)
+        {
+            var users = await _userRepo.FindAsync(u => u.Username == username, u => u.Roles);
+            var user = users.FirstOrDefault();
+            return user == null ? null : MapToDto(user);
+        }
+
         private static UserDto MapToDto(User user)
         {
             return new UserDto
@@ -118,9 +112,9 @@ namespace Aurora.Application.Services.Security
                 Id = user.Id,
                 Username = user.Username,
                 Email = user.Email,
+                Roles = user.Roles.Select(r => r.Name).ToList(),
                 IsActive = user.IsActive,
-                LastLogin = user.LastLogin,
-                Roles = user.Roles.Select(r => r.Name).ToList()
+                LastLogin = user.LastLogin
             };
         }
     }

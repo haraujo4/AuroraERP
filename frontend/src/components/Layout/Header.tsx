@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Bell, Settings, User as UserIcon, LogOut, ChevronDown, Star, Search, X } from 'lucide-react';
+import { Settings, User as UserIcon, LogOut, ChevronDown, Star, Search, X } from 'lucide-react';
 import { authService } from '../../services/authService';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../utils';
 import { MENU_ITEMS } from '../../utils/menuItems';
+import { NotificationDropdown } from '../Notifications/NotificationDropdown';
 
 interface HeaderProps {
     favorites: string[];
@@ -95,10 +96,8 @@ export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange
 
             {/* Right: Actions & User */}
             <div className="flex items-center gap-3">
-                <button className="p-2 text-text-secondary hover:bg-bg-main rounded-full relative">
-                    <Bell size={16} />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                </button>
+
+                <NotificationDropdown />
 
                 <div className="h-6 w-px bg-border-default mx-1" />
 

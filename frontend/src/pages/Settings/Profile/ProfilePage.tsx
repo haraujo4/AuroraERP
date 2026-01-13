@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Lock, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { api } from '../../../services/api';
-import { authService } from '../../../services/authService';
+
 
 export function ProfilePage() {
     const [user, setUser] = useState<any>(null);
