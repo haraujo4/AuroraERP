@@ -1,0 +1,21 @@
+auroraerp.softnexus.com.br {
+    # API requests (Backend)
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+
+    # SignalR Hubs (Backend)
+    handle /hubs/* {
+        reverse_proxy backend:8080
+    }
+
+    # Everything else (Frontend)
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    # Global log configuration
+    log {
+        output file /data/access.log
+    }
+}

@@ -65,19 +65,17 @@ services:
     networks:
       - aurora_net
 
-  proxy:
-    image: jonasal/nginx-certbot:latest
-    container_name: aurora_proxy
+  gateway:
+    image: caddy:latest
+    container_name: aurora_gateway
     restart: always
-    environment:
-      - CERTBOT_EMAIL=admin@softnexus.com.br
-      - STAGING=0 # Set to 1 for testing to avoid rate limits
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./proxy/user_conf.d:/etc/nginx/user_conf.d:ro
-      - ./certbot/conf:/etc/letsencrypt
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
     depends_on:
       - frontend
       - backend
