@@ -8,10 +8,13 @@ import { controladoriaService } from '../../services/controladoriaService';
 import type { DreData, PerformanceData } from '../../services/controladoriaService';
 import { cn } from '../../utils';
 
+import { SimulationModal } from './components/SimulationModal';
+
 const FinancialReports: React.FC = () => {
     const [dre, setDre] = useState<DreData | null>(null);
     const [performance, setPerformance] = useState<PerformanceData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSimulationOpen, setIsSimulationOpen] = useState(false);
     const [dateRange, setDateRange] = useState({
         start: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
         end: new Date().toISOString().split('T')[0]
@@ -70,7 +73,10 @@ const FinancialReports: React.FC = () => {
                     <button onClick={fetchData} className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                         <Filter size={18} />
                     </button>
-                    <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                    <button
+                        onClick={() => alert("Exportação de relatório em desenvolvimento.")}
+                        className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                    >
                         <Download size={18} />
                     </button>
                 </div>
@@ -190,12 +196,21 @@ const FinancialReports: React.FC = () => {
                         <p className="text-indigo-100 text-xs mb-6 opacity-80">
                             Simule o impacto de cortes de gastos ou aumento de volume de vendas na margem líquida.
                         </p>
-                        <button className="w-full py-2.5 bg-white text-indigo-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors">
+                        <button
+                            onClick={() => setIsSimulationOpen(true)}
+                            className="w-full py-2.5 bg-white text-indigo-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors"
+                        >
                             Iniciar Simulação
                         </button>
                     </div>
                 </div>
             </div>
+
+            <SimulationModal
+                isOpen={isSimulationOpen}
+                onClose={() => setIsSimulationOpen(false)}
+                baseData={dre}
+            />
         </div>
     );
 };

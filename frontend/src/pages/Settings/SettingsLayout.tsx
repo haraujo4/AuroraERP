@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { Users, Building2, ChevronLeft } from 'lucide-react';
+import { Users, Building2, ChevronLeft, ShieldAlert } from 'lucide-react';
 import { cn } from '../../utils';
 import { authService } from '../../services/authService';
 import { useEffect } from 'react';
@@ -7,15 +7,30 @@ import { useEffect } from 'react';
 export function SettingsLayout() {
     const navigate = useNavigate();
     const user = authService.getCurrentUser();
-    const isAdmin = user?.roles?.includes('Admin');
+    const isAdmin = user?.roles?.some(r => r.toLowerCase() === 'admin');
 
-    useEffect(() => {
-        if (!isAdmin) {
-            navigate('/');
-        }
-    }, [isAdmin, navigate]);
-
-    if (!isAdmin) return null;
+    if (!isAdmin) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full bg-gray-50">
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center max-w-md">
+                    <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <ShieldAlert size={32} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Acesso Restrito</h2>
+                    <p className="text-gray-500 mb-6">Esta área é restrita a administradores do sistema.</p>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                        Voltar ao Dashboard
+                    </button>
+                    <div className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400">
+                        <p>Debug: Roles = {JSON.stringify(user?.roles)}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const navItems = [
         { path: '/settings/users', label: 'Usuários', icon: Users },
