@@ -6,16 +6,19 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
     public class CentroCustoService : ICentroCustoService
     {
         private readonly IRepository<CentroCusto> _repository;
+        private readonly ICodeGenerationService _codeGenService;
 
-        public CentroCustoService(IRepository<CentroCusto> repository)
+        public CentroCustoService(IRepository<CentroCusto> repository, ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<CentroCustoDto>> GetAllAsync()
@@ -39,7 +42,8 @@ namespace Aurora.Application.Services.Organization
 
         public async Task<CentroCustoDto> CreateAsync(CreateCentroCustoDto dto)
         {
-            var entity = new CentroCusto(dto.Codigo, dto.Descricao, dto.Responsavel, dto.EmpresaId);
+            var code = await _codeGenService.GenerateNextCodeAsync<CentroCusto>("CC");
+            var entity = new CentroCusto(code, dto.Descricao, dto.Responsavel, dto.EmpresaId);
             // HierarquiaPaiId is optional and not in the constructor, needs a public setter or method if we want to support it
             // For now, let's keep it simple as per entity definition.
             

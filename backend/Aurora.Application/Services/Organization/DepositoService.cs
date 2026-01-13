@@ -6,16 +6,19 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
     public class DepositoService : IDepositoService
     {
         private readonly IRepository<Deposito> _repository;
+        private readonly ICodeGenerationService _codeGenService;
 
-        public DepositoService(IRepository<Deposito> repository)
+        public DepositoService(IRepository<Deposito> repository, ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<DepositoDto>> GetAllAsync()
@@ -39,7 +42,8 @@ namespace Aurora.Application.Services.Organization
 
         public async Task<DepositoDto> CreateAsync(CreateDepositoDto dto)
         {
-            var entity = new Deposito(dto.Codigo, dto.Descricao, dto.Tipo, dto.ControlaLote, dto.ControlaSerie, dto.FilialId);
+            var code = await _codeGenService.GenerateNextCodeAsync<Deposito>("DEP");
+            var entity = new Deposito(code, dto.Descricao, dto.Tipo, dto.ControlaLote, dto.ControlaSerie, dto.FilialId);
             await _repository.AddAsync(entity);
             return MapToDto(entity);
         }

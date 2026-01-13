@@ -17,18 +17,22 @@ namespace Aurora.Application.Services.Sales
         private readonly IRepository<Aurora.Domain.Entities.Logistics.Material> _materialRepository; // Direct usage for simplicity
         private readonly IPricingService _pricingService;
 
+        private readonly Aurora.Application.Interfaces.Common.ICodeGenerationService _codeGenService;
+
         public SalesQuoteService(
             ISalesQuoteRepository repository, 
             IBusinessPartnerRepository bpRepository, 
             IOpportunityRepository oppRepository, 
             IRepository<Aurora.Domain.Entities.Logistics.Material> materialRepository,
-            IPricingService pricingService)
+            IPricingService pricingService,
+            Aurora.Application.Interfaces.Common.ICodeGenerationService codeGenService)
         {
             _repository = repository;
             _bpRepository = bpRepository;
             _oppRepository = oppRepository;
             _materialRepository = materialRepository;
             _pricingService = pricingService;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<SalesQuoteDto>> GetAllAsync()
@@ -46,7 +50,7 @@ namespace Aurora.Application.Services.Sales
 
         public async Task<SalesQuoteDto> CreateAsync(CreateSalesQuoteDto dto)
         {
-            var number = $"QT-{DateTime.Now.Year}-{new Random().Next(1000, 9999)}";
+            var number = await _codeGenService.GenerateNextCodeAsync<SalesQuote>("QT");
             
             var quote = new SalesQuote(number, dto.BusinessPartnerId, dto.ValidUntil, dto.OpportunityId);
 

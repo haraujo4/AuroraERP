@@ -9,6 +9,7 @@ using Aurora.Domain.Entities.Organization;
 using Aurora.Domain.Entities.Security;
 using Aurora.Domain.ValueObjects;
 using Aurora.Application.Interfaces.Security;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
@@ -17,15 +18,18 @@ namespace Aurora.Application.Services.Organization
         private readonly IEmpresaRepository _repository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IRepository<User> _userRepository;
+        private readonly ICodeGenerationService _codeGenService;
 
         public EmpresaService(
             IEmpresaRepository repository,
             ICurrentUserService currentUserService,
-            IRepository<User> userRepository)
+            IRepository<User> userRepository,
+            ICodeGenerationService codeGenService)
         {
             _repository = repository;
             _currentUserService = currentUserService;
             _userRepository = userRepository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<EmpresaDto>> GetAllAsync()
@@ -89,8 +93,10 @@ namespace Aurora.Application.Services.Organization
                 dto.EnderecoFiscal.ZipCode
             );
 
+            var code = await _codeGenService.GenerateNextCodeAsync<Empresa>("EMP");
+
             var entity = new Empresa(
-                dto.Codigo,
+                code,
                 dto.RazaoSocial,
                 dto.NomeFantasia,
                 dto.CNPJ,

@@ -12,10 +12,12 @@ namespace Aurora.Application.Services.Logistics
     public class MaterialService : IMaterialService
     {
         private readonly IRepository<Material> _repository;
+        private readonly Aurora.Application.Interfaces.Common.ICodeGenerationService _codeGenService;
 
-        public MaterialService(IRepository<Material> repository)
+        public MaterialService(IRepository<Material> repository, Aurora.Application.Interfaces.Common.ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<MaterialDto>> GetAllAsync()
@@ -33,12 +35,14 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task<MaterialDto> CreateAsync(CreateMaterialDto dto)
         {
-            Console.WriteLine($"[MaterialService] Creating Material: Code={dto.Code}");
+            var code = await _codeGenService.GenerateNextCodeAsync<Material>("MAT");
+
+            Console.WriteLine($"[MaterialService] Creating Material: Code={code}");
             Console.WriteLine($"[MaterialService] Logistics: NetWeight={dto.NetWeight}, GrossWeight={dto.GrossWeight}, Width={dto.Width}");
             Console.WriteLine($"[MaterialService] Purchasing: Cost={dto.StandardCost}, Unit={dto.PurchasingUnit}");
 
             // Constructor with basic data
-            var material = new Material(dto.Code, dto.Description, dto.UnitOfMeasure, dto.BasePrice, dto.Type);
+            var material = new Material(code, dto.Description, dto.UnitOfMeasure, dto.BasePrice, dto.Type);
             
             // Enrich with additional data
             material.UpdateBasicData(dto.Description, dto.Type, dto.Group, dto.UnitOfMeasure);

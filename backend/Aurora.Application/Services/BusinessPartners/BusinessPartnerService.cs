@@ -13,10 +13,12 @@ namespace Aurora.Application.Services.BusinessPartners
     public class BusinessPartnerService : IBusinessPartnerService
     {
         private readonly IBusinessPartnerRepository _repository;
+        private readonly Aurora.Application.Interfaces.Common.ICodeGenerationService _codeGenService;
 
-        public BusinessPartnerService(IBusinessPartnerRepository repository)
+        public BusinessPartnerService(IBusinessPartnerRepository repository, Aurora.Application.Interfaces.Common.ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<BusinessPartnerDto>> GetAllAsync()
@@ -40,8 +42,10 @@ namespace Aurora.Application.Services.BusinessPartners
                 throw new ArgumentException("Invalid Business Partner Type");
             }
 
+            var code = await _codeGenService.GenerateNextCodeAsync<BusinessPartner>("BP");
+
             var entity = new BusinessPartner(
-                dto.Codigo,
+                code,
                 type,
                 dto.RazaoSocial,
                 dto.NomeFantasia,

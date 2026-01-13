@@ -6,16 +6,19 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
     public class LocalEstoqueService : ILocalEstoqueService
     {
         private readonly IRepository<LocalEstoque> _repository;
+        private readonly ICodeGenerationService _codeGenService;
 
-        public LocalEstoqueService(IRepository<LocalEstoque> repository)
+        public LocalEstoqueService(IRepository<LocalEstoque> repository, ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<LocalEstoqueDto>> GetAllAsync()
@@ -39,7 +42,8 @@ namespace Aurora.Application.Services.Organization
 
         public async Task<LocalEstoqueDto> CreateAsync(CreateLocalEstoqueDto dto)
         {
-            var entity = new LocalEstoque(dto.Codigo, dto.Tipo, dto.PermitePicking, dto.PermiteInventario, dto.DepositoId);
+            var code = await _codeGenService.GenerateNextCodeAsync<LocalEstoque>("LOC");
+            var entity = new LocalEstoque(code, dto.Tipo, dto.PermitePicking, dto.PermiteInventario, dto.DepositoId);
             await _repository.AddAsync(entity);
             return MapToDto(entity);
         }

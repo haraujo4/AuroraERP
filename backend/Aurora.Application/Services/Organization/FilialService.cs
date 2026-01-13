@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aurora.Application.DTOs.Organization;
+using Aurora.Application.Interfaces.Common;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
@@ -19,19 +20,22 @@ namespace Aurora.Application.Services.Organization
         private readonly IRepository<Deposito> _depositoRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IRepository<User> _userRepository;
+        private readonly ICodeGenerationService _codeGenService;
 
         public FilialService(
             IFilialRepository repository, 
             IRepository<Empresa> empresaRepository, 
             IRepository<Deposito> depositoRepository,
             ICurrentUserService currentUserService,
-            IRepository<User> userRepository)
+            IRepository<User> userRepository,
+            ICodeGenerationService codeGenService)
         {
             _repository = repository;
             _empresaRepository = empresaRepository;
             _depositoRepository = depositoRepository;
             _currentUserService = currentUserService;
             _userRepository = userRepository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<DepositoDto>> GetDepositosAsync(Guid filialId)
@@ -99,7 +103,8 @@ namespace Aurora.Application.Services.Organization
         public async Task<FilialDto> CreateAsync(CreateFilialDto dto)
         {
             var address = new Address(dto.Street, dto.Number, dto.Complement, dto.Neighborhood, dto.City, dto.State, dto.Country, dto.ZipCode);
-            var filial = new Filial(dto.Codigo, dto.Descricao, dto.Tipo, address, dto.EmpresaId);
+            var code = await _codeGenService.GenerateNextCodeAsync<Filial>("FIL");
+            var filial = new Filial(code, dto.Descricao, dto.Tipo, address, dto.EmpresaId);
 
             await _repository.AddAsync(filial);
             

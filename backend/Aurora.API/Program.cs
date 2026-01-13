@@ -89,6 +89,7 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IDeliveryServ
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IAuthService, Aurora.Application.Services.Security.AuthService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.ICurrentUserService, Aurora.API.Services.CurrentUserService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IUserService, Aurora.Application.Services.Security.UserService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Common.ICodeGenerationService, Aurora.Application.Services.Common.CodeGenerationService>();
 builder.Services.AddScoped<Aurora.Infrastructure.Persistence.Interceptors.AuditInterceptor>();
 
 // Core Repositories
