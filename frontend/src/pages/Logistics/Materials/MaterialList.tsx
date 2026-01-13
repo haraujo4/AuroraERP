@@ -3,10 +3,11 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { materialService } from '../../../services/materialService';
 import type { Material } from '../../../types/materials';
 import { Plus, Package, Edit, Trash } from 'lucide-react';
+import { ALVGrid } from '../../../components/Common/ALVGrid';
+import type { Column } from '../../../components/Common/ALVGrid';
 
 export function MaterialList() {
     const navigate = useNavigate();
-    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [materials, setMaterials] = useState<Material[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,97 +37,88 @@ export function MaterialList() {
         }
     };
 
-    const filteredMaterials = materials.filter(m =>
-        searchTerm === '' ||
-        m.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.type.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const columns: Column<Material>[] = [
+        { key: 'code', label: 'Código', sortable: true, width: '120px' },
+        { key: 'description', label: 'Descrição', sortable: true },
+        {
+            key: 'type',
+            label: 'Tipo',
+            sortable: true,
+            width: '100px',
+            render: (value) => (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-100 uppercase">
+                    {value}
+                </span>
+            )
+        },
+        { key: 'group', label: 'Grupo', sortable: true, width: '120px' },
+        { key: 'unitOfMeasure', label: 'Unid.', width: '80px', align: 'center' },
+        {
+            key: 'basePrice',
+            label: 'Preço Base',
+            align: 'right',
+            width: '120px',
+            render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+        },
+        {
+            key: 'actions',
+            label: 'Ações',
+            align: 'right',
+            width: '80px',
+            render: (_, material) => (
+                <div className="flex justify-end gap-1">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); navigate(`/logistics/materials/${material.id}`); }}
+                        className="p-1 text-text-secondary hover:text-brand-primary transition-colors"
+                        title="Editar"
+                    >
+                        <Edit className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); handleDelete(material.id); }}
+                        className="p-1 text-text-secondary hover:text-red-500 transition-colors"
+                        title="Excluir"
+                    >
+                        <Trash className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            )
+        }
+    ];
 
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             {/* Header */}
-            <div className="p-4 bg-white border-b border-border-secondary flex justify-between items-center shadow-sm">
+            <div className="px-6 py-4 bg-white border-b border-border-secondary flex justify-between items-center shadow-sm z-20">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
-                        <Package className="w-6 h-6 text-brand-primary" />
-                        Gestão de Materiais (MM02)
+                    <h1 className="text-xl font-bold text-text-primary flex items-center gap-2 tracking-tight">
+                        <Package className="w-5 h-5 text-brand-primary" />
+                        Gestão de Materiais
                     </h1>
-                    <p className="text-text-secondary text-sm">Gerencie produtos, serviços e ativos</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default uppercase">MM02</span>
+                        <p className="text-text-secondary text-xs">Mestre de Materiais e Serviços</p>
+                    </div>
                 </div>
                 <button
                     onClick={() => navigate('/logistics/materials/new')}
-                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary transition-colors shadow-sm"
+                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-brand-secondary transition-all shadow-sm active:transform active:scale-95"
                 >
                     <Plus className="w-4 h-4" />
-                    Novo Material
+                    CRIAR MATERIAL
                 </button>
             </div>
 
-
-
-            {/* Content */}
-            <div className="flex-1 overflow-auto p-4">
-                {loading ? (
-                    <div className="flex items-center justify-center h-full text-text-secondary">Carregando materiais...</div>
-                ) : (
-                    <div className="bg-white rounded-lg shadow-sm border border-border-default overflow-hidden">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-bg-secondary text-text-secondary text-xs uppercase font-semibold">
-                                    <th className="p-4 border-b border-border-defaults">Código</th>
-                                    <th className="p-4 border-b border-border-default">Descrição</th>
-                                    <th className="p-4 border-b border-border-default">Tipo</th>
-                                    <th className="p-4 border-b border-border-default">Grupo</th>
-                                    <th className="p-4 border-b border-border-default">Unid.</th>
-                                    <th className="p-4 border-b border-border-default text-right">Preço Base</th>
-                                    <th className="p-4 border-b border-border-default text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-border-default">
-                                {filteredMaterials.map((material) => (
-                                    <tr key={material.id} className="hover:bg-bg-secondary/50 transition-colors">
-                                        <td className="p-4 font-medium text-text-primary">{material.code}</td>
-                                        <td className="p-4 text-text-secondary">{material.description}</td>
-                                        <td className="p-4">
-                                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                                                {material.type}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 text-text-secondary">{material.group || '-'}</td>
-                                        <td className="p-4 text-text-secondary">{material.unitOfMeasure}</td>
-                                        <td className="p-4 text-text-primary text-right font-mono">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(material.basePrice)}
-                                        </td>
-                                        <td className="p-4 text-right space-x-2">
-                                            <button
-                                                onClick={() => navigate(`/logistics/materials/${material.id}`)}
-                                                className="p-1 text-text-secondary hover:text-brand-primary transition-colors"
-                                                title="Editar"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(material.id)}
-                                                className="p-1 text-text-secondary hover:text-red-500 transition-colors"
-                                                title="Excluir"
-                                            >
-                                                <Trash className="w-4 h-4" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {filteredMaterials.length === 0 && (
-                                    <tr>
-                                        <td colSpan={7} className="p-8 text-center text-text-secondary">
-                                            Nenhum material encontrado com sua busca.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+            {/* Content Contextualized */}
+            <div className="flex-1 overflow-hidden p-4">
+                <ALVGrid
+                    title="Catálogo de Materiais"
+                    tCode="MM02-LIST"
+                    data={materials}
+                    columns={columns}
+                    loading={loading}
+                    onRowClick={(m) => navigate(`/logistics/materials/${m.id}`)}
+                />
             </div>
         </div>
     );
