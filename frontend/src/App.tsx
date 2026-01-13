@@ -152,6 +152,7 @@ function App() {
             <Route path="logistics/materials" element={<MaterialList />} />
             <Route path="logistics/materials/new" element={<MaterialForm />} />
             <Route path="logistics/inventory" element={<StockList />} />
+            <Route path="logistics/inventory/movement" element={<StockAdjustmentForm />} />
             <Route path="logistics/inventory/in" element={<GoodsReceiptForm />} />
             <Route path="logistics/inventory/out" element={<GoodsIssueForm />} />
             <Route path="logistics/inventory/transfer" element={<StockTransferForm />} />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { materialService } from '../../../services/materialService';
 import { branchService } from '../../../services/branchService';
@@ -10,6 +10,7 @@ import { StockMovementTypes, type StockMovementType, type CreateStockMovement } 
 
 export function StockAdjustmentForm() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [materials, setMaterials] = useState<Material[]>([]);
     const [branches, setBranches] = useState<Branch[]>([]);
@@ -36,6 +37,13 @@ export function StockAdjustmentForm() {
     useEffect(() => {
         loadData();
     }, []);
+
+    useEffect(() => {
+        const matId = searchParams.get('materialId');
+        if (matId) {
+            setFormData(prev => ({ ...prev, materialId: matId }));
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         if (formData.branchId) {
