@@ -54,10 +54,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: /api
+        VITE_API_URL: http://31.97.168.147:5000/api
     container_name: aurora_frontend
     environment:
-      - VITE_API_URL=/api
+      - VITE_API_URL=http://31.97.168.147:5000/api
     ports:
       - "3000:80"
     depends_on:
