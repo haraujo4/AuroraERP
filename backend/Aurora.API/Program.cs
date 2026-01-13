@@ -64,6 +64,7 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentS
 // Analytics Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Analytics.IDashboardService, Aurora.Application.Services.Analytics.DashboardService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Analytics.IProfitabilityService, Aurora.Application.Services.Analytics.ProfitabilityService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Analytics.IControladoriaService, Aurora.Application.Services.Analytics.ControladoriaService>();
 
 // Logistics Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IInventoryService, Aurora.Application.Services.Logistics.InventoryService>();

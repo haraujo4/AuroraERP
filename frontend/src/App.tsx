@@ -48,6 +48,7 @@ import PurchaseOrderList from './pages/Purchasing/Orders/PurchaseOrderList';
 import PurchaseOrderForm from './pages/Purchasing/Orders/PurchaseOrderForm';
 import TaxRuleList from './pages/Fiscal/TaxRules/TaxRuleList';
 import TaxRuleForm from './pages/Fiscal/TaxRules/TaxRuleForm';
+import FinancialReports from './pages/Analytics/FinancialReports';
 import Login from "./pages/Security/Login";
 import { authService } from "./services/authService";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -131,6 +132,8 @@ function App() {
 
           <Route path="finance/payments" element={<PaymentList />} />
           <Route path="finance/payments/new" element={<PaymentForm />} />
+
+          <Route path="finance/reports" element={<FinancialReports />} />
 
 
           {/* Production */}

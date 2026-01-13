@@ -77,6 +77,7 @@ const MENU_ITEMS: MenuItem[] = [
             { id: 'journal-entries', label: 'Lançamentos', path: '/finance/journal-entries' },
             { id: 'invoices', label: 'Faturas (AR/AP)', path: '/finance/invoices' },
             { id: 'payments', label: 'Pagamentos', path: '/finance/payments' },
+            { id: 'reports', label: 'Relatórios Analíticos (DRE)', path: '/finance/reports' },
         ]
     },
     {

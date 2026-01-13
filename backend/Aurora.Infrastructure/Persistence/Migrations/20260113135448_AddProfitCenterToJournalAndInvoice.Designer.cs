@@ -3,17 +3,20 @@ using System;
 using Aurora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Aurora.Infrastructure.Migrations
+namespace Aurora.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AuroraDbContext))]
-    partial class AuroraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260113135448_AddProfitCenterToJournalAndInvoice")]
+    partial class AddProfitCenterToJournalAndInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

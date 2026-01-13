@@ -1,5 +1,6 @@
 using System;
 using Aurora.Domain.Common;
+using Aurora.Domain.Entities.Organization;
 
 namespace Aurora.Domain.Entities.Finance
 {
@@ -25,6 +26,13 @@ namespace Aurora.Domain.Entities.Finance
         public decimal CofinsRate { get; private set; }
         public decimal CofinsValue { get; private set; }
         public int? Cfop { get; private set; }
+
+        // Costing & Profitability
+        public Guid? CostCenterId { get; private set; }
+        public CentroCusto? CostCenter { get; private set; }
+
+        public Guid? ProfitCenterId { get; private set; }
+        public CentroLucro? ProfitCenter { get; private set; }
 
         public InvoiceItem(Guid invoiceId, string description, decimal quantity, decimal unitPrice, decimal taxAmount)
         {
@@ -60,6 +68,12 @@ namespace Aurora.Domain.Entities.Finance
             
             TaxAmount = IcmsValue + IpiValue + PisValue + CofinsValue;
             RecalculateTotal();
+        }
+
+        public void SetCosting(Guid? costCenterId, Guid? profitCenterId)
+        {
+            CostCenterId = costCenterId;
+            ProfitCenterId = profitCenterId;
         }
 
         private void RecalculateTotal()
