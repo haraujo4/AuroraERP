@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aurora.Application.Interfaces.Security;
+using Aurora.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aurora.Infrastructure.Persistence
@@ -33,11 +34,12 @@ namespace Aurora.Infrastructure.Persistence
                 context.GruposEmpresariais.Add(grupo);
                 await context.SaveChangesAsync();
 
-                var empresa = new Aurora.Domain.Entities.Organization.Empresa(grupo.Id, "EMP01", "Aurora Matriz LTDA", "Aurora Matriz", "12345678000199");
+                var address = new Address("Av. Brasil", "1000", null, "Centro", "São Paulo", "SP", "Brasil", "01001000");
+                var empresa = new Aurora.Domain.Entities.Organization.Empresa("EMP01", "Aurora Matriz LTDA", "Aurora Matriz", "12345678000199", address, grupo.Id);
                 context.Empresas.Add(empresa);
                 await context.SaveChangesAsync();
 
-                var filial = new Aurora.Domain.Entities.Organization.Filial(empresa.Id, "FIL01", "Filial Principal", "Operacional");
+                var filial = new Aurora.Domain.Entities.Organization.Filial("FIL01", "Filial Principal", "Operacional", address, empresa.Id);
                 context.Filiais.Add(filial);
                 await context.SaveChangesAsync();
             }

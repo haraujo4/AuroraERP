@@ -7,6 +7,7 @@ using Aurora.Application.Interfaces.Logistics;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Logistics;
 using Aurora.Domain.Enums;
+using Aurora.Application.Interfaces.Finance;
 
 namespace Aurora.Application.Services.Logistics
 {
@@ -35,7 +36,58 @@ namespace Aurora.Application.Services.Logistics
             _journalEntryService = journalEntryService;
         }
 
-        // ... existing Get methods ...
+        public async Task<decimal> GetStockLevelAsync(Guid materialId, Guid depositoId, string? batchNumber = null)
+        {
+            var levels = await _stockLevelRepo.GetAllAsync();
+            var level = levels.FirstOrDefault(x => 
+                x.MaterialId == materialId && 
+                x.DepositoId == depositoId && 
+                x.BatchNumber == batchNumber);
+            
+            return level?.Quantity ?? 0;
+        }
+
+        public async Task<IEnumerable<StockLevelDto>> GetStockByMaterialAsync(Guid materialId)
+        {
+            var levels = await _stockLevelRepo.GetAllAsync();
+            var materials = await _materialRepo.GetAllAsync();
+            var depositos = await _depositoRepo.GetAllAsync();
+
+            return levels
+                .Where(x => x.MaterialId == materialId)
+                .Select(x => new StockLevelDto
+                {
+                    Id = x.Id,
+                    MaterialId = x.MaterialId,
+                    MaterialName = materials.FirstOrDefault(m => m.Id == x.MaterialId)?.Description ?? "Unknown",
+                    DepositoId = x.DepositoId,
+                    DepositoName = depositos.FirstOrDefault(d => d.Id == x.DepositoId)?.Descricao ?? "Unknown",
+                    BatchNumber = x.BatchNumber,
+                    Quantity = x.Quantity,
+                    AverageUnitCost = x.AverageUnitCost,
+                    LastUpdated = x.UpdatedAt ?? x.CreatedAt
+                });
+        }
+
+        public async Task<IEnumerable<StockLevelDto>> GetAllStocksAsync()
+        {
+            var levels = await _stockLevelRepo.GetAllAsync();
+            var materials = await _materialRepo.GetAllAsync();
+            var depositos = await _depositoRepo.GetAllAsync();
+
+            return levels.Select(x => new StockLevelDto
+            {
+                Id = x.Id,
+                MaterialId = x.MaterialId,
+                MaterialName = materials.FirstOrDefault(m => m.Id == x.MaterialId)?.Description ?? "Unknown",
+                DepositoId = x.DepositoId,
+                DepositoName = depositos.FirstOrDefault(d => d.Id == x.DepositoId)?.Descricao ?? "Unknown",
+                BatchNumber = x.BatchNumber,
+                Quantity = x.Quantity,
+                AverageUnitCost = x.AverageUnitCost,
+                LastUpdated = x.UpdatedAt ?? x.CreatedAt
+            });
+        }
 
         public async Task AddStockMovementAsync(CreateStockMovementDto dto)
         {
