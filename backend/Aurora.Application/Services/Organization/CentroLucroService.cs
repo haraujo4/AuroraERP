@@ -6,16 +6,19 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Application.Interfaces.Common;
 
 namespace Aurora.Application.Services.Organization
 {
     public class CentroLucroService : ICentroLucroService
     {
         private readonly IRepository<CentroLucro> _repository;
+        private readonly ICodeGenerationService _codeGenService;
 
-        public CentroLucroService(IRepository<CentroLucro> repository)
+        public CentroLucroService(IRepository<CentroLucro> repository, ICodeGenerationService codeGenService)
         {
             _repository = repository;
+            _codeGenService = codeGenService;
         }
 
         public async Task<IEnumerable<CentroLucroDto>> GetAllAsync()
@@ -39,7 +42,8 @@ namespace Aurora.Application.Services.Organization
 
         public async Task<CentroLucroDto> CreateAsync(CreateCentroLucroDto dto)
         {
-            var entity = new CentroLucro(dto.Codigo, dto.Descricao, dto.Responsavel, dto.EmpresaId);
+            var code = await _codeGenService.GenerateNextCodeAsync<CentroLucro>("CL");
+            var entity = new CentroLucro(code, dto.Descricao, dto.Responsavel, dto.EmpresaId);
             await _repository.AddAsync(entity);
             return MapToDto(entity);
         }

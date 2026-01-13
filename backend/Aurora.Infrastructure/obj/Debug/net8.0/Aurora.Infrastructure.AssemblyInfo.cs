@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurora.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b7ecb4aa9bf494a398641e8476f11e024c579ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+296f66906993f465c64dcc2b850d6f9dd19a1187")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurora.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurora.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

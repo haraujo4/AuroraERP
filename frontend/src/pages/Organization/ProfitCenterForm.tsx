@@ -48,7 +48,11 @@ export function ProfitCenterForm() {
         e.preventDefault();
         setSaving(true);
         try {
-            await OrganizationService.createProfitCenter(formData);
+            const payload = { ...formData };
+            if (!payload.unidadeNegocioId) delete (payload as any).unidadeNegocioId;
+            if (!payload.codigo) (payload as any).codigo = 'Generating...';
+
+            await OrganizationService.createProfitCenter(payload);
             navigate('/admin/profit-centers');
         } catch (error) {
             console.error("Failed to save", error);

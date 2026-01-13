@@ -48,7 +48,11 @@ export function CostCenterForm() {
         e.preventDefault();
         setSaving(true);
         try {
-            await OrganizationService.createCostCenter(formData);
+            const payload = { ...formData };
+            if (!payload.hierarquiaPaiId) delete (payload as any).hierarquiaPaiId;
+            if (!payload.codigo) (payload as any).codigo = 'Generating...'; // Placeholder to avoid empty string if required
+
+            await OrganizationService.createCostCenter(payload);
             navigate('/admin/cost-centers');
         } catch (error) {
             console.error("Failed to save", error);
