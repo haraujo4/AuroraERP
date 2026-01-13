@@ -1,2 +1,3 @@
 FROM caddy:latest
 COPY Caddyfile /etc/caddy/Caddyfile
+COPY certs /etc/caddy/certs

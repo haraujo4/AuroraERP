@@ -1,4 +1,5 @@
 auroraerp.softnexus.com.br {
+    tls /etc/caddy/certs/cert.pem /etc/caddy/certs/key.pem
     # API requests (Backend)
     handle /api/* {
         reverse_proxy backend:8080
