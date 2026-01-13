@@ -4,6 +4,8 @@ export interface User {
     username: string;
     roles: string[];
     token: string;
+    companyName?: string;
+    branchName?: string;
 }
 
 export const authService = {

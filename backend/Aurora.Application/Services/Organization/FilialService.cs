@@ -7,6 +7,8 @@ using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
 using Aurora.Domain.ValueObjects;
+using Aurora.Application.Interfaces.Security;
+using Aurora.Domain.Entities.Security;
 
 namespace Aurora.Application.Services.Organization
 {
@@ -15,12 +17,21 @@ namespace Aurora.Application.Services.Organization
         private readonly IFilialRepository _repository;
         private readonly IRepository<Empresa> _empresaRepository;
         private readonly IRepository<Deposito> _depositoRepository;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IRepository<User> _userRepository;
 
-        public FilialService(IFilialRepository repository, IRepository<Empresa> empresaRepository, IRepository<Deposito> depositoRepository)
+        public FilialService(
+            IFilialRepository repository, 
+            IRepository<Empresa> empresaRepository, 
+            IRepository<Deposito> depositoRepository,
+            ICurrentUserService currentUserService,
+            IRepository<User> userRepository)
         {
             _repository = repository;
             _empresaRepository = empresaRepository;
             _depositoRepository = depositoRepository;
+            _currentUserService = currentUserService;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<DepositoDto>> GetDepositosAsync(Guid filialId)
@@ -92,6 +103,18 @@ namespace Aurora.Application.Services.Organization
 
             await _repository.AddAsync(filial);
             
+            // Auto-link context for the creating user if they are linked to the company but not a branch
+            var currentUserId = _currentUserService.UserId;
+            if (!string.IsNullOrEmpty(currentUserId) && Guid.TryParse(currentUserId, out var userId))
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user != null && user.EmpresaId == filial.EmpresaId && user.FilialId == null)
+                {
+                    user.SetContext(user.EmpresaId.Value, filial.Id);
+                    await _userRepository.UpdateAsync(user);
+                }
+            }
+
             var empresa = await _empresaRepository.GetByIdAsync(dto.EmpresaId);
             return MapToDto(filial, empresa?.RazaoSocial);
         }

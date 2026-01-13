@@ -44,9 +44,9 @@ export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange
                 </div>
                 <div className="h-6 w-px bg-border-default mx-2" />
                 <div className="flex items-center gap-2 text-sm text-text-secondary">
-                    <span className="font-medium">Aurora Ind.</span>
+                    <span className="font-medium">{user?.companyName || 'Empresa não vinculada'}</span>
                     <span className="text-text-muted">/</span>
-                    <span>Matriz SP</span>
+                    <span>{user?.branchName || 'Nenhuma filial'}</span>
                 </div>
 
                 {/* Global Favorite Button for Current Transaction */}

@@ -31,7 +31,7 @@ namespace Aurora.Application.Services.Security
 
         public async Task<AuthResponseDto?> LoginAsync(LoginRequestDto request)
         {
-            var users = await _userRepo.GetAllAsync(u => u.Roles);
+            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Empresa!, u => u.Filial!);
             var user = users.FirstOrDefault(u => u.Username == request.Username);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
@@ -48,7 +48,9 @@ namespace Aurora.Application.Services.Security
             {
                 Token = token,
                 Username = user.Username,
-                Roles = user.Roles.Select(r => r.Name).ToList()
+                Roles = user.Roles.Select(r => r.Name).ToList(),
+                CompanyName = user.Empresa?.NomeFantasia,
+                BranchName = user.Filial?.Descricao
             };
         }
 

@@ -38,6 +38,16 @@ namespace Aurora.Infrastructure.Persistence.Configurations.Security
             
             // builder.Metadata.FindNavigation(nameof(User.Roles))!
             //    .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.HasOne(x => x.Empresa)
+                .WithMany()
+                .HasForeignKey(x => x.EmpresaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Filial)
+                .WithMany()
+                .HasForeignKey(x => x.FilialId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

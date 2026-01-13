@@ -12,6 +12,12 @@ namespace Aurora.Domain.Entities.Security
         public bool IsActive { get; private set; }
         public DateTime? LastLogin { get; private set; }
 
+        public Guid? EmpresaId { get; private set; }
+        public Aurora.Domain.Entities.Organization.Empresa? Empresa { get; private set; }
+        
+        public Guid? FilialId { get; private set; }
+        public Aurora.Domain.Entities.Organization.Filial? Filial { get; private set; }
+
         private readonly List<Role> _roles = new();
         public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
 
@@ -59,6 +65,18 @@ namespace Aurora.Domain.Entities.Security
         public void Deactivate()
         {
             IsActive = false;
+        }
+
+        public void SetContext(Guid empresaId, Guid? filialId)
+        {
+            EmpresaId = empresaId;
+            FilialId = filialId;
+        }
+
+        public void ClearContext()
+        {
+            EmpresaId = null;
+            FilialId = null;
         }
     }
 }

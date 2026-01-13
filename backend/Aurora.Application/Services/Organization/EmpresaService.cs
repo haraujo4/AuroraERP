@@ -6,17 +6,26 @@ using Aurora.Application.DTOs.Organization;
 using Aurora.Application.Interfaces.Organization;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Organization;
+using Aurora.Domain.Entities.Security;
 using Aurora.Domain.ValueObjects;
+using Aurora.Application.Interfaces.Security;
 
 namespace Aurora.Application.Services.Organization
 {
     public class EmpresaService : IEmpresaService
     {
         private readonly IEmpresaRepository _repository;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IRepository<User> _userRepository;
 
-        public EmpresaService(IEmpresaRepository repository)
+        public EmpresaService(
+            IEmpresaRepository repository,
+            ICurrentUserService currentUserService,
+            IRepository<User> userRepository)
         {
             _repository = repository;
+            _currentUserService = currentUserService;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<EmpresaDto>> GetAllAsync()
@@ -90,6 +99,18 @@ namespace Aurora.Application.Services.Organization
             );
 
             await _repository.AddAsync(entity);
+
+            // Auto-link context for the creating user if they don't have one
+            var currentUserId = _currentUserService.UserId;
+            if (!string.IsNullOrEmpty(currentUserId) && Guid.TryParse(currentUserId, out var userId))
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user != null && user.EmpresaId == null)
+                {
+                    user.SetContext(entity.Id, null);
+                    await _userRepository.UpdateAsync(user);
+                }
+            }
 
             return new EmpresaDto
             {
