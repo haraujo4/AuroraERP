@@ -167,11 +167,17 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try 
     {
+        var context = services.GetRequiredService<AuroraDbContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            await context.Database.MigrateAsync();
+        }
+
         await Aurora.Infrastructure.Persistence.DataSeeder.SeedUsersAsync(services);
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"An error occurred during seeding: {ex.Message}");
+        Console.WriteLine($"An error occurred during migration or seeding: {ex.Message}");
         Console.WriteLine(ex.StackTrace);
     }
 }
