@@ -28,8 +28,10 @@ export function SignalRProvider({ children }: { children: React.ReactNode }) {
         const token = authService.getToken();
         if (!token) return;
 
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api';
+        const hubUrl = baseUrl.replace(/\/api$/, '') + '/hubs/notifications';
         const newConnection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5000/hubs/notifications', {
+            .withUrl(hubUrl, {
                 accessTokenFactory: () => token
             })
             .withAutomaticReconnect()

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Empresa, CreateEmpresaDto } from '../types/organization';
 
-const API_URL = 'http://localhost:5000/api/organization/companies';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/organization/companies`;
 
 export const companyService = {
     getAll: async (): Promise<Empresa[]> => {

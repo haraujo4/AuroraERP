@@ -130,10 +130,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.SetIsOriginAllowed(_ => true)
+            builder.AllowAnyOrigin()
                    .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
+                   .AllowAnyHeader();
         });
 });
 
@@ -146,14 +145,14 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors("AllowAll");
 
 app.Use(async (context, next) =>
 {
@@ -188,6 +187,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for Docker/IP access
 
 app.Run();
