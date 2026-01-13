@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { materialService } from '../../../services/materialService';
 import type { Material } from '../../../types/materials';
-import { Plus, Package, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash, RefreshCw } from 'lucide-react';
 import { ALVGrid } from '../../../components/Common/ALVGrid';
 import type { Column } from '../../../components/Common/ALVGrid';
 
 export function MaterialList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [materials, setMaterials] = useState<Material[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -87,36 +88,35 @@ export function MaterialList() {
     ];
 
     return (
-        <div className="h-full flex flex-col bg-bg-primary">
-            {/* Header */}
-            <div className="px-6 py-4 bg-white border-b border-border-secondary flex justify-between items-center shadow-sm z-20">
-                <div>
-                    <h1 className="text-xl font-bold text-text-primary flex items-center gap-2 tracking-tight">
-                        <Package className="w-5 h-5 text-brand-primary" />
-                        Gestão de Materiais
-                    </h1>
-                    <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default uppercase">MM02</span>
-                        <p className="text-text-secondary text-xs">Mestre de Materiais e Serviços</p>
+        <div className="flex flex-col h-full bg-bg-main p-4">
+            <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm z-20">
+                <div className="flex items-center space-x-4">
+                    <h1 className="text-xl font-bold text-text-primary uppercase tracking-tight">Mestre de Materiais</h1>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default">MM02</span>
                     </div>
                 </div>
-                <button
-                    onClick={() => navigate('/logistics/materials/new')}
-                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-brand-secondary transition-all shadow-sm active:transform active:scale-95"
-                >
-                    <Plus className="w-4 h-4" />
-                    CRIAR MATERIAL
-                </button>
+
+                <div className="flex items-center space-x-2">
+                    <button onClick={loadMaterials} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/logistics/materials/new')}
+                        className="flex items-center px-4 py-1.5 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-xs font-bold shadow-sm"
+                    >
+                        <Plus size={14} className="mr-2" />
+                        NOVO MATERIAL
+                    </button>
+                </div>
             </div>
 
-            {/* Content Contextualized */}
-            <div className="flex-1 overflow-hidden p-4">
+            <div className="flex-1 overflow-hidden">
                 <ALVGrid
-                    title="Catálogo de Materiais"
-                    tCode="MM02-LIST"
                     data={materials}
                     columns={columns}
                     loading={loading}
+                    searchTerm={searchTerm}
                     onRowClick={(m) => navigate(`/logistics/materials/${m.id}`)}
                 />
             </div>

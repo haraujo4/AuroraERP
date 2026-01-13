@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, Edit, Trash2 } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import type { Account } from '../../../types/finance';
+import { ALVGrid } from '../../../components/Common/ALVGrid';
+import type { Column } from '../../../components/Common/ALVGrid';
+import { RefreshCw, Plus, Edit, Trash2 } from 'lucide-react';
 
 export function AccountList() {
     const navigate = useNavigate();
@@ -35,69 +37,72 @@ export function AccountList() {
         }
     };
 
-    const filteredAccounts = accounts.filter(acc =>
-        searchTerm === '' ||
-        acc.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        acc.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const columns: Column<Account>[] = [
+        { key: 'code', label: 'Código', sortable: true, width: '120px' },
+        { key: 'name', label: 'Nome', sortable: true },
+        { key: 'type', label: 'Tipo', width: '120px' },
+        { key: 'nature', label: 'Natureza', width: '120px' },
+        { key: 'level', label: 'Nível', width: '80px', align: 'center' },
+        {
+            key: 'isActive',
+            label: 'Status',
+            width: '100px',
+            render: (value) => (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {value ? 'ATIVA' : 'INATIVA'}
+                </span>
+            )
+        },
+        {
+            key: 'actions',
+            label: 'Ações',
+            align: 'right',
+            width: '80px',
+            render: (_, account) => (
+                <div className="flex justify-end gap-1">
+                    <button onClick={(e) => { e.stopPropagation(); navigate(`/finance/accounts/${account.id}`); }} className="p-1 text-text-secondary hover:text-brand-primary">
+                        <Edit className="w-4 h-4" />
+                    </button>
+                    <button onClick={(e) => { e.stopPropagation(); handleDelete(account.id); }} className="p-1 text-text-secondary hover:text-red-500">
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                </div>
+            )
+        }
+    ];
 
     return (
-        <div className="h-full flex flex-col bg-bg-primary">
-            <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Plano de Contas (FI01)</h1>
-                <button
-                    onClick={() => navigate('/finance/accounts/new')}
-                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
-                >
-                    <Plus size={16} />
-                    Nova Conta
-                </button>
+        <div className="flex flex-col h-full bg-bg-main p-4">
+            <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm z-20">
+                <div className="flex items-center space-x-4">
+                    <h1 className="text-xl font-bold text-text-primary uppercase tracking-tight">Plano de Contas</h1>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default">FI01</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <button onClick={loadAccounts} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/finance/accounts/new')}
+                        className="flex items-center px-4 py-1.5 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-xs font-bold shadow-sm"
+                    >
+                        <Plus size={14} className="mr-2" />
+                        NOVA CONTA
+                    </button>
+                </div>
             </div>
 
-            <div className="flex-1 overflow-auto p-4">
-                {loading ? (
-                    <div className="text-center py-8">Carregando...</div>
-                ) : (
-                    <div className="bg-white rounded-lg shadow border border-border-default overflow-hidden">
-                        <table className="w-full">
-                            <thead className="bg-bg-secondary border-b border-border-default">
-                                <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Código</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Nome</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Tipo</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Natureza</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Nível</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Status</th>
-                                    <th className="px-4 py-3 text-right text-xs font-bold uppercase">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredAccounts.map((account) => (
-                                    <tr key={account.id} className="border-b border-border-default hover:bg-bg-subtle">
-                                        <td className="px-4 py-3 font-mono text-sm">{account.code}</td>
-                                        <td className="px-4 py-3">{account.name}</td>
-                                        <td className="px-4 py-3 text-sm">{account.type}</td>
-                                        <td className="px-4 py-3 text-sm">{account.nature}</td>
-                                        <td className="px-4 py-3 text-sm">{account.level}</td>
-                                        <td className="px-4 py-3">
-                                            <span className={`px-2 py-1 rounded text-xs font-bold ${account.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
-                                                {account.isActive ? 'Ativa' : 'Inativa'}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-right">
-                                            <button onClick={() => navigate(`/finance/accounts/${account.id}`)} className="text-brand-primary hover:text-brand-secondary p-1">
-                                                <Edit size={16} />
-                                            </button>
-                                            <button onClick={() => handleDelete(account.id)} className="text-red-600 hover:text-red-700 p-1 ml-2">
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+            <div className="flex-1 overflow-hidden">
+                <ALVGrid
+                    data={accounts}
+                    columns={columns}
+                    loading={loading}
+                    searchTerm={searchTerm}
+                    onRowClick={(acc) => navigate(`/finance/accounts/${acc.id}`)}
+                />
             </div>
         </div>
     );

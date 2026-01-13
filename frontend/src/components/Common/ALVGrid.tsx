@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronUp, ChevronDown, Search, Download, Filter, Settings2 } from 'lucide-react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 export interface Column<T> {
     key: keyof T | 'actions';
@@ -13,8 +13,7 @@ export interface Column<T> {
 interface ALVGridProps<T> {
     data: T[];
     columns: Column<T>[];
-    title?: string;
-    tCode?: string;
+    searchTerm?: string;
     loading?: boolean;
     onRowClick?: (item: T) => void;
     actions?: React.ReactNode;
@@ -23,13 +22,11 @@ interface ALVGridProps<T> {
 export function ALVGrid<T extends { id: string | number }>({
     data,
     columns,
-    title,
-    tCode,
+    searchTerm = '',
     loading,
     onRowClick,
     actions
 }: ALVGridProps<T>) {
-    const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: 'asc' | 'desc' } | null>(null);
 
     const handleSort = (key: keyof T) => {
@@ -68,42 +65,12 @@ export function ALVGrid<T extends { id: string | number }>({
 
     return (
         <div className="flex flex-col h-full bg-bg-primary overflow-hidden border border-border-default shadow-sm rounded-lg">
-            {/* ALV Toolbar */}
-            <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-border-default gap-4">
-                <div className="flex items-center gap-3">
-                    {tCode && (
-                        <span className="bg-brand-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded tracking-tighter uppercase whitespace-nowrap">
-                            {tCode}
-                        </span>
-                    )}
-                    {title && <h2 className="text-sm font-bold text-text-primary whitespace-nowrap">{title}</h2>}
-                    <div className="h-4 w-[1px] bg-border-default mx-1" />
-                    <div className="relative group">
-                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary group-focus-within:text-brand-primary transition-colors" />
-                        <input
-                            type="text"
-                            placeholder="Pesquisa rápida..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-8 pr-3 py-1 bg-white border border-border-default rounded text-xs focus:ring-1 focus:ring-brand-primary focus:border-brand-primary w-48 transition-all outline-none"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-1">
+            {/* Optional Small Toolbar for Actions if provided */}
+            {actions && (
+                <div className="flex items-center justify-end px-3 py-1.5 bg-bg-secondary border-b border-border-default gap-2 text-xs">
                     {actions}
-                    <div className="h-4 w-[1px] bg-border-default mx-1" />
-                    <button className="p-1.5 text-text-secondary hover:bg-white hover:text-brand-primary rounded transition-all shadow-sm active:shadow-none border border-transparent hover:border-border-default" title="Filtros localizados">
-                        <Filter className="w-4 h-4" />
-                    </button>
-                    <button className="p-1.5 text-text-secondary hover:bg-white hover:text-brand-primary rounded transition-all shadow-sm active:shadow-none border border-transparent hover:border-border-default" title="Download Excel">
-                        <Download className="w-4 h-4" />
-                    </button>
-                    <button className="p-1.5 text-text-secondary hover:bg-white hover:text-brand-primary rounded transition-all shadow-sm active:shadow-none border border-transparent hover:border-border-default" title="Layout da Grade">
-                        <Settings2 className="w-4 h-4" />
-                    </button>
                 </div>
-            </div>
+            )}
 
             {/* Grid Content */}
             <div className="flex-1 overflow-auto bg-white min-h-0 relative">
@@ -181,12 +148,7 @@ export function ALVGrid<T extends { id: string | number }>({
             </div>
 
             {/* Status Bar */}
-            <div className="px-3 py-1 bg-bg-secondary border-t border-border-default flex justify-between items-center text-[10px] text-text-secondary font-medium uppercase tracking-wider">
-                <div className="flex items-center gap-3">
-                    <span>SISTEMA: AURORA ERP</span>
-                    <span className="w-1 h-1 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
-                    <span>CONECTADO: ESTÁVEL</span>
-                </div>
+            <div className="px-3 py-1 bg-bg-secondary border-t border-border-default flex justify-end items-center text-[10px] text-text-secondary font-medium uppercase tracking-wider">
                 <div>
                     EXIBINDO {filteredAndSortedData.length} DE {data.length} REGISTROS
                 </div>

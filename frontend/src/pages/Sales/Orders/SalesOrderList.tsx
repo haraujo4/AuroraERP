@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import type { SalesOrder } from '../../../types/sales-orders';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Plus, Eye, Truck, RefreshCw } from 'lucide-react';
+import { ALVGrid } from '../../../components/Common/ALVGrid';
+import type { Column } from '../../../components/Common/ALVGrid';
 import { salesOrderService } from '../../../services/salesOrderService';
-import { Link, useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, Eye, Truck } from 'lucide-react';
+import type { SalesOrder } from '../../../types/sales-orders';
 
 export function SalesOrderList() {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ export function SalesOrderList() {
     }, []);
 
     const loadOrders = async () => {
+        setLoading(true);
         try {
             const data = await salesOrderService.getAll();
             setOrders(data);
@@ -25,103 +28,125 @@ export function SalesOrderList() {
         }
     };
 
-    const filteredOrders = orders.filter(order =>
-        searchTerm === '' ||
-        order.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'Draft': return 'bg-gray-100 text-gray-800';
+            case 'Confirmed': return 'bg-green-100 text-green-800';
+            case 'Cancelled': return 'bg-red-100 text-red-800';
+            default: return 'bg-blue-100 text-blue-800';
+        }
+    };
+
+    const columns: Column<SalesOrder>[] = [
+        { key: 'number', label: 'Número', sortable: true, width: '120px' },
+        { key: 'businessPartnerName', label: 'Cliente', sortable: true },
+        {
+            key: 'orderDate',
+            label: 'Data',
+            width: '120px',
+            render: (val) => new Date(val).toLocaleDateString()
+        },
+        {
+            key: 'quoteNumber',
+            label: 'Origem',
+            width: '150px',
+            render: (val) => val ? (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">
+                    Quote: {val}
+                </span>
+            ) : '-'
+        },
+        {
+            key: 'totalValue',
+            label: 'Valor Total',
+            width: '120px',
+            align: 'right',
+            render: (val) => `R$ ${val.toFixed(2)}`
+        },
+        {
+            key: 'status',
+            label: 'Status',
+            width: '120px',
+            render: (val) => (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(val)}`}>
+                    {val.toUpperCase()}
+                </span>
+            )
+        },
+        {
+            key: 'actions',
+            label: 'Ações',
+            width: '100px',
+            align: 'right',
+            render: (_, order) => (
+                <div className="flex justify-end gap-2">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); navigate(`/sales/orders/${order.id}`); }}
+                        className="text-brand-primary hover:text-brand-secondary p-1 transition-colors"
+                        title="Visualizar"
+                    >
+                        <Eye size={16} />
+                    </button>
+                    {order.status === 'Confirmed' && (
+                        <button
+                            onClick={async (e) => {
+                                e.stopPropagation();
+                                if (confirm('Gerar entrega para este pedido?')) {
+                                    try {
+                                        const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
+                                        await service.createFromOrder(order.id);
+                                        alert('Entrega criada com sucesso!');
+                                        navigate('/logistics/deliveries');
+                                    } catch (err: any) {
+                                        alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
+                                    }
+                                }
+                            }}
+                            className="text-green-600 hover:text-green-800 p-1 transition-colors"
+                            title="Gerar Entrega"
+                        >
+                            <Truck size={16} />
+                        </button>
+                    )}
+                </div>
+            )
+        }
+    ];
 
     if (loading) return <div>Carregando pedidos...</div>;
 
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
-            <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
+            <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm z-20">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-xl font-bold text-text-primary">Listar Pedidos de Venda (VA02)</h1>
+                    <h1 className="text-xl font-bold text-text-primary uppercase tracking-tight">Pedidos de Venda</h1>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default">VA05</span>
+                    </div>
                 </div>
-                <Link
-                    to="/sales/orders/new"
-                    className="flex items-center px-4 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium"
-                >
-                    <Plus size={16} className="mr-2" />
-                    Novo Pedido
-                </Link>
+
+                <div className="flex items-center space-x-2">
+                    <button onClick={loadOrders} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/sales/orders/new')}
+                        className="flex items-center px-4 py-1.5 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-xs font-bold shadow-sm"
+                    >
+                        <Plus size={14} className="mr-2" />
+                        NOVO PEDIDO
+                    </button>
+                </div>
             </div>
 
-            <div className="flex-1 overflow-auto bg-white border border-border-default rounded shadow-sm">
-                <table className="w-full text-left border-collapse">
-                    <thead className="bg-bg-header sticky top-0 z-10">
-                        <tr>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Número</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Cliente</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Data</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Origem</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Valor Total</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default">Status</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default text-right">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border-default">
-                        {filteredOrders.map((order) => (
-                            <tr key={order.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
-                                <td className="p-3 font-mono">{order.number}</td>
-                                <td className="p-3">{order.businessPartnerName}</td>
-                                <td className="p-3">{new Date(order.orderDate).toLocaleDateString()}</td>
-                                <td className="p-3">
-                                    {order.quoteNumber ? (
-                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                            Quote: {order.quoteNumber}
-                                        </span>
-                                    ) : '-'}
-                                </td>
-                                <td className="p-3 font-bold">R$ {order.totalValue.toFixed(2)}</td>
-                                <td className="p-3">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-bold
-                                        ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
-                                            order.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
-                                                order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
-                                                    'bg-blue-100 text-blue-800'}`}>
-                                        {order.status}
-                                    </span>
-                                </td>
-                                <td className="p-3 text-right flex items-center justify-end space-x-2">
-                                    <Link to={`/sales/orders/${order.id}`} className="text-brand-primary hover:text-brand-secondary" title="Visualizar">
-                                        <Eye size={18} />
-                                    </Link>
-                                    {order.status === 'Confirmed' && (
-                                        <button
-                                            onClick={async (e) => {
-                                                e.preventDefault();
-                                                if (confirm('Gerar entrega para este pedido?')) {
-                                                    try {
-                                                        const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
-                                                        await service.createFromOrder(order.id);
-                                                        alert('Entrega criada com sucesso!');
-                                                        navigate('/logistics/deliveries');
-                                                    } catch (err: any) {
-                                                        alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
-                                                    }
-                                                }
-                                            }}
-                                            className="text-green-600 hover:text-green-800"
-                                            title="Gerar Entrega"
-                                        >
-                                            <Truck size={18} />
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {filteredOrders.length === 0 && (
-                    <div className="p-8 text-center text-text-secondary">
-                        Nenhum pedido encontrado.
-                    </div>
-                )}
-            </div>
-            <div className="mt-2 text-xs text-text-secondary text-right">
-                Registros: {orders.length}
+            <div className="flex-1 overflow-hidden">
+                <ALVGrid
+                    data={orders}
+                    columns={columns}
+                    loading={loading}
+                    searchTerm={searchTerm}
+                    onRowClick={(order) => navigate(`/sales/orders/${order.id}`)}
+                />
             </div>
         </div>
     );

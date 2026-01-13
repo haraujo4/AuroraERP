@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, CheckCircle, Package } from 'lucide-react';
+import { Plus, CheckCircle, Package, RefreshCw } from 'lucide-react';
 import purchasingService from '../../../services/purchasingService';
 import type { PurchaseOrder } from '../../../types/purchasing';
+import { ALVGrid } from '../../../components/Common/ALVGrid';
+import type { Column } from '../../../components/Common/ALVGrid';
 import { format } from 'date-fns';
 
 const PurchaseOrderList: React.FC = () => {
@@ -58,87 +60,92 @@ const PurchaseOrderList: React.FC = () => {
             default: return 'bg-gray-100 text-gray-800';
         }
     };
-
-    const filteredOrders = orders.filter(po =>
-        searchTerm === '' ||
-        po.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (po.supplier?.name && po.supplier.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const columns: Column<PurchaseOrder>[] = [
+        { key: 'orderNumber', label: 'Número', sortable: true, width: '120px' },
+        {
+            key: 'supplier',
+            label: 'Fornecedor',
+            sortable: true,
+            render: (val) => val?.name || '-'
+        },
+        {
+            key: 'deliveryDate',
+            label: 'Data Entrega',
+            width: '120px',
+            render: (val) => format(new Date(val), 'dd/MM/yyyy')
+        },
+        {
+            key: 'status',
+            label: 'Status',
+            width: '120px',
+            render: (val) => (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(val)}`}>
+                    {val.toUpperCase()}
+                </span>
+            )
+        },
+        {
+            key: 'actions',
+            label: 'Ações',
+            width: '100px',
+            align: 'right',
+            render: (_, po) => (
+                <div className="flex justify-end gap-2">
+                    {po.status === 'Draft' && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleApprove(po.id); }}
+                            className="text-green-600 hover:text-green-700 p-1 transition-colors"
+                            title="Aprovar"
+                        >
+                            <CheckCircle size={14} />
+                        </button>
+                    )}
+                    {(po.status === 'Approved' || po.status === 'Ordered') && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleReceive(po.id); }}
+                            className="text-blue-600 hover:text-blue-700 p-1 transition-colors"
+                            title="Receber (MIGO)"
+                        >
+                            <Package size={14} />
+                        </button>
+                    )}
+                </div>
+            )
+        }
+    ];
 
     return (
-        <div className="h-full flex flex-col bg-bg-primary">
-            <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Pedidos de Compra</h1>
-                <button
-                    onClick={() => navigate('/purchasing/orders/new')}
-                    className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
-                >
-                    <Plus size={16} />
-                    Novo Pedido
-                </button>
+        <div className="flex flex-col h-full bg-bg-main p-4">
+            <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm z-20">
+                <div className="flex items-center space-x-4">
+                    <h1 className="text-xl font-bold text-text-primary uppercase tracking-tight">Pedidos de Compra</h1>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded border border-border-default">ME2L</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <button onClick={loadOrders} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/purchasing/orders/new')}
+                        className="flex items-center px-4 py-1.5 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-xs font-bold shadow-sm"
+                    >
+                        <Plus size={14} className="mr-2" />
+                        NOVO PEDIDO
+                    </button>
+                </div>
             </div>
 
-            <div className="flex-1 overflow-auto p-4">
-                {loading ? (
-                    <div className="text-center py-8">Carregando...</div>
-                ) : (
-                    <div className="bg-white rounded-lg shadow border border-border-default overflow-hidden">
-                        <table className="w-full">
-                            <thead className="bg-bg-secondary border-b border-border-default">
-                                <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Número</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Fornecedor</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Data Entrega</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Status</th>
-                                    <th className="px-4 py-3 text-right text-xs font-bold uppercase">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredOrders.map((po) => (
-                                    <tr key={po.id} className="border-b border-border-default hover:bg-bg-subtle">
-                                        <td className="px-4 py-3 text-sm font-mono">{po.orderNumber}</td>
-                                        <td className="px-4 py-3 text-sm">{po.supplier?.name}</td>
-                                        <td className="px-4 py-3 text-sm">
-                                            {format(new Date(po.deliveryDate), 'dd/MM/yyyy')}
-                                        </td>
-                                        <td className="px-4 py-3 text-sm">
-                                            <span className={`px-2 py-1 rounded text-xs font-bold ${getStatusColor(po.status)}`}>
-                                                {po.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-right flex justify-end gap-2">
-                                            {(po.status === 'Draft') && (
-                                                <button
-                                                    onClick={() => handleApprove(po.id)}
-                                                    className="text-green-600 hover:text-green-700 p-1"
-                                                    title="Aprovar"
-                                                >
-                                                    <CheckCircle size={16} />
-                                                </button>
-                                            )}
-                                            {(po.status === 'Approved' || po.status === 'Ordered') && (
-                                                <button
-                                                    onClick={() => handleReceive(po.id)}
-                                                    className="text-blue-600 hover:text-blue-700 p-1"
-                                                    title="Receber (MIGO)"
-                                                >
-                                                    <Package size={16} />
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                                {filteredOrders.length === 0 && (
-                                    <tr>
-                                        <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                                            Nenhum pedido encontrado
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+            <div className="flex-1 overflow-hidden">
+                <ALVGrid
+                    data={orders}
+                    columns={columns}
+                    loading={loading}
+                    searchTerm={searchTerm}
+                    onRowClick={(po) => navigate(`/purchasing/orders/${po.id}`)}
+                />
             </div>
         </div>
     );
