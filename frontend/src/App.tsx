@@ -144,9 +144,12 @@ function App() {
 
             <Route path="crm/leads" element={<LeadList />} />
             <Route path="crm/leads/new" element={<LeadForm />} />
+            <Route path="crm/leads/:id" element={<LeadForm />} />
+            <Route path="crm/leads/:id" element={<LeadForm />} />
 
             <Route path="crm/opportunities" element={<OpportunityList />} />
             <Route path="crm/opportunities/new" element={<OpportunityForm />} />
+            <Route path="crm/opportunities/:id" element={<OpportunityForm />} />
 
             {/* Logistics */}
             <Route path="logistics/materials" element={<MaterialList />} />
@@ -160,30 +163,48 @@ function App() {
             <Route path="logistics/deliveries" element={<DeliveryList />} />
             <Route path="logistics/warehouses" element={<WarehouseList />} />
             <Route path="logistics/warehouses/new" element={<WarehouseForm />} />
+            <Route path="logistics/warehouses/:id" element={<WarehouseForm />} />
             <Route path="logistics/storage-locations" element={<StorageLocationList />} />
             <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
+            <Route path="logistics/storage-locations/:id" element={<StorageLocationForm />} />
 
             {/* Sales */}
             <Route path="sales/quotes" element={<SalesQuoteList />} />
             <Route path="sales/quotes/new" element={<SalesQuoteForm />} />
+            <Route path="sales/quotes" element={<SalesQuoteList />} />
+            <Route path="sales/quotes/new" element={<SalesQuoteForm />} />
+            <Route path="sales/quotes/:id" element={<SalesQuoteForm />} />
             <Route path="sales/orders" element={<SalesOrderList />} />
             <Route path="sales/orders/new" element={<SalesOrderForm />} />
+            <Route path="sales/orders/:id" element={<SalesOrderForm />} />
             <Route path="sales/contracts" element={<SalesContractList />} />
             <Route path="sales/contracts/new" element={<SalesContractForm />} />
+            <Route path="sales/contracts/:id" element={<SalesContractForm />} />
+            <Route path="sales/contracts/:id" element={<SalesContractForm />} />
 
             {/* Production */}
             <Route path="production/orders" element={<ProductionOrderList />} />
             <Route path="production/orders/new" element={<ProductionOrderForm />} />
+            <Route path="production/orders" element={<ProductionOrderList />} />
+            <Route path="production/orders/new" element={<ProductionOrderForm />} />
+            <Route path="production/orders/:id" element={<ProductionOrderForm />} />
             <Route path="production/work-centers" element={<WorkCenterList />} />
             <Route path="production/work-centers/new" element={<WorkCenterForm />} />
+            <Route path="production/work-centers/:id" element={<WorkCenterForm />} />
             <Route path="production/boms" element={<BillOfMaterialList />} />
             <Route path="production/boms/new" element={<BillOfMaterialForm />} />
+            <Route path="production/boms/:id" element={<BillOfMaterialForm />} />
+            <Route path="production/boms/:id" element={<BillOfMaterialForm />} />
 
             {/* Purchasing */}
             <Route path="purchasing/requisitions" element={<PurchaseRequisitionList />} />
+            <Route path="purchasing/requisitions" element={<PurchaseRequisitionList />} />
             <Route path="purchasing/requisitions/new" element={<PurchaseRequisitionForm />} />
+            <Route path="purchasing/requisitions/:id" element={<PurchaseRequisitionForm />} />
             <Route path="purchasing/orders" element={<PurchaseOrderList />} />
             <Route path="purchasing/orders/new" element={<PurchaseOrderForm />} />
+            <Route path="purchasing/orders/:id" element={<PurchaseOrderForm />} />
+            <Route path="purchasing/orders/:id" element={<PurchaseOrderForm />} />
 
             {/* Planning */}
             <Route path="planning/mrp" element={<MRPRun />} />
@@ -207,6 +228,8 @@ function App() {
             {/* Fiscal */}
             <Route path="fiscal/tax-rules" element={<TaxRuleList />} />
             <Route path="fiscal/tax-rules/new" element={<TaxRuleForm />} />
+            <Route path="fiscal/tax-rules/:id" element={<TaxRuleForm />} />
+            <Route path="fiscal/tax-rules/:id" element={<TaxRuleForm />} />
 
             {/* HR */}
             <Route path="hr/employees" element={<EmployeeList />} />
