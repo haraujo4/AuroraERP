@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { SalesQuote, CreateSalesQuote } from '../types/sales-quotes';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/sales/quotes`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/sales/quotes`;
 
 export const salesQuoteService = {
     getAll: async (): Promise<SalesQuote[]> => {

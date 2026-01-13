@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { SalesContract, CreateSalesContractDto } from '../types/sales-contracts';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/sales/contracts`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/sales/contracts`;
 
 export const salesContractService = {
     getAll: async (): Promise<SalesContract[]> => {

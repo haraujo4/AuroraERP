@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Branch, CreateBranchDto, CreateDepositoDto } from '../types/organization';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/organization/branches`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/organization/branches`;
 
 export const branchService = {
     getAll: async (): Promise<Branch[]> => {

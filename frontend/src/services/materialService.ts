@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Material, CreateMaterial } from '../types/materials';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/logistics/materials`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/logistics/materials`;
 
 export const materialService = {
     getAll: async (): Promise<Material[]> => {

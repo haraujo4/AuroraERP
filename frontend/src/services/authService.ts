@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/auth`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/auth`;
 
 export interface User {
     username: string;

@@ -40,9 +40,9 @@ services:
     container_name: aurora_backend
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=aurora_erp;Username=postgres;Password=aurora_password
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5000:8080"
+      - ASPNETCORE_ENVIRONMENT=Production
+    # ports:
+    #   - "5000:8080" # No longer needed to expose directly
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,13 +54,32 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://31.97.168.147:5000/api
+        VITE_API_URL: https://auroraerp.softnexus.com.br/api
     container_name: aurora_frontend
     environment:
-      - VITE_API_URL=http://31.97.168.147:5000/api
-    ports:
-      - "3000:80"
+      - VITE_API_URL=https://auroraerp.softnexus.com.br/api
+    # ports:
+    #   - "3000:80" # No longer needed to expose directly
     depends_on:
+      - backend
+    networks:
+      - aurora_net
+
+  proxy:
+    image: jonasal/nginx-certbot:latest
+    container_name: aurora_proxy
+    restart: always
+    environment:
+      - CERTBOT_EMAIL=admin@softnexus.com.br
+      - STAGING=0 # Set to 1 for testing to avoid rate limits
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./proxy/user_conf.d:/etc/nginx/user_conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - frontend
       - backend
     networks:
       - aurora_net

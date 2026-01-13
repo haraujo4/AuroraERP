@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://31.97.168.147:5000/api'}/controladoria`;
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api'}/controladoria`;
 
 export interface DreLine {
     accountCode: string;
