@@ -49,7 +49,7 @@ namespace Aurora.API.Controllers.Security
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ADMIN")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllAsync();
@@ -57,7 +57,7 @@ namespace Aurora.API.Controllers.Security
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ADMIN")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto request)
         {
             var user = await _userService.CreateAsync(request);
@@ -65,7 +65,7 @@ namespace Aurora.API.Controllers.Security
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ADMIN")]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDto request)
         {
             var user = await _userService.UpdateAsync(id, request);
@@ -74,7 +74,7 @@ namespace Aurora.API.Controllers.Security
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ADMIN")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             var success = await _userService.DeleteAsync(id);
