@@ -1,5 +1,6 @@
 using System;
 using Aurora.Domain.Common;
+using Aurora.Domain.Enums;
 
 namespace Aurora.Domain.Entities.Logistics
 {
@@ -31,6 +32,11 @@ namespace Aurora.Domain.Entities.Logistics
         // Purchasing
         public decimal? StandardCost { get; private set; }
         public string? PurchasingUnit { get; private set; }
+
+        // Planning
+        public ProcurementType ProcurementType { get; private set; } = ProcurementType.Buy;
+        public int LeadTimeDays { get; private set; }
+        public decimal SafetyStock { get; private set; }
 
         // Control
         public bool IsBatchManaged { get; private set; }
@@ -89,6 +95,13 @@ namespace Aurora.Domain.Entities.Logistics
         {
             IsBatchManaged = isBatchManaged;
             IsSerialManaged = isSerialManaged;
+        }
+
+        public void UpdatePlanningData(ProcurementType procurementType, int leadTimeDays, decimal safetyStock)
+        {
+            ProcurementType = procurementType;
+            LeadTimeDays = leadTimeDays;
+            SafetyStock = safetyStock;
         }
     }
 }

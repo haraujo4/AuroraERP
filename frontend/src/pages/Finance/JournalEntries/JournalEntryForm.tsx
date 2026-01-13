@@ -117,7 +117,7 @@ export function JournalEntryForm() {
                     <button onClick={() => navigate('/finance/journal-entries')} className="text-gray-500 hover:text-gray-700">
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-xl font-bold text-text-primary">Novo Lançamento Contábil</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Novo Lançamento Contábil (FB50)</h1>
                 </div>
                 <button
                     onClick={handleSubmit}

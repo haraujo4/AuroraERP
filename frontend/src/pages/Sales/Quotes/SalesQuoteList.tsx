@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { SalesQuote } from '../../../types/sales-quotes';
 import { salesQuoteService } from '../../../services/salesQuoteService';
-import { Link } from 'react-router-dom';
-import { Plus, Eye, FileText, ShoppingCart } from 'lucide-react';
+import { Link, useOutletContext } from 'react-router-dom';
+import { Plus, Eye, ShoppingCart } from 'lucide-react';
 
 export function SalesQuoteList() {
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [quotes, setQuotes] = useState<SalesQuote[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -23,13 +24,19 @@ export function SalesQuoteList() {
         }
     };
 
+    const filteredQuotes = quotes.filter(q =>
+        searchTerm === '' ||
+        q.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        q.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return <div>Carregando cotações...</div>;
 
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-xl font-bold text-text-primary">Cotações de Venda</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Listar Cotações (VA22)</h1>
                 </div>
 
                 <Link
@@ -54,7 +61,7 @@ export function SalesQuoteList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-default">
-                        {quotes.map((quote) => (
+                        {filteredQuotes.map((quote) => (
                             <tr key={quote.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                 <td className="p-3 font-mono">{quote.number}</td>
                                 <td className="p-3">{quote.businessPartnerName}</td>
@@ -100,7 +107,7 @@ export function SalesQuoteList() {
                         ))}
                     </tbody>
                 </table>
-                {quotes.length === 0 && (
+                {filteredQuotes.length === 0 && (
                     <div className="p-8 text-center text-text-secondary">
                         Nenhuma cotação encontrada. Clique em "Nova Cotação" para começar.
                     </div>

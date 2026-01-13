@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { OpportunityService } from '../../../services/opportunityService';
 import type { Opportunity } from '../../../types/crm-opportunities';
 import { Plus, RefreshCw } from 'lucide-react';
 
 export function OpportunityList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -37,12 +38,19 @@ export function OpportunityList() {
         }
     };
 
+    const filteredOpportunities = opportunities.filter(op =>
+        searchTerm === '' ||
+        op.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (op.businessPartnerName && op.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (op.leadName && op.leadName.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-2">
-                    <h1 className="text-xl font-bold text-text-primary">Oportunidades</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Oportunidades (CRM02)</h1>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button onClick={loadOpportunities} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
@@ -81,7 +89,7 @@ export function OpportunityList() {
                                 <td colSpan={6} className="p-8 text-center text-text-secondary">Nenhuma oportunidade encontrada.</td>
                             </tr>
                         ) : (
-                            opportunities.map((op) => (
+                            filteredOpportunities.map((op) => (
                                 <tr key={op.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-medium">{op.title}</td>
                                     <td className="p-3">

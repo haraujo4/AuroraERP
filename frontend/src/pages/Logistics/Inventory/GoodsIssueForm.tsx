@@ -132,7 +132,7 @@ export function GoodsIssueForm() {
                     <div>
                         <h1 className="text-xl font-bold text-text-primary flex items-center gap-2">
                             <PackageMinus className="text-red-600" size={24} />
-                            Saída de Estoque
+                            Saída de Estoque (MB1A)
                         </h1>
                         <p className="text-sm text-text-secondary">Baixa de materiais por consumo ou avaria</p>
                     </div>

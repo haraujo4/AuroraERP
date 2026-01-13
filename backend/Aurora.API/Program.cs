@@ -57,6 +57,8 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IPaymentService
 builder.Services.AddScoped<Aurora.Application.Interfaces.Production.IProductionService, Aurora.Application.Services.Production.ProductionService>();
 // Purchasing Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Purchasing.IPurchasingService, Aurora.Application.Services.Purchasing.PurchasingService>();
+// Planning Services
+builder.Services.AddScoped<Aurora.Application.Interfaces.Planning.IMRPService, Aurora.Application.Services.Planning.MRPService>();
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentService, Aurora.Application.Services.Fiscal.FiscalDocumentService>();

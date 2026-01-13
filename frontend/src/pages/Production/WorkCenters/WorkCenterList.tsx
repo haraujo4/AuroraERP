@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, Settings } from 'lucide-react';
 import { productionService } from '../../../services/productionService';
 import type { WorkCenter } from '../../../types/production';
 
 export function WorkCenterList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [centers, setCenters] = useState<WorkCenter[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,10 +25,16 @@ export function WorkCenterList() {
         }
     };
 
+    const filteredCenters = centers.filter(center =>
+        searchTerm === '' ||
+        center.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        center.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Centros de Trabalho</h1>
+                <h1 className="text-xl font-bold text-text-primary">Centros de Trabalho (CR01)</h1>
                 <button
                     onClick={() => navigate('/production/work-centers/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -52,7 +59,7 @@ export function WorkCenterList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {centers.map((center) => (
+                                {filteredCenters.map((center) => (
                                     <tr key={center.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm font-mono">{center.code}</td>
                                         <td className="px-4 py-3 text-sm">{center.name}</td>

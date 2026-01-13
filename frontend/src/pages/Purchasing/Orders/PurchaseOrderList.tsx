@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, CheckCircle, Package } from 'lucide-react';
 import purchasingService from '../../../services/purchasingService';
 import type { PurchaseOrder } from '../../../types/purchasing';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 const PurchaseOrderList: React.FC = () => {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [orders, setOrders] = useState<PurchaseOrder[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -58,6 +59,12 @@ const PurchaseOrderList: React.FC = () => {
         }
     };
 
+    const filteredOrders = orders.filter(po =>
+        searchTerm === '' ||
+        po.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (po.supplier?.name && po.supplier.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
@@ -87,7 +94,7 @@ const PurchaseOrderList: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.map((po) => (
+                                {filteredOrders.map((po) => (
                                     <tr key={po.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm font-mono">{po.orderNumber}</td>
                                         <td className="px-4 py-3 text-sm">{po.supplier?.name}</td>
@@ -121,7 +128,7 @@ const PurchaseOrderList: React.FC = () => {
                                         </td>
                                     </tr>
                                 ))}
-                                {orders.length === 0 && (
+                                {filteredOrders.length === 0 && (
                                     <tr>
                                         <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
                                             Nenhum pedido encontrado

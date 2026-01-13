@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, Settings } from 'lucide-react';
 import { productionService } from '../../../services/productionService';
 import type { BillOfMaterial } from '../../../types/production';
 
 export function BillOfMaterialList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [boms, setBoms] = useState<BillOfMaterial[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,10 +25,16 @@ export function BillOfMaterialList() {
         }
     };
 
+    const filteredBoms = boms.filter(bom =>
+        searchTerm === '' ||
+        bom.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bom.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Listas de Materiais (BOM)</h1>
+                <h1 className="text-xl font-bold text-text-primary">Listas de Materiais (CS01)</h1>
                 <button
                     onClick={() => navigate('/production/boms/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -52,7 +59,7 @@ export function BillOfMaterialList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {boms.map((bom) => (
+                                {filteredBoms.map((bom) => (
                                     <tr key={bom.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm font-medium">{bom.productName}</td>
                                         <td className="px-4 py-3 text-sm">{bom.description}</td>

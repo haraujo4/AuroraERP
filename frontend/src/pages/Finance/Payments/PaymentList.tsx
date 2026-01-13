@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, CheckCircle, XCircle } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import type { Payment } from '../../../types/finance';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 export function PaymentList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [payments, setPayments] = useState<Payment[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -45,10 +46,16 @@ export function PaymentList() {
         }
     };
 
+    const filteredPayments = payments.filter(p =>
+        searchTerm === '' ||
+        p.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.reference && p.reference.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Pagamentos e Recebimentos</h1>
+                <h1 className="text-xl font-bold text-text-primary">Pagamentos (F110)</h1>
                 <button
                     onClick={() => navigate('/finance/payments/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -76,7 +83,7 @@ export function PaymentList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {payments.map((p) => (
+                                {filteredPayments.map((p) => (
                                     <tr key={p.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm">
                                             {format(new Date(p.paymentDate), 'dd/MM/yyyy')}
@@ -118,7 +125,7 @@ export function PaymentList() {
                                         </td>
                                     </tr>
                                 ))}
-                                {payments.length === 0 && (
+                                {filteredPayments.length === 0 && (
                                     <tr>
                                         <td colSpan={7} className="px-4 py-8 text-center text-text-secondary">Nenhum pagamento registrado.</td>
                                     </tr>

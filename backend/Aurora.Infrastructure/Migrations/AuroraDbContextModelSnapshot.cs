@@ -836,6 +836,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<bool>("IsSerialManaged")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("LeadTimeDays")
+                        .HasColumnType("integer");
+
                     b.Property<decimal?>("Length")
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)");
@@ -852,9 +855,15 @@ namespace Aurora.Infrastructure.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)");
 
+                    b.Property<int>("ProcurementType")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PurchasingUnit")
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
+
+                    b.Property<decimal>("SafetyStock")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("SalesUnit")
                         .HasMaxLength(10)
@@ -1511,6 +1520,9 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("TotalMaterialCost")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -1527,6 +1539,51 @@ namespace Aurora.Infrastructure.Migrations
                     b.HasIndex("WorkCenterId");
 
                     b.ToTable("ProductionOrders");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Production.ProductionOrderComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("QuantityConsumed")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("QuantityRequired")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("QuantityReserved")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("ProductionOrderId");
+
+                    b.ToTable("ProductionOrderComponents");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Production.WorkCenter", b =>
@@ -2888,6 +2945,25 @@ namespace Aurora.Infrastructure.Migrations
                     b.Navigation("WorkCenter");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Production.ProductionOrderComponent", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Material", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aurora.Domain.Entities.Production.ProductionOrder", "ProductionOrder")
+                        .WithMany("Components")
+                        .HasForeignKey("ProductionOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+
+                    b.Navigation("ProductionOrder");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Purchasing.PurchaseOrder", b =>
                 {
                     b.HasOne("Aurora.Domain.Entities.BusinessPartners.BusinessPartner", "Supplier")
@@ -3237,6 +3313,11 @@ namespace Aurora.Infrastructure.Migrations
             modelBuilder.Entity("Aurora.Domain.Entities.Production.BillOfMaterial", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Production.ProductionOrder", b =>
+                {
+                    b.Navigation("Components");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Purchasing.PurchaseOrder", b =>

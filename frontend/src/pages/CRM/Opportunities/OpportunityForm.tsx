@@ -66,7 +66,7 @@ export function OpportunityForm() {
                     <button onClick={() => navigate('/crm/opportunities')} className="p-2 text-text-secondary hover:text-brand-primary" title="Voltar">
                         <ArrowLeft size={20} />
                     </button>
-                    <h1 className="text-xl font-bold text-text-primary">Nova Oportunidade</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Nova Oportunidade (CRM02)</h1>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button

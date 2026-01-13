@@ -190,46 +190,61 @@ namespace Aurora.Application.Services.Production
                  throw new Exception("Order already completed");
 
              // 1. Find BOM to know what to consume
-             var bom = await _productionRepository.GetActiveBOMForProductAsync(o.ProductId);
+             var oWithDetails = await _productionRepository.GetOrderWithDetailsAsync(id);
+             if (oWithDetails == null) throw new Exception("Order not found with details");
+
+             var bom = await _productionRepository.GetActiveBOMForProductAsync(oWithDetails.ProductId);
              if (bom == null) throw new Exception("No active BOM found for this product. Cannot backflush components.");
 
-            // 2. Consume Components (Backflush)
+            // 2. Consume Components (Backflush) and calculate costs
             var deposito = await _productionRepository.GetDefaultDepositoAsync();
             if (deposito == null) throw new Exception("No Warehouse configured.");
 
             // Ratio: OrderQty / BOM BaseQty
-            decimal ratio = o.Quantity / bom.BaseQuantity;
+            decimal ratio = oWithDetails.Quantity / bom.BaseQuantity;
+            decimal totalWipCost = 0;
 
             foreach(var item in bom.Items)
             {
                 decimal quantityToConsume = item.Quantity * ratio;
                 
+                // Fetch current cost for WIP calculation
+                var componentStocks = await _inventoryService.GetStockByMaterialAsync(item.ComponentId);
+                var relevantStock = componentStocks.FirstOrDefault(s => s.DepositoId == deposito.Id);
+                decimal componentUnitCost = relevantStock?.AverageUnitCost ?? 0;
+                
+                totalWipCost += quantityToConsume * componentUnitCost;
+
                 await _inventoryService.AddStockMovementAsync(new CreateStockMovementDto
                 {
                     MaterialId = item.ComponentId,
                     DepositoId = deposito.Id,
                     Type = StockMovementType.Out, // Issue
                     Quantity = quantityToConsume,
-                    ReferenceDocument = o.OrderNumber,
+                    ReferenceDocument = oWithDetails.OrderNumber,
                     BatchNumber = null
                 });
             }
 
-            // 3. Receive Finished Good
+            // 3. Receive Finished Good with calculated cost
+            decimal finishedGoodUnitCost = oWithDetails.Quantity > 0 ? totalWipCost / oWithDetails.Quantity : 0;
+
              await _inventoryService.AddStockMovementAsync(new CreateStockMovementDto
                 {
-                    MaterialId = o.ProductId,
+                    MaterialId = oWithDetails.ProductId,
                     DepositoId = deposito.Id,
                     Type = StockMovementType.In, // Receipt
-                    Quantity = o.Quantity,
-                    ReferenceDocument = o.OrderNumber,
+                    Quantity = oWithDetails.Quantity,
+                    UnitPrice = finishedGoodUnitCost, // VALUATION BASED ON ACTUAL WIP
+                    ReferenceDocument = oWithDetails.OrderNumber,
                     BatchNumber = DateTime.Now.ToString("yyyyMMdd") // Simple batch
                 });
 
-             // 4. Update Status
-             o.Start(); // Ensure it was started
-             o.Complete();
-             await _orderRepository.UpdateAsync(o);
+             // 4. Update Status and Cost
+             oWithDetails.SetCost(totalWipCost);
+             oWithDetails.Start(); // Ensure it was started
+             oWithDetails.Complete();
+             await _orderRepository.UpdateAsync(oWithDetails);
         }
     }
 }

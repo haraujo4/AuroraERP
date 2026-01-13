@@ -113,7 +113,7 @@ export function SalesOrderForm() {
                             <ArrowLeft size={20} />
                         </button>
                         <h1 className="text-xl font-bold text-text-primary">
-                            Pedido {order.number}
+                            Pedido {order.number} (VA02)
                         </h1>
                         <span className={`px-2 py-0.5 text-xs font-semibold rounded-full
                                     ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
@@ -240,7 +240,7 @@ export function SalesOrderForm() {
                         <ArrowLeft size={20} />
                     </button>
                     <h1 className="text-xl font-bold text-text-primary">
-                        Novo Pedido de Venda
+                        Novo Pedido de Venda (VA01)
                     </h1>
                 </div>
                 <div className="flex items-center space-x-2">

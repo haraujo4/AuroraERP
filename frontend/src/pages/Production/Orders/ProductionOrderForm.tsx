@@ -58,7 +58,7 @@ export function ProductionOrderForm() {
                     <button onClick={() => navigate('/production/orders')} className="text-gray-500 hover:text-gray-700">
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-xl font-bold text-text-primary">Nova Ordem de Produção</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Nova Ordem de Produção (CO01)</h1>
                 </div>
                 <button
                     onClick={handleSubmit}

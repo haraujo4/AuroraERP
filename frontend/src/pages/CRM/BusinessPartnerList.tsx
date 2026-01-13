@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { BusinessPartnerService } from '../../services/businessPartnerService';
 import type { BusinessPartner } from '../../types/crm';
 import { Plus, RefreshCw, Users } from 'lucide-react';
 
 export function BusinessPartnerList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [partners, setPartners] = useState<BusinessPartner[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,13 +26,21 @@ export function BusinessPartnerList() {
         }
     };
 
+    const filteredPartners = partners.filter(bp =>
+        searchTerm === '' ||
+        bp.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bp.razaoSocial.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bp.nomeFantasia.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bp.cpfCnpj.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-2">
                     <Users size={20} className="text-text-secondary" />
-                    <h1 className="text-xl font-bold text-text-primary">Parceiros de Negócio</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Gestão de Business Partners (BP01)</h1>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button onClick={loadPartners} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
@@ -70,7 +79,7 @@ export function BusinessPartnerList() {
                                 <td colSpan={6} className="p-8 text-center text-text-secondary">Nenhum registro encontrado.</td>
                             </tr>
                         ) : (
-                            partners.map((bp) => (
+                            filteredPartners.map((bp) => (
                                 <tr key={bp.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-mono">{bp.codigo}</td>
                                     <td className="p-3 font-medium">{bp.razaoSocial}</td>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import type { Branch } from '../../types/organization';
 import { branchService } from '../../services/branchService';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { Plus, Building2 } from 'lucide-react';
 
 export function BranchList() {
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [branches, setBranches] = useState<Branch[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -23,13 +24,21 @@ export function BranchList() {
         }
     };
 
+    // Filter branches based on Global Search Term
+    const filteredBranches = branches.filter(branch =>
+        searchTerm === '' ||
+        branch.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        branch.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        branch.city.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return <div>Carregando filiais...</div>;
 
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-xl font-bold text-text-primary">Filiais</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Filiais (ORG03)</h1>
                 </div>
 
                 <Link
@@ -65,7 +74,7 @@ export function BranchList() {
                                 </td>
                             </tr>
                         ) : (
-                            branches.map((branch) => (
+                            filteredBranches.map((branch) => (
                                 <tr key={branch.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-mono">{branch.codigo}</td>
                                     <td className="p-3 font-medium">{branch.descricao}</td>

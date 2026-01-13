@@ -57,6 +57,7 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<BillOfMaterial> BillOfMaterials { get; set; }
         public DbSet<BillOfMaterialItem> BillOfMaterialItems { get; set; }
         public DbSet<ProductionOrder> ProductionOrders { get; set; }
+        public DbSet<ProductionOrderComponent> ProductionOrderComponents { get; set; }
 
         // Purchasing
         public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseRequisition> PurchaseRequisitions { get; set; }

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import type { Account } from '../../../types/finance';
 
 export function AccountList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,10 +35,16 @@ export function AccountList() {
         }
     };
 
+    const filteredAccounts = accounts.filter(acc =>
+        searchTerm === '' ||
+        acc.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        acc.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Plano de Contas</h1>
+                <h1 className="text-xl font-bold text-text-primary">Plano de Contas (FI01)</h1>
                 <button
                     onClick={() => navigate('/finance/accounts/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -65,7 +72,7 @@ export function AccountList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {accounts.map((account) => (
+                                {filteredAccounts.map((account) => (
                                     <tr key={account.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 font-mono text-sm">{account.code}</td>
                                         <td className="px-4 py-3">{account.name}</td>

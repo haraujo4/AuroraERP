@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, CheckCircle } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import type { JournalEntry } from '../../../types/finance';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 export function JournalEntryList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [entries, setEntries] = useState<JournalEntry[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,10 +36,16 @@ export function JournalEntryList() {
         }
     };
 
+    const filteredEntries = entries.filter(entry =>
+        searchTerm === '' ||
+        entry.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (entry.reference && entry.reference.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Lançamentos Contábeis</h1>
+                <h1 className="text-xl font-bold text-text-primary">Lançamentos (FB50)</h1>
                 <button
                     onClick={() => navigate('/finance/journal-entries/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -65,7 +72,7 @@ export function JournalEntryList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {entries.map((entry) => {
+                                {filteredEntries.map((entry) => {
                                     const totalAmount = entry.lines
                                         .filter(l => l.type === 'Debit')
                                         .reduce((sum, line) => sum + line.amount, 0);

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { deliveryService, type DeliveryDto } from '../../../services/deliveryService';
 import { Package, Truck, CheckCircle } from 'lucide-react';
 
 export function DeliveryList() {
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     const [deliveries, setDeliveries] = useState<DeliveryDto[]>([]);
     const [loading, setLoading] = useState(true);
@@ -42,6 +44,12 @@ export function DeliveryList() {
         }
     };
 
+    const filteredDeliveries = deliveries.filter(d =>
+        searchTerm === '' ||
+        d.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        d.salesOrderNumber.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return <div className="p-8 text-center text-text-secondary">Carregando expedições...</div>;
 
     return (
@@ -49,7 +57,7 @@ export function DeliveryList() {
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-4">
                     <Truck size={20} className="text-brand-primary" />
-                    <h1 className="text-xl font-bold text-text-primary">Expedição de Vendas</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Entregas (VL01N)</h1>
                 </div>
             </div>
 
@@ -66,7 +74,7 @@ export function DeliveryList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-default">
-                        {deliveries.map((delivery) => (
+                        {filteredDeliveries.map((delivery) => (
                             <React.Fragment key={delivery.id}>
                                 <tr
                                     className="hover:bg-bg-main cursor-pointer"
@@ -144,7 +152,7 @@ export function DeliveryList() {
                         ))}
                     </tbody>
                 </table>
-                {deliveries.length === 0 && (
+                {filteredDeliveries.length === 0 && (
                     <div className="p-8 text-center text-text-secondary">
                         Nenhuma entrega encontrada.
                     </div>

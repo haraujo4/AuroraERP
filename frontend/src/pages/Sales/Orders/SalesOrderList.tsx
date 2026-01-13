@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import type { SalesOrder } from '../../../types/sales-orders';
 import { salesOrderService } from '../../../services/salesOrderService';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, Eye, Truck } from 'lucide-react';
 
 export function SalesOrderList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [orders, setOrders] = useState<SalesOrder[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,13 +25,19 @@ export function SalesOrderList() {
         }
     };
 
+    const filteredOrders = orders.filter(order =>
+        searchTerm === '' ||
+        order.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return <div>Carregando pedidos...</div>;
 
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-xl font-bold text-text-primary">Pedidos de Venda</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Listar Pedidos de Venda (VA02)</h1>
                 </div>
                 <Link
                     to="/sales/orders/new"
@@ -55,7 +62,7 @@ export function SalesOrderList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-default">
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                             <tr key={order.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                 <td className="p-3 font-mono">{order.number}</td>
                                 <td className="p-3">{order.businessPartnerName}</td>
@@ -107,7 +114,7 @@ export function SalesOrderList() {
                         ))}
                     </tbody>
                 </table>
-                {orders.length === 0 && (
+                {filteredOrders.length === 0 && (
                     <div className="p-8 text-center text-text-secondary">
                         Nenhum pedido encontrado.
                     </div>

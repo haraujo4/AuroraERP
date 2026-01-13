@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Plus, CheckCircle, XCircle, FileText } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import { fiscalService } from '../../../services/fiscalService';
@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 
 export function InvoiceList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -55,10 +56,15 @@ export function InvoiceList() {
         }
     };
 
+    const filteredInvoices = invoices.filter(inv =>
+        searchTerm === '' ||
+        inv.businessPartnerName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Contas a Pagar / Receber</h1>
+                <h1 className="text-xl font-bold text-text-primary">Faturas (MIRO)</h1>
                 <div className="flex gap-2">
                     <button
                         onClick={() => navigate('/finance/invoices/billing')}
@@ -102,7 +108,7 @@ export function InvoiceList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {invoices.map((invoice) => (
+                                {filteredInvoices.map((invoice) => (
                                     <tr key={invoice.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm">
                                             {format(new Date(invoice.issueDate), 'dd/MM/yyyy')}

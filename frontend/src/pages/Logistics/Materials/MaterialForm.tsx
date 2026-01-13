@@ -141,7 +141,7 @@ export function MaterialForm() {
                     </button>
                     <div>
                         <h1 className="text-xl font-bold text-text-primary">
-                            {isEditing ? `Editar Material: ${formData.code}` : 'Novo Material'}
+                            {isEditing ? `Editar Material: ${formData.code}` : 'Novo Material (MM01)'}
                         </h1>
                         <p className="text-sm text-text-secondary">{isEditing ? 'Atualizar detalhes do material' : 'Criar novo registro de material'}</p>
                     </div>

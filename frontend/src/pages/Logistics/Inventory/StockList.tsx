@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Package, Search, Plus, Filter, ArrowRightLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Package, Filter, ArrowRightLeft } from 'lucide-react';
 import { inventoryService } from '../../../services/inventoryService';
 import type { StockLevel } from '../../../types/inventory';
 import { formatDate } from '../../../utils';
 
 export function StockList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [stocks, setStocks] = useState<StockLevel[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         loadStocks();
@@ -27,6 +27,7 @@ export function StockList() {
     };
 
     const filteredStocks = stocks.filter(stock =>
+        searchTerm === '' ||
         stock.materialName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         stock.depositoName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (stock.batchNumber && stock.batchNumber.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -39,7 +40,7 @@ export function StockList() {
                 <div>
                     <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
                         <Package className="w-6 h-6 text-brand-primary" />
-                        Gestão de Estoques
+                        Visão Geral de Estoque (MMBE)
                     </h1>
                     <p className="text-text-secondary text-sm">Visualize o saldo de materiais por depósito e lote</p>
                 </div>
@@ -52,24 +53,12 @@ export function StockList() {
                 </button>
             </div>
 
-            {/* Filters */}
-            <div className="p-4 border-b border-border-secondary bg-white/50 backdrop-blur-sm">
-                <div className="flex gap-4">
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary w-4 h-4" />
-                        <input
-                            type="text"
-                            placeholder="Buscar por material, depósito ou lote..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white shadow-sm transition-all"
-                        />
-                    </div>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-border-default rounded-lg hover:bg-bg-secondary text-text-secondary transition-colors bg-white shadow-sm">
-                        <Filter className="w-4 h-4" />
-                        Filtros
-                    </button>
-                </div>
+            {/* Filters (Optional: Keep Filter button if needed, but remove search input) */}
+            <div className="p-4 border-b border-border-secondary bg-white/50 backdrop-blur-sm flex justify-end">
+                <button className="flex items-center gap-2 px-4 py-2 border border-border-default rounded-lg hover:bg-bg-secondary text-text-secondary transition-colors bg-white shadow-sm">
+                    <Filter className="w-4 h-4" />
+                    Filtros Avançados
+                </button>
             </div>
 
             {/* Table */}

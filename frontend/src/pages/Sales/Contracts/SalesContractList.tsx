@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { salesContractService } from '../../../services/salesContractService';
 import type { SalesContract } from '../../../types/sales-contracts';
-import { Plus, Search, FileText, Clock } from 'lucide-react';
+import { Plus, FileText, Clock } from 'lucide-react';
 
 export function SalesContractList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [contracts, setContracts] = useState<SalesContract[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         loadContracts();
@@ -26,6 +26,7 @@ export function SalesContractList() {
     };
 
     const filteredContracts = contracts.filter(c =>
+        searchTerm === '' ||
         c.contractNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.businessPartnerName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -48,17 +49,6 @@ export function SalesContractList() {
                 >
                     <Plus size={20} className="mr-2" /> Novo Contrato
                 </button>
-            </div>
-
-            <div className="mb-6 relative">
-                <input
-                    type="text"
-                    placeholder="Buscar por número ou cliente..."
-                    className="w-full pl-10 pr-4 py-2 border border-border-input rounded-lg focus:outline-none focus:border-brand-primary"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Search className="absolute left-3 top-2.5 text-text-secondary" size={20} />
             </div>
 
             <div className="flex-1 overflow-auto bg-white rounded-lg shadow border border-border-default">

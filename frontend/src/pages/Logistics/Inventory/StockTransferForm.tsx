@@ -149,7 +149,7 @@ export function StockTransferForm() {
                     <div>
                         <h1 className="text-xl font-bold flex items-center gap-2">
                             <ArrowRightLeft className="text-brand-primary" size={24} />
-                            Transferência de Estoque
+                            Transferência de Estoque (MB1B)
                         </h1>
                         <p className="text-sm text-text-secondary">Movimentação direta entre depósitos</p>
                     </div>

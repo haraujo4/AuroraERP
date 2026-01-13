@@ -46,7 +46,7 @@ const FinancialReports: React.FC = () => {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Controladoria & BI</h1>
+                    <h1 className="text-2xl font-bold text-slate-900">Relatórios Analíticos (KE30)</h1>
                     <p className="text-slate-500">Gestão financeira estratégica e análise de resultados</p>
                 </div>
 

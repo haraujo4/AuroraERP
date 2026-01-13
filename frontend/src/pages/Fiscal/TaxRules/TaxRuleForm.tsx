@@ -48,7 +48,7 @@ const TaxRuleForm: React.FC = () => {
                 >
                     <ArrowLeft size={20} className="text-gray-500" />
                 </button>
-                <h1 className="text-2xl font-bold text-gray-900">Nova Regra Fiscal</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Nova Regra Fiscal (FIS01)</h1>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-8">

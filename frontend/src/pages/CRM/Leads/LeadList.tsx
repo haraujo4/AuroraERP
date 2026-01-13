@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { LeadService } from '../../../services/leadService';
 import type { Lead } from '../../../types/crm-leads';
 import { Plus, RefreshCw } from 'lucide-react';
 
 export function LeadList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [leads, setLeads] = useState<Lead[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,12 +37,19 @@ export function LeadList() {
         }
     };
 
+    const filteredLeads = leads.filter(lead =>
+        searchTerm === '' ||
+        lead.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.contactName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-2">
-                    <h1 className="text-xl font-bold text-text-primary">Leads</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Leads (CRM01)</h1>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button onClick={loadLeads} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
@@ -80,7 +88,7 @@ export function LeadList() {
                                 <td colSpan={6} className="p-8 text-center text-text-secondary">Nenhum lead encontrado.</td>
                             </tr>
                         ) : (
-                            leads.map((lead) => (
+                            filteredLeads.map((lead) => (
                                 <tr key={lead.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-medium">{lead.title}</td>
                                     <td className="p-3">

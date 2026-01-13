@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Percent } from 'lucide-react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import fiscalService from '../../../services/fiscalService';
 import type { TaxRule } from '../../../types/fiscal';
 
 const TaxRuleList: React.FC = () => {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [rules, setRules] = useState<TaxRule[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -23,6 +24,14 @@ const TaxRuleList: React.FC = () => {
             setLoading(false);
         }
     };
+
+    const filteredRules = rules.filter(rule =>
+        searchTerm === '' ||
+        rule.sourceState.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rule.destState.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (rule.ncmCode && rule.ncmCode.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        rule.operationType.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="space-y-6">
@@ -55,7 +64,7 @@ const TaxRuleList: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {rules.map((rule) => (
+                        {filteredRules.map((rule) => (
                             <tr key={rule.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 font-medium">{rule.sourceState}</td>
                                 <td className="px-6 py-4 font-medium">{rule.destState}</td>
@@ -67,7 +76,7 @@ const TaxRuleList: React.FC = () => {
                                 <td className="px-6 py-4">{rule.pisRate}% / {rule.cofinsRate}%</td>
                             </tr>
                         ))}
-                        {rules.length === 0 && !loading && (
+                        {filteredRules.length === 0 && !loading && (
                             <tr>
                                 <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
                                     Nenhuma regra fiscal configurada.

@@ -75,7 +75,7 @@ const PurchaseRequisitionForm: React.FC = () => {
                     >
                         <ArrowLeft size={20} />
                     </button>
-                    <h1 className="text-xl font-bold text-text-primary">Nova Requisição</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Nova Requisição (ME51N)</h1>
                 </div>
                 <button
                     onClick={handleSubmit}

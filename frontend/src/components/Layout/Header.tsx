@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
-import { Search, Bell, Settings, User as UserIcon, LogOut, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, Settings, User as UserIcon, LogOut, ChevronDown, Star, Search, X } from 'lucide-react';
 import { authService } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../utils';
+import { MENU_ITEMS } from '../../utils/menuItems';
 
-export function Header() {
-    const [tcode, setTcode] = useState('');
+interface HeaderProps {
+    favorites: string[];
+    onToggleFavorite: (id: string) => void;
+    searchTerm: string;
+    onSearchChange: (term: string) => void;
+}
+
+export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange }: HeaderProps) {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const user = authService.getCurrentUser();
 
-    const handleTCodeSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(`Executing T-Code: ${tcode}`);
-        // T-Code execution logic will go here
-    };
+    // Find current transaction ID based on path
+    const allSubItems = MENU_ITEMS.flatMap(item => item.subItems || []);
+    // Find exact match or match ignoring localized params if needed
+    // For now strict path match is good as registry paths are strict
+    const currentTransaction = allSubItems.find(sub => sub.path === location.pathname);
+
+    const isFavorite = currentTransaction ? favorites.includes(currentTransaction.id) : false;
 
     const handleLogout = () => {
         authService.logout();
@@ -25,7 +35,7 @@ export function Header() {
     return (
         <header className="h-12 bg-bg-panel border-b border-border-default flex items-center justify-between px-4 shadow-sm z-10">
 
-            {/* Left: Branding & Context */}
+            {/* Left: Branding & Context & Favorite */}
             <div className="flex items-center gap-4">
                 <div className="flex flex-col">
                     <span className="font-bold text-base text-brand-primary leading-tight">AURORA ERP</span>
@@ -37,23 +47,51 @@ export function Header() {
                     <span className="text-text-muted">/</span>
                     <span>Matriz SP</span>
                 </div>
+
+                {/* Global Favorite Button for Current Transaction */}
+                {currentTransaction && (
+                    <>
+                        <div className="h-6 w-px bg-border-default mx-2" />
+                        <button
+                            onClick={() => onToggleFavorite(currentTransaction.id)}
+                            className={cn(
+                                "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all",
+                                isFavorite
+                                    ? "bg-yellow-50 text-yellow-600 border border-yellow-200"
+                                    : "bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100 hover:text-gray-700"
+                            )}
+                            title={isFavorite ? "Remover a tela atual dos favoritos" : "Adicionar a tela atual aos favoritos"}
+                        >
+                            <Star size={12} className={isFavorite ? "fill-yellow-500" : ""} />
+                            <span>{isFavorite ? "Favorito" : "Favoritar"}</span>
+                        </button>
+                    </>
+                )}
             </div>
 
-            {/* Center: T-Code Command Bar */}
-            <form onSubmit={handleTCodeSubmit} className="flex-1 max-w-md mx-8">
-                <div className="relative">
+            {/* Center: Global Search Bar */}
+            <div className="flex-1 flex justify-center px-8">
+                <div className="relative w-full max-w-md">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search size={14} className="text-text-muted" />
+                        <Search size={14} className="text-gray-400" />
                     </div>
                     <input
                         type="text"
-                        className="w-full pl-9 pr-4 py-1.5 text-sm border border-border-default rounded bg-bg-main focus:bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors uppercase placeholder:normal-case"
-                        placeholder="Digite a transação (ex: VA01)..."
-                        value={tcode}
-                        onChange={(e) => setTcode(e.target.value)}
+                        value={searchTerm}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Filtrar dados na tela..."
+                        className="w-full pl-9 pr-8 py-1.5 text-sm bg-gray-50 border border-gray-200 rounded-md focus:bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-all placeholder:text-gray-400"
                     />
+                    {searchTerm && (
+                        <button
+                            onClick={() => onSearchChange('')}
+                            className="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-400 hover:text-gray-600"
+                        >
+                            <X size={14} />
+                        </button>
+                    )}
                 </div>
-            </form>
+            </div>
 
             {/* Right: Actions & User */}
             <div className="flex items-center gap-3">

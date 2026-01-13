@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, CheckCircle, Eye } from 'lucide-react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Plus, CheckCircle } from 'lucide-react';
 import purchasingService from '../../../services/purchasingService';
 import type { PurchaseRequisition } from '../../../types/purchasing';
 import { format } from 'date-fns';
 
 const PurchaseRequisitionList: React.FC = () => {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [requisitions, setRequisitions] = useState<PurchaseRequisition[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -46,10 +47,16 @@ const PurchaseRequisitionList: React.FC = () => {
         }
     };
 
+    const filteredRequisitions = requisitions.filter(req =>
+        searchTerm === '' ||
+        req.requisitionNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        req.requester.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Requisições de Compra</h1>
+                <h1 className="text-xl font-bold text-text-primary">Requisições de Compra (ME52N)</h1>
                 <button
                     onClick={() => navigate('/purchasing/requisitions/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -75,7 +82,7 @@ const PurchaseRequisitionList: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {requisitions.map((req) => (
+                                {filteredRequisitions.map((req) => (
                                     <tr key={req.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm font-mono">{req.requisitionNumber}</td>
                                         <td className="px-4 py-3 text-sm">
@@ -100,7 +107,7 @@ const PurchaseRequisitionList: React.FC = () => {
                                         </td>
                                     </tr>
                                 ))}
-                                {requisitions.length === 0 && (
+                                {filteredRequisitions.length === 0 && (
                                     <tr>
                                         <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
                                             Nenhuma requisição encontrada

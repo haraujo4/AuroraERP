@@ -105,7 +105,7 @@ export function GoodsReceiptForm() {
                     <div>
                         <h1 className="text-xl font-bold text-text-primary flex items-center gap-2">
                             <PackagePlus className="text-green-600" size={24} />
-                            Entrada de Mercadoria (MIGO)
+                            Entrada de Mercadoria (MB01)
                         </h1>
                         <p className="text-sm text-text-secondary">Recebimento de materiais no estoque</p>
                     </div>

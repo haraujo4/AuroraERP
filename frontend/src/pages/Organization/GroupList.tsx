@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { OrganizationService } from '../../services/organizationService';
 import type { GrupoEmpresarial } from '../../types/organization';
 import { Plus, RefreshCw } from 'lucide-react';
 
 export function GroupList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>(); // Get search term from layout
     const [groups, setGroups] = useState<GrupoEmpresarial[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,12 +26,19 @@ export function GroupList() {
         }
     };
 
+    // Filter groups based on Global Search Term
+    const filteredGroups = groups.filter(group =>
+        searchTerm === '' ||
+        group.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.razaoSocialConsolidada.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-2">
-                    <h1 className="text-xl font-bold text-text-primary mr-4">Grupos Empresariais</h1>
+                    <h1 className="text-xl font-bold text-text-primary mr-4">Grupos Empresariais (ORG01)</h1>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button onClick={loadGroups} className="p-2 text-text-secondary hover:text-brand-primary hover:bg-bg-main rounded border border-transparent hover:border-border-default transition-all" title="Atualizar">
@@ -68,7 +76,7 @@ export function GroupList() {
                                 <td colSpan={5} className="p-8 text-center text-text-secondary">Nenhum grupo encontrado.</td>
                             </tr>
                         ) : (
-                            groups.map((group) => (
+                            filteredGroups.map((group) => (
                                 <tr key={group.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-mono">{group.codigo}</td>
                                     <td className="p-3 font-medium">{group.razaoSocialConsolidada}</td>

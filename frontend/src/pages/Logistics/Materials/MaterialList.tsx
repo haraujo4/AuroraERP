@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { materialService } from '../../../services/materialService';
 import type { Material } from '../../../types/materials';
-import { Plus, Search, Package, Edit, Trash } from 'lucide-react';
+import { Plus, Package, Edit, Trash } from 'lucide-react';
 
 export function MaterialList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [materials, setMaterials] = useState<Material[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         loadMaterials();
@@ -37,6 +37,7 @@ export function MaterialList() {
     };
 
     const filteredMaterials = materials.filter(m =>
+        searchTerm === '' ||
         m.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,7 +50,7 @@ export function MaterialList() {
                 <div>
                     <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
                         <Package className="w-6 h-6 text-brand-primary" />
-                        Cadastro de Materiais
+                        Gestão de Materiais (MM02)
                     </h1>
                     <p className="text-text-secondary text-sm">Gerencie produtos, serviços e ativos</p>
                 </div>
@@ -62,19 +63,7 @@ export function MaterialList() {
                 </button>
             </div>
 
-            {/* Toolbar */}
-            <div className="p-4 border-b border-border-secondary bg-bg-secondary">
-                <div className="relative max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary w-4 h-4" />
-                    <input
-                        type="text"
-                        placeholder="Buscar por código, descrição ou tipo..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                    />
-                </div>
-            </div>
+
 
             {/* Content */}
             <div className="flex-1 overflow-auto p-4">

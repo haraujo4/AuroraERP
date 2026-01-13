@@ -49,6 +49,7 @@ import PurchaseOrderForm from './pages/Purchasing/Orders/PurchaseOrderForm';
 import TaxRuleList from './pages/Fiscal/TaxRules/TaxRuleList';
 import TaxRuleForm from './pages/Fiscal/TaxRules/TaxRuleForm';
 import FinancialReports from './pages/Analytics/FinancialReports';
+import MRPRun from './pages/Planning/MRPRun';
 import Login from "./pages/Security/Login";
 import { authService } from "./services/authService";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -149,6 +150,9 @@ function App() {
           <Route path="purchasing/requisitions/new" element={<PurchaseRequisitionForm />} />
           <Route path="purchasing/orders" element={<PurchaseOrderList />} />
           <Route path="purchasing/orders/new" element={<PurchaseOrderForm />} />
+
+          {/* Planning */}
+          <Route path="planning/mrp" element={<MRPRun />} />
 
           <Route path="fiscal/tax-rules" element={<TaxRuleList />} />
           <Route path="fiscal/tax-rules/new" element={<TaxRuleForm />} />

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Play, CheckCircle, Archive } from 'lucide-react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Plus, Play, CheckCircle } from 'lucide-react';
 import { productionService } from '../../../services/productionService';
 import type { ProductionOrder } from '../../../types/production';
 
 export function ProductionOrderList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [orders, setOrders] = useState<ProductionOrder[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -55,10 +56,17 @@ export function ProductionOrderList() {
         }
     };
 
+    const filteredOrders = orders.filter(order =>
+        searchTerm === '' ||
+        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (order.workCenterName && order.workCenterName.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div className="h-full flex flex-col bg-bg-primary">
             <div className="flex items-center justify-between p-4 bg-white border-b border-border-secondary shadow-sm">
-                <h1 className="text-xl font-bold text-text-primary">Ordens de Produção</h1>
+                <h1 className="text-xl font-bold text-text-primary">Ordens de Produção (CO02)</h1>
                 <button
                     onClick={() => navigate('/production/orders/new')}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-secondary"
@@ -85,7 +93,7 @@ export function ProductionOrderList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.map((order) => (
+                                {filteredOrders.map((order) => (
                                     <tr key={order.id} className="border-b border-border-default hover:bg-bg-subtle">
                                         <td className="px-4 py-3 text-sm font-mono font-medium">{order.orderNumber}</td>
                                         <td className="px-4 py-3 text-sm">{order.productName}</td>

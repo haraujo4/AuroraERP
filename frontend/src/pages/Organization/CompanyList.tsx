@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { OrganizationService } from '../../services/organizationService';
 import { OrganizationService as GroupService } from '../../services/organizationService'; // Re-use for groups
 import type { Empresa, GrupoEmpresarial } from '../../types/organization';
@@ -7,6 +7,7 @@ import { Plus, RefreshCw, Filter } from 'lucide-react';
 
 export function CompanyList() {
     const navigate = useNavigate();
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [companies, setCompanies] = useState<Empresa[]>([]);
     const [groups, setGroups] = useState<GrupoEmpresarial[]>([]);
     const [selectedGroup, setSelectedGroup] = useState<string>('');
@@ -48,12 +49,20 @@ export function CompanyList() {
         }
     };
 
+    // Filter companies based on Global Search Term
+    const filteredCompanies = companies.filter(company =>
+        searchTerm === '' ||
+        company.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        company.razaoSocial.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        company.nomeFantasia.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="flex flex-col h-full bg-bg-main p-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 bg-white p-2 rounded border border-border-default shadow-sm">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-xl font-bold text-text-primary">Empresas</h1>
+                    <h1 className="text-xl font-bold text-text-primary">Empresas (ORG02)</h1>
 
                     {/* Filter by Group */}
                     <div className="flex items-center space-x-2 text-sm">
@@ -110,7 +119,7 @@ export function CompanyList() {
                                 </td>
                             </tr>
                         ) : (
-                            companies.map((company) => (
+                            filteredCompanies.map((company) => (
                                 <tr key={company.id} className="hover:bg-bg-main cursor-pointer transition-colors text-sm text-text-primary">
                                     <td className="p-3 font-mono">{company.codigo}</td>
                                     <td className="p-3 font-medium">{company.razaoSocial}</td>

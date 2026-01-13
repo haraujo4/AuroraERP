@@ -70,6 +70,15 @@ namespace Aurora.Infrastructure.Repositories.Purchasing
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<PurchaseOrder>> GetAllOrdersWithDetailsAsync()
+        {
+              return await _context.PurchaseOrders
+                .Include(o => o.Supplier)
+                .Include(o => o.Items)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+        }
+
          public async Task<int> GetOrderCountAsync()
         {
             return await _context.PurchaseOrders.CountAsync();

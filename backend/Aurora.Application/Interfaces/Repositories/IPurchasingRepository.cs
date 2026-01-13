@@ -17,6 +17,7 @@ namespace Aurora.Application.Interfaces.Repositories
         Task AddOrderAsync(PurchaseOrder order);
         Task<PurchaseOrder?> GetOrderByIdAsync(Guid id);
         Task<IEnumerable<PurchaseOrder>> GetAllOrdersAsync();
+        Task<IEnumerable<PurchaseOrder>> GetAllOrdersWithDetailsAsync();
         Task<int> GetOrderCountAsync();
 
         Task SaveChangesAsync();
