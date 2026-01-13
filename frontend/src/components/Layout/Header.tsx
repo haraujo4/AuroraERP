@@ -34,7 +34,7 @@ export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange
     };
 
     return (
-        <header className="h-12 bg-bg-panel border-b border-border-default flex items-center justify-between px-4 shadow-sm z-10">
+        <header className="h-12 bg-bg-panel border-b border-border-default flex items-center justify-between px-4 shadow-sm z-40">
 
             {/* Left: Branding & Context & Favorite */}
             <div className="flex items-center gap-4">
@@ -120,10 +120,10 @@ export function Header({ favorites, onToggleFavorite, searchTerm, onSearchChange
                     {isUserMenuOpen && (
                         <>
                             <div
-                                className="fixed inset-0 z-40"
+                                className="fixed inset-0 z-50"
                                 onClick={() => setIsUserMenuOpen(false)}
                             />
-                            <div className="absolute right-0 mt-2 w-56 bg-white border border-border-default rounded-xl shadow-xl z-50 py-1 overflow-hidden animate-in fade-in zoom-in duration-200">
+                            <div className="absolute right-0 mt-2 w-56 bg-white border border-border-default rounded-xl shadow-xl z-[60] py-1 overflow-hidden animate-in fade-in zoom-in duration-200">
                                 <div className="px-4 py-3 border-b border-border-default bg-bg-main/30">
                                     <p className="text-sm font-bold text-text-primary truncate">{user?.username}</p>
                                     <p className="text-xs text-text-muted truncate">{user?.roles?.[0]}</p>

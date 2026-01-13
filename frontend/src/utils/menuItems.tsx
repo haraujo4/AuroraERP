@@ -30,6 +30,8 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'groups', label: 'Grupos Empresariais (ORG01)', path: '/admin/groups' },
             { id: 'companies', label: 'Empresas (ORG02)', path: '/admin/companies' },
             { id: 'branches', label: 'Filiais (ORG03)', path: '/admin/branches' },
+            { id: 'cost-centers', label: 'Centros de Custo (KS01)', path: '/admin/cost-centers' },
+            { id: 'profit-centers', label: 'Centros de Lucro (KE51)', path: '/admin/profit-centers' },
         ]
     },
     {
@@ -62,6 +64,8 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'inventory-in', label: 'Entrada (MB01)', path: '/logistics/inventory/in' },
             { id: 'inventory-out', label: 'Saída de Estoque (MB1A)', path: '/logistics/inventory/out' },
             { id: 'inventory-transfer', label: 'Transferência (MB1B)', path: '/logistics/inventory/transfer' },
+            { id: 'warehouses', label: 'Depósitos (WR01)', path: '/logistics/warehouses' },
+            { id: 'storage-locations', label: 'Locais de Estoque (SL01)', path: '/logistics/storage-locations' },
         ]
     },
     {

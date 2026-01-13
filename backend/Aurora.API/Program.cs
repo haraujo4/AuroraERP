@@ -44,6 +44,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.IGrupoEmpresarialService, Aurora.Application.Services.Organization.GrupoEmpresarialService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.IEmpresaService, Aurora.Application.Services.Organization.EmpresaService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.IFilialService, Aurora.Application.Services.Organization.FilialService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.ICentroCustoService, Aurora.Application.Services.Organization.CentroCustoService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.ICentroLucroService, Aurora.Application.Services.Organization.CentroLucroService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.IDepositoService, Aurora.Application.Services.Organization.DepositoService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Organization.ILocalEstoqueService, Aurora.Application.Services.Organization.LocalEstoqueService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.BusinessPartners.IBusinessPartnerService, Aurora.Application.Services.BusinessPartners.BusinessPartnerService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.CRM.ILeadService, Aurora.Application.Services.CRM.LeadService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.CRM.IOpportunityService, Aurora.Application.Services.CRM.OpportunityService>();
@@ -182,7 +186,7 @@ using (var scope = app.Services.CreateScope())
             await context.Database.MigrateAsync();
         }
 
-        await Aurora.Infrastructure.Persistence.DataSeeder.SeedUsersAsync(services);
+        await Aurora.Infrastructure.Persistence.DataSeeder.SeedAllAsync(services);
     }
     catch (Exception ex)
     {

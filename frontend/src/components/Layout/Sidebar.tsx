@@ -55,7 +55,7 @@ export function Sidebar({ isOpen, favorites, onToggleFavorite }: SidebarProps) {
 
     return (
         <aside className={cn(
-            "bg-bg-sidebar border-r border-border-default flex flex-col transition-all duration-300",
+            "bg-bg-sidebar border-r border-border-default flex flex-col transition-all duration-300 z-30",
             isOpen ? "w-64" : "w-0 overflow-hidden"
         )}>
             {/* Transaction Search Bar */}

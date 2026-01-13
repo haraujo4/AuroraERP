@@ -9,6 +9,8 @@ export const TRANSACTION_REGISTRY: Transaction[] = [
     { code: 'ORG01', label: 'Grupos Empresariais', path: '/admin/groups' },
     { code: 'ORG02', label: 'Empresas', path: '/admin/companies' },
     { code: 'ORG03', label: 'Filiais', path: '/admin/branches' },
+    { code: 'KS01', label: 'Centros de Custo', path: '/admin/cost-centers' },
+    { code: 'KE51', label: 'Centros de Lucro', path: '/admin/profit-centers' },
 
     // CRM
     { code: 'BP01', label: 'Gestão de Business Partners', path: '/crm/bp' },
@@ -30,6 +32,8 @@ export const TRANSACTION_REGISTRY: Transaction[] = [
     { code: 'MB01', label: 'Entrada de Mercadorias', path: '/logistics/inventory/in' },
     { code: 'MB1A', label: 'Saída de Estoque', path: '/logistics/inventory/out' },
     { code: 'MB1B', label: 'Transferência de Estoque', path: '/logistics/inventory/transfer' },
+    { code: 'WR01', label: 'Depósitos (Warehouses)', path: '/logistics/warehouses' },
+    { code: 'SL01', label: 'Locais de Estoque', path: '/logistics/storage-locations' },
     { code: 'VL01N', label: 'Criar Entrega (Expedição)', path: '/logistics/deliveries' },
 
     // Finance

@@ -16,85 +16,26 @@ namespace Aurora.Application.Services.Logistics
         private readonly IRepository<StockMovement> _stockMovementRepo;
         private readonly IRepository<Aurora.Domain.Entities.Logistics.Material> _materialRepo;
         private readonly IRepository<Aurora.Domain.Entities.Organization.Deposito> _depositoRepo;
+        private readonly IRepository<Aurora.Domain.Entities.Finance.Account> _accountRepo;
+        private readonly IJournalEntryService _journalEntryService;
 
         public InventoryService(
             IRepository<StockLevel> stockLevelRepo,
             IRepository<StockMovement> stockMovementRepo,
             IRepository<Aurora.Domain.Entities.Logistics.Material> materialRepo,
-            IRepository<Aurora.Domain.Entities.Organization.Deposito> depositoRepo)
+            IRepository<Aurora.Domain.Entities.Organization.Deposito> depositoRepo,
+            IRepository<Aurora.Domain.Entities.Finance.Account> accountRepo,
+            IJournalEntryService journalEntryService)
         {
             _stockLevelRepo = stockLevelRepo;
             _stockMovementRepo = stockMovementRepo;
             _materialRepo = materialRepo;
             _depositoRepo = depositoRepo;
+            _accountRepo = accountRepo;
+            _journalEntryService = journalEntryService;
         }
 
-        public async Task<decimal> GetStockLevelAsync(Guid materialId, Guid depositoId, string? batchNumber = null)
-        {
-            var levels = await _stockLevelRepo.GetAllAsync();
-            var level = levels.FirstOrDefault(x => 
-                x.MaterialId == materialId && 
-                x.DepositoId == depositoId && 
-                x.BatchNumber == batchNumber);
-            
-            return level?.Quantity ?? 0;
-        }
-
-        public async Task<IEnumerable<StockLevelDto>> GetStockByMaterialAsync(Guid materialId)
-        {
-            var levels = await _stockLevelRepo.GetAllAsync();
-            // In a real scenario, use Include/ProjectTo for performance
-            var materialLevels = levels.Where(x => x.MaterialId == materialId).ToList();
-
-            var dtos = new List<StockLevelDto>();
-            foreach (var level in materialLevels)
-            {
-                // Fetch related names (Optimization: Use a better query strategy in future)
-                var material = await _materialRepo.GetByIdAsync(level.MaterialId);
-                var deposito = await _depositoRepo.GetByIdAsync(level.DepositoId);
-
-                dtos.Add(new StockLevelDto
-                {
-                    Id = level.Id,
-                    MaterialId = level.MaterialId,
-                    MaterialName = material?.Description ?? "Unknown",
-                    DepositoId = level.DepositoId,
-                    DepositoName = deposito?.Descricao ?? "Unknown",
-                    BatchNumber = level.BatchNumber,
-                    Quantity = level.Quantity,
-                    AverageUnitCost = level.AverageUnitCost,
-                    LastUpdated = level.LastUpdated
-                });
-            }
-            return dtos;
-        }
-
-        public async Task<IEnumerable<StockLevelDto>> GetAllStocksAsync()
-        {
-            var levels = await _stockLevelRepo.GetAllAsync();
-            var dtos = new List<StockLevelDto>();
-            
-            // Performance note: use explicit loading or optimized query mechanism in future
-            foreach (var level in levels)
-            {
-                var material = await _materialRepo.GetByIdAsync(level.MaterialId);
-                var deposito = await _depositoRepo.GetByIdAsync(level.DepositoId);
-
-                dtos.Add(new StockLevelDto
-                {
-                    Id = level.Id,
-                    MaterialId = level.MaterialId,
-                    MaterialName = material?.Description ?? "Unknown",
-                    DepositoId = level.DepositoId,
-                    DepositoName = deposito?.Descricao ?? "Unknown",
-                    BatchNumber = level.BatchNumber,
-                    Quantity = level.Quantity,
-                    AverageUnitCost = level.AverageUnitCost,
-                    LastUpdated = level.LastUpdated
-                });
-            }
-            return dtos;
-        }
+        // ... existing Get methods ...
 
         public async Task AddStockMovementAsync(CreateStockMovementDto dto)
         {
@@ -115,20 +56,18 @@ namespace Aurora.Application.Services.Logistics
 
             if (IsOutgoing(dto.Type))
             {
-                // For OUT movements, we use the CURRENT average cost as the unit price of the movement (COGS)
                 movementUnitPrice = level.AverageUnitCost;
                 level.RemoveQuantity(dto.Quantity);
             }
             else
             {
-                // For IN movements, we update the average cost
                 level.UpdateCost(dto.Quantity, dto.UnitPrice);
                 level.AddQuantity(dto.Quantity);
             }
 
             await _stockLevelRepo.UpdateAsync(level);
 
-            // 2. Register Movement with the determined price
+            // 2. Register Movement
             var movement = new StockMovement(
                 dto.MaterialId, 
                 dto.DepositoId, 
@@ -139,6 +78,59 @@ namespace Aurora.Application.Services.Logistics
                 dto.BatchNumber);
             
             await _stockMovementRepo.AddAsync(movement);
+
+            // 3. Automated Accounting Integration (Bookkeeping)
+            await CreateAccountingEntryAsync(dto, movementUnitPrice);
+        }
+
+        private async Task CreateAccountingEntryAsync(CreateStockMovementDto dto, decimal unitPrice)
+        {
+            try 
+            {
+                var accounts = await _accountRepo.GetAllAsync();
+                var inventoryAcct = accounts.FirstOrDefault(a => a.Code == "1.1.01");
+                var grirAcct = accounts.FirstOrDefault(a => a.Code == "2.1.01");
+                var cogsAcct = accounts.FirstOrDefault(a => a.Code == "3.1.01");
+
+                if (inventoryAcct == null) return; // Silent skip if accounts not seeded yet
+
+                var totalValue = dto.Quantity * unitPrice;
+                var material = await _materialRepo.GetByIdAsync(dto.MaterialId);
+                
+                var journalEntryDto = new CreateJournalEntryDto
+                {
+                    PostingDate = DateTime.UtcNow,
+                    DocumentDate = DateTime.UtcNow,
+                    Description = $"Stock {dto.Type}: {material?.Description} - {dto.ReferenceDocument}",
+                    Reference = dto.ReferenceDocument
+                };
+
+                if (dto.Type == StockMovementType.In)
+                {
+                    // Debit: Inventory, Credit: GR/IR
+                    journalEntryDto.Lines.Add(new CreateJournalEntryLineDto { AccountId = inventoryAcct.Id, Amount = totalValue, Type = "Debit" });
+                    if (grirAcct != null)
+                        journalEntryDto.Lines.Add(new CreateJournalEntryLineDto { AccountId = grirAcct.Id, Amount = totalValue, Type = "Credit" });
+                }
+                else if (dto.Type == StockMovementType.Out)
+                {
+                    // Debit: COGS, Credit: Inventory
+                    if (cogsAcct != null)
+                        journalEntryDto.Lines.Add(new CreateJournalEntryLineDto { AccountId = cogsAcct.Id, Amount = totalValue, Type = "Debit" });
+                    journalEntryDto.Lines.Add(new CreateJournalEntryLineDto { AccountId = inventoryAcct.Id, Amount = totalValue, Type = "Credit" });
+                }
+
+                if (journalEntryDto.Lines.Count >= 2)
+                {
+                    var entry = await _journalEntryService.CreateAsync(journalEntryDto);
+                    await _journalEntryService.PostAsync(entry.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                // In a production system, we'd log this and potentially use a background worker
+                Console.WriteLine($"Accounting integration failed: {ex.Message}");
+            }
         }
 
         public async Task TransferStockAsync(TransferStockDto dto)

@@ -34,7 +34,7 @@ export function NotificationDropdown() {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-border-secondary z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-border-secondary z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                         <h3 className="font-semibold text-gray-900">Notificações</h3>
                         <div className="flex gap-2">

@@ -89,3 +89,56 @@ export interface CreateDepositoDto {
     controlaLote: boolean;
     controlaSerie: boolean;
 }
+
+export interface CentroCusto {
+    id: string;
+    empresaId: string;
+    codigo: string;
+    descricao: string;
+    responsavel: string;
+    hierarquiaPaiId?: string;
+    validadeInicio: string;
+    validadeFim?: string;
+}
+
+export interface CreateCentroCustoDto {
+    empresaId: string;
+    codigo: string;
+    descricao: string;
+    responsavel: string;
+    hierarquiaPaiId?: string;
+}
+
+export interface CentroLucro {
+    id: string;
+    empresaId: string;
+    unidadeNegocioId?: string;
+    codigo: string;
+    descricao: string;
+    responsavel: string;
+}
+
+export interface CreateCentroLucroDto {
+    empresaId: string;
+    unidadeNegocioId?: string;
+    codigo: string;
+    descricao: string;
+    responsavel: string;
+}
+
+export interface LocalEstoque {
+    id: string;
+    depositoId: string;
+    codigo: string;
+    tipo: string;
+    permitePicking: boolean;
+    permiteInventario: boolean;
+}
+
+export interface CreateLocalEstoqueDto {
+    depositoId: string;
+    codigo: string;
+    tipo: string;
+    permitePicking: boolean;
+    permiteInventario: boolean;
+}

@@ -11,6 +11,10 @@ import { CompanyList } from "./pages/Organization/CompanyList";
 import { CompanyForm } from "./pages/Organization/CompanyForm";
 import { BranchList } from "./pages/Organization/BranchList";
 import { BranchForm } from "./pages/Organization/BranchForm";
+import { CostCenterList } from "./pages/Organization/CostCenterList";
+import { CostCenterForm } from "./pages/Organization/CostCenterForm";
+import { ProfitCenterList } from "./pages/Organization/ProfitCenterList";
+import { ProfitCenterForm } from "./pages/Organization/ProfitCenterForm";
 
 // CRM
 import { BusinessPartnerList } from "./pages/CRM/BusinessPartnerList";
@@ -37,6 +41,10 @@ import { GoodsIssueForm } from './pages/Logistics/Inventory/GoodsIssueForm';
 import { StockTransferForm } from './pages/Logistics/Inventory/StockTransferForm';
 import { StockAdjustmentForm } from './pages/Logistics/Inventory/StockAdjustmentForm';
 import { DeliveryList } from './pages/Logistics/Expedition/DeliveryList';
+import { WarehouseList } from './pages/Logistics/Warehouses/WarehouseList';
+import { WarehouseForm } from './pages/Logistics/Warehouses/WarehouseForm';
+import { StorageLocationList } from './pages/Logistics/Warehouses/StorageLocationList';
+import { StorageLocationForm } from './pages/Logistics/Warehouses/StorageLocationForm';
 
 // Finance
 import { AccountList } from './pages/Finance/Accounts/AccountList';
@@ -123,6 +131,11 @@ function App() {
             <Route path="base/branches" element={<BranchList />} />
             <Route path="base/branches/new" element={<BranchForm />} />
 
+            <Route path="admin/cost-centers" element={<CostCenterList />} />
+            <Route path="admin/cost-centers/new" element={<CostCenterForm />} />
+            <Route path="admin/profit-centers" element={<ProfitCenterList />} />
+            <Route path="admin/profit-centers/new" element={<ProfitCenterForm />} />
+
             {/* CRM */}
             <Route path="crm/bp" element={<BusinessPartnerList />} />
             <Route path="crm/bp/new" element={<BusinessPartnerForm />} />
@@ -144,6 +157,10 @@ function App() {
             <Route path="logistics/inventory/transfer" element={<StockTransferForm />} />
             <Route path="logistics/inventory/adjustment" element={<StockAdjustmentForm />} />
             <Route path="logistics/deliveries" element={<DeliveryList />} />
+            <Route path="logistics/warehouses" element={<WarehouseList />} />
+            <Route path="logistics/warehouses/new" element={<WarehouseForm />} />
+            <Route path="logistics/storage-locations" element={<StorageLocationList />} />
+            <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
 
             {/* Sales */}
             <Route path="sales/quotes" element={<SalesQuoteList />} />
