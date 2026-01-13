@@ -109,3 +109,15 @@
 /home/helisson/Projetos/AurroraERP/backend/Aurora.API/obj/Debug/net8.0/Aurora.API.pdb
 /home/helisson/Projetos/AurroraERP/backend/Aurora.API/obj/Debug/net8.0/Aurora.API.genruntimeconfig.cache
 /home/helisson/Projetos/AurroraERP/backend/Aurora.API/obj/Debug/net8.0/ref/Aurora.API.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/obj/Debug/net8.0/Aurora.API.sourcelink.json
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.API/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll

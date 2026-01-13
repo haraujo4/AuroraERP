@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Layout } from "./components/Layout/Layout";
 import { GroupList } from "./pages/Organization/GroupList";
 import { GroupForm } from "./pages/Organization/GroupForm";
@@ -22,41 +22,54 @@ import { MaterialList } from './pages/Logistics/Materials/MaterialList';
 import { MaterialForm } from './pages/Logistics/Materials/MaterialForm';
 import { StockList } from './pages/Logistics/Inventory/StockList';
 import { StockAdjustmentForm } from './pages/Logistics/Inventory/StockAdjustmentForm';
+import { GoodsReceiptForm } from './pages/Logistics/Inventory/GoodsReceiptForm';
+import { GoodsIssueForm } from './pages/Logistics/Inventory/GoodsIssueForm';
+import { StockTransferForm } from './pages/Logistics/Inventory/StockTransferForm';
 import { DeliveryList } from './pages/Logistics/Expedition/DeliveryList';
+import { AccountList } from './pages/Finance/Accounts/AccountList';
+import { AccountForm } from './pages/Finance/Accounts/AccountForm';
+import { JournalEntryList } from './pages/Finance/JournalEntries/JournalEntryList';
+import { JournalEntryForm } from './pages/Finance/JournalEntries/JournalEntryForm';
+import { InvoiceList } from './pages/Finance/Invoices/InvoiceList';
+import { InvoiceForm } from './pages/Finance/Invoices/InvoiceForm';
+import MiroForm from './pages/Finance/Invoices/MiroForm';
+import BillingForm from './pages/Finance/Invoices/BillingForm';
+import { PaymentList } from './pages/Finance/Payments/PaymentList';
+import PaymentForm from './pages/Finance/Payments/PaymentForm';
+import { WorkCenterList } from './pages/Production/WorkCenters/WorkCenterList';
+import { WorkCenterForm } from './pages/Production/WorkCenters/WorkCenterForm';
+import { BillOfMaterialList } from './pages/Production/BOMs/BillOfMaterialList';
+import { BillOfMaterialForm } from './pages/Production/BOMs/BillOfMaterialForm';
+import { ProductionOrderList } from './pages/Production/Orders/ProductionOrderList';
+import { ProductionOrderForm } from './pages/Production/Orders/ProductionOrderForm';
+import PurchaseRequisitionList from './pages/Purchasing/Requisitions/PurchaseRequisitionList';
+import PurchaseRequisitionForm from './pages/Purchasing/Requisitions/PurchaseRequisitionForm';
+import PurchaseOrderList from './pages/Purchasing/Orders/PurchaseOrderList';
+import PurchaseOrderForm from './pages/Purchasing/Orders/PurchaseOrderForm';
+import TaxRuleList from './pages/Fiscal/TaxRules/TaxRuleList';
+import TaxRuleForm from './pages/Fiscal/TaxRules/TaxRuleForm';
+import Login from "./pages/Security/Login";
+import { authService } from "./services/authService";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
-function Dashboard() {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-text-primary mb-4">Bem-vindo ao Aurora ERP</h1>
-      <div className="bg-white p-6 rounded-lg border border-border-default shadow-sm max-w-2xl">
-        <p className="text-text-secondary">
-          Selecione um módulo no menu ou digite um código de transação (T-Code) na barra superior para começar.
-        </p>
-        <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="p-4 bg-bg-main rounded border border-border-default text-center">
-            <span className="block font-bold text-brand-primary text-xl">12</span>
-            <span className="text-xs text-text-secondary uppercase">Tarefas</span>
-          </div>
-          <div className="p-4 bg-bg-main rounded border border-border-default text-center">
-            <span className="block font-bold text-status-success text-xl">OK</span>
-            <span className="text-xs text-text-secondary uppercase">Status do Sistema</span>
-          </div>
-          <div className="p-4 bg-bg-main rounded border border-border-default text-center">
-            <span className="block font-bold text-text-primary text-xl">0</span>
-            <span className="text-xs text-text-secondary uppercase">Alertas</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = authService.isAuthenticated();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 }
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/" element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }>
           <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="admin/groups" element={<GroupList />} />
           <Route path="admin/groups/new" element={<GroupForm />} />
           <Route path="admin/groups/:id" element={<GroupForm />} />
@@ -99,7 +112,43 @@ function App() {
 
           <Route path="logistics/inventory" element={<StockList />} />
           <Route path="logistics/inventory/movement" element={<StockAdjustmentForm />} />
+          <Route path="logistics/inventory/in" element={<GoodsReceiptForm />} />
+          <Route path="logistics/inventory/out" element={<GoodsIssueForm />} />
+          <Route path="logistics/inventory/transfer" element={<StockTransferForm />} />
           <Route path="logistics/deliveries" element={<DeliveryList />} />
+
+          <Route path="finance/accounts" element={<AccountList />} />
+          <Route path="finance/accounts/new" element={<AccountForm />} />
+          <Route path="finance/accounts/:id" element={<AccountForm />} />
+
+          <Route path="finance/journal-entries" element={<JournalEntryList />} />
+          <Route path="finance/journal-entries/new" element={<JournalEntryForm />} />
+
+          <Route path="finance/invoices" element={<InvoiceList />} />
+          <Route path="finance/invoices/new" element={<InvoiceForm />} />
+          <Route path="finance/invoices/miro" element={<MiroForm />} />
+          <Route path="finance/invoices/billing" element={<BillingForm />} />
+
+          <Route path="finance/payments" element={<PaymentList />} />
+          <Route path="finance/payments/new" element={<PaymentForm />} />
+
+
+          {/* Production */}
+          <Route path="production/work-centers" element={<WorkCenterList />} />
+          <Route path="production/work-centers/new" element={<WorkCenterForm />} />
+          <Route path="production/boms" element={<BillOfMaterialList />} />
+          <Route path="production/boms/new" element={<BillOfMaterialForm />} />
+          <Route path="production/orders" element={<ProductionOrderList />} />
+          <Route path="production/orders/new" element={<ProductionOrderForm />} />
+
+          {/* Purchasing */}
+          <Route path="purchasing/requisitions" element={<PurchaseRequisitionList />} />
+          <Route path="purchasing/requisitions/new" element={<PurchaseRequisitionForm />} />
+          <Route path="purchasing/orders" element={<PurchaseOrderList />} />
+          <Route path="purchasing/orders/new" element={<PurchaseOrderForm />} />
+
+          <Route path="fiscal/tax-rules" element={<TaxRuleList />} />
+          <Route path="fiscal/tax-rules/new" element={<TaxRuleForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

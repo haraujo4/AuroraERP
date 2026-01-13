@@ -15,13 +15,20 @@ namespace Aurora.Application.Services.Sales
         private readonly IBusinessPartnerRepository _bpRepository;
         private readonly IOpportunityRepository _oppRepository;
         private readonly IRepository<Aurora.Domain.Entities.Logistics.Material> _materialRepository; // Direct usage for simplicity
+        private readonly IPricingService _pricingService;
 
-        public SalesQuoteService(ISalesQuoteRepository repository, IBusinessPartnerRepository bpRepository, IOpportunityRepository oppRepository, IRepository<Aurora.Domain.Entities.Logistics.Material> materialRepository)
+        public SalesQuoteService(
+            ISalesQuoteRepository repository, 
+            IBusinessPartnerRepository bpRepository, 
+            IOpportunityRepository oppRepository, 
+            IRepository<Aurora.Domain.Entities.Logistics.Material> materialRepository,
+            IPricingService pricingService)
         {
             _repository = repository;
             _bpRepository = bpRepository;
             _oppRepository = oppRepository;
             _materialRepository = materialRepository;
+            _pricingService = pricingService;
         }
 
         public async Task<IEnumerable<SalesQuoteDto>> GetAllAsync()
@@ -45,7 +52,17 @@ namespace Aurora.Application.Services.Sales
 
             foreach (var itemDto in dto.Items)
             {
-                quote.AddItem(itemDto.MaterialId, itemDto.Quantity, itemDto.UnitPrice, itemDto.DiscountPercentage);
+                var unitPrice = itemDto.UnitPrice;
+                var discount = itemDto.DiscountPercentage;
+
+                if (unitPrice == 0)
+                {
+                    var pricing = await _pricingService.CalculatePricingAsync(itemDto.MaterialId, dto.BusinessPartnerId, itemDto.Quantity);
+                    unitPrice = pricing.BasePrice;
+                    discount = pricing.DiscountPercentage;
+                }
+
+                quote.AddItem(itemDto.MaterialId, itemDto.Quantity, unitPrice, discount);
             }
 
             await _repository.AddAsync(quote);

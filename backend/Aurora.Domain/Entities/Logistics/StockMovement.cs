@@ -15,18 +15,20 @@ namespace Aurora.Domain.Entities.Logistics
 
         public StockMovementType Type { get; private set; }
         public decimal Quantity { get; private set; }
+        public decimal UnitPrice { get; private set; }
         public string? BatchNumber { get; private set; }
         public string ReferenceDocument { get; private set; } // e.g. "INV-001"
         public DateTime MovementDate { get; private set; }
 
         private StockMovement() { }
 
-        public StockMovement(Guid materialId, Guid depositoId, StockMovementType type, decimal quantity, string referenceDocument, string? batchNumber = null)
+        public StockMovement(Guid materialId, Guid depositoId, StockMovementType type, decimal quantity, decimal unitPrice, string referenceDocument, string? batchNumber = null)
         {
             MaterialId = materialId;
             DepositoId = depositoId;
             Type = type;
             Quantity = quantity;
+            UnitPrice = unitPrice;
             ReferenceDocument = referenceDocument;
             BatchNumber = batchNumber;
             MovementDate = DateTime.UtcNow;

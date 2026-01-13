@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { salesOrderService } from '../../../services/salesOrderService';
 import { BusinessPartnerService } from '../../../services/businessPartnerService';
 import { materialService } from '../../../services/materialService';
-import { ArrowLeft, Save, Printer, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Save, Printer, CheckCircle, Truck } from 'lucide-react';
 import type { BusinessPartner } from '../../../types/crm';
 import type { Material } from '../../../types/materials';
 import type { CreateSalesOrder, CreateSalesOrderItem, SalesOrder } from '../../../types/sales-orders';
@@ -129,7 +129,6 @@ export function SalesOrderForm() {
                                     if (confirm('Confirmar este pedido? Isso permitirá a expedição.')) {
                                         try {
                                             await salesOrderService.updateStatus(order.id, 'Confirmed');
-                                            // Reload
                                             const updated = await salesOrderService.getById(order.id);
                                             setOrder(updated);
                                         } catch (e) {
@@ -138,11 +137,33 @@ export function SalesOrderForm() {
                                         }
                                     }
                                 }}
-                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium">
+                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium"
+                            >
                                 <CheckCircle size={16} className="mr-2" /> Confirmar
                             </button>
                         )}
-                        <button className="flex items-center px-3 py-2 bg-text-secondary text-white rounded hover:bg-text-primary transition-colors text-sm font-medium">
+                        {order.status === 'Confirmed' && (
+                            <button
+                                onClick={async () => {
+                                    if (confirm('Gerar entrega para este pedido?')) {
+                                        try {
+                                            const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
+                                            await service.createFromOrder(order.id);
+                                            alert('Entrega criada com sucesso!');
+                                            navigate('/logistics/deliveries');
+                                        } catch (err: any) {
+                                            alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
+                                        }
+                                    }
+                                }}
+                                className="flex items-center px-3 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium"
+                            >
+                                <Truck size={16} className="mr-2" /> Gerar Entrega
+                            </button>
+                        )}
+                        <button
+                            className="flex items-center px-3 py-2 bg-text-secondary text-white rounded hover:bg-text-primary transition-colors text-sm font-medium"
+                        >
                             <Printer size={16} className="mr-2" /> Imprimir
                         </button>
                     </div>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Aurora.Application.DTOs.Logistics;
 using Aurora.Application.Interfaces.Logistics;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Logistics;
@@ -61,6 +62,7 @@ namespace Aurora.Application.Services.Logistics
                     DepositoName = deposito?.Descricao ?? "Unknown",
                     BatchNumber = level.BatchNumber,
                     Quantity = level.Quantity,
+                    AverageUnitCost = level.AverageUnitCost,
                     LastUpdated = level.LastUpdated
                 });
             }
@@ -87,6 +89,7 @@ namespace Aurora.Application.Services.Logistics
                     DepositoName = deposito?.Descricao ?? "Unknown",
                     BatchNumber = level.BatchNumber,
                     Quantity = level.Quantity,
+                    AverageUnitCost = level.AverageUnitCost,
                     LastUpdated = level.LastUpdated
                 });
             }
@@ -95,18 +98,7 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task AddStockMovementAsync(CreateStockMovementDto dto)
         {
-            // 1. Register Movement
-            var movement = new StockMovement(
-                dto.MaterialId, 
-                dto.DepositoId, 
-                dto.Type, 
-                dto.Quantity, 
-                dto.ReferenceDocument, 
-                dto.BatchNumber);
-            
-            await _stockMovementRepo.AddAsync(movement);
-
-            // 2. Update Stock Level
+            // 1. Update Stock Level & Recalculate Cost
             var levels = await _stockLevelRepo.GetAllAsync();
             var level = levels.FirstOrDefault(x => 
                 x.MaterialId == dto.MaterialId && 
@@ -115,33 +107,66 @@ namespace Aurora.Application.Services.Logistics
 
             if (level == null)
             {
-                // Logic check: Cannot remove from non-existent stock, unless allowing negative?
-                // Let's prevent negative creation for now
-                if (IsOutgoing(dto.Type) && dto.Quantity > 0)
-                {
-                    // If outgoing, we might throw exception or allow negative. 
-                    // Domain entity throws if insufficient, so we need to create it with 0 if possible or fail.
-                    // Let's assume we create with 0 then try to remove? 
-                    level = new StockLevel(dto.MaterialId, dto.DepositoId, 0, dto.BatchNumber);
-                    await _stockLevelRepo.AddAsync(level);
-                }
-                else
-                {
-                    level = new StockLevel(dto.MaterialId, dto.DepositoId, 0, dto.BatchNumber);
-                    await _stockLevelRepo.AddAsync(level);
-                }
+                level = new StockLevel(dto.MaterialId, dto.DepositoId, 0, dto.UnitPrice, dto.BatchNumber);
+                await _stockLevelRepo.AddAsync(level);
             }
+
+            decimal movementUnitPrice = dto.UnitPrice;
 
             if (IsOutgoing(dto.Type))
             {
+                // For OUT movements, we use the CURRENT average cost as the unit price of the movement (COGS)
+                movementUnitPrice = level.AverageUnitCost;
                 level.RemoveQuantity(dto.Quantity);
             }
             else
             {
+                // For IN movements, we update the average cost
+                level.UpdateCost(dto.Quantity, dto.UnitPrice);
                 level.AddQuantity(dto.Quantity);
             }
 
             await _stockLevelRepo.UpdateAsync(level);
+
+            // 2. Register Movement with the determined price
+            var movement = new StockMovement(
+                dto.MaterialId, 
+                dto.DepositoId, 
+                dto.Type, 
+                dto.Quantity, 
+                movementUnitPrice,
+                dto.ReferenceDocument, 
+                dto.BatchNumber);
+            
+            await _stockMovementRepo.AddAsync(movement);
+        }
+
+        public async Task TransferStockAsync(TransferStockDto dto)
+        {
+            // Note: For true atomicity, use a database transaction.
+            // Simplified for MVP.
+            
+            // 1. Out from Source
+            await AddStockMovementAsync(new CreateStockMovementDto
+            {
+                MaterialId = dto.MaterialId,
+                DepositoId = dto.SourceDepositoId,
+                Type = StockMovementType.Out,
+                Quantity = dto.Quantity,
+                BatchNumber = dto.BatchNumber,
+                ReferenceDocument = dto.ReferenceDocument
+            });
+
+            // 2. In to Destination
+            await AddStockMovementAsync(new CreateStockMovementDto
+            {
+                MaterialId = dto.MaterialId,
+                DepositoId = dto.DestinationDepositoId,
+                Type = StockMovementType.In,
+                Quantity = dto.Quantity,
+                BatchNumber = dto.BatchNumber,
+                ReferenceDocument = dto.ReferenceDocument
+            });
         }
 
         private bool IsOutgoing(StockMovementType type)

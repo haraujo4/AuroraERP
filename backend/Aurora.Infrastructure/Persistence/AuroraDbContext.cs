@@ -2,6 +2,9 @@ using Aurora.Domain.Entities.Organization;
 using Aurora.Domain.Entities.CRM;
 using Aurora.Domain.Entities.Logistics;
 using Aurora.Domain.Entities.Sales;
+using Aurora.Domain.Entities.Finance;
+using Aurora.Domain.Entities.Production;
+using Aurora.Domain.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aurora.Infrastructure.Persistence
@@ -37,7 +40,44 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesContract> SalesContracts { get; set; }
         public DbSet<SalesContractItem> SalesContractItems { get; set; }
+        public DbSet<PriceList> PriceLists { get; set; }
+        public DbSet<PriceListItem> PriceListItems { get; set; }
+        public DbSet<DiscountRule> DiscountRules { get; set; }
 
+        // Finance
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<JournalEntry> JournalEntries { get; set; }
+        public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        
+        // Production
+        public DbSet<WorkCenter> WorkCenters { get; set; }
+        public DbSet<BillOfMaterial> BillOfMaterials { get; set; }
+        public DbSet<BillOfMaterialItem> BillOfMaterialItems { get; set; }
+        public DbSet<ProductionOrder> ProductionOrders { get; set; }
+
+        // Purchasing
+        public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseRequisition> PurchaseRequisitions { get; set; }
+        public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseRequisitionItem> PurchaseRequisitionItems { get; set; }
+        public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<Aurora.Domain.Entities.Purchasing.PurchaseOrderItem> PurchaseOrderItems { get; set; }
+
+        // Fiscal
+        public DbSet<Aurora.Domain.Entities.Fiscal.TaxRule> TaxRules { get; set; }
+        public DbSet<Aurora.Domain.Entities.Fiscal.FiscalDocument> FiscalDocuments { get; set; }
+
+        // Security
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Interceptor registration is usually done in DI, but keeping this for awareness
+            base.OnConfiguring(optionsBuilder);
+        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

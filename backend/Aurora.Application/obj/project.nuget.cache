@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "otJEw93/r88DBNomSzCx9HJRd9232cRZTA2m0utMrcJ67Lw5TMssw92Awr5W+JtJeIOPadqfvFjiW40rG+Kjaw==",
+  "dgSpecHash": "jgb3gLlCfNdmjzH1HdDRwgkxzlpaln9gw3NzpVjcOeRkwECtDQTm9d2L0afpwiW2Ddd2Yl1vy0NqFOGeXH+/9A==",
   "success": true,
   "projectFilePath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/helisson/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.extensions.configuration.abstractions/10.0.1/microsoft.extensions.configuration.abstractions.10.0.1.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.extensions.primitives/10.0.1/microsoft.extensions.primitives.10.0.1.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.identitymodel.abstractions/8.15.0/microsoft.identitymodel.abstractions.8.15.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.15.0/microsoft.identitymodel.jsonwebtokens.8.15.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.identitymodel.logging/8.15.0/microsoft.identitymodel.logging.8.15.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/microsoft.identitymodel.tokens/8.15.0/microsoft.identitymodel.tokens.8.15.0.nupkg.sha512",
+    "/home/helisson/.nuget/packages/system.identitymodel.tokens.jwt/8.15.0/system.identitymodel.tokens.jwt.8.15.0.nupkg.sha512"
+  ],
   "logs": []
 }

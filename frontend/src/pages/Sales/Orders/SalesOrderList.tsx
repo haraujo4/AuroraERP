@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { SalesOrder } from '../../../types/sales-orders';
 import { salesOrderService } from '../../../services/salesOrderService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Eye, Truck } from 'lucide-react';
 
 export function SalesOrderList() {
+    const navigate = useNavigate();
     const [orders, setOrders] = useState<SalesOrder[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -85,8 +86,14 @@ export function SalesOrderList() {
                                             onClick={async (e) => {
                                                 e.preventDefault();
                                                 if (confirm('Gerar entrega para este pedido?')) {
-                                                    await import('../../../services/deliveryService').then(m => m.deliveryService.createFromOrder(order.id));
-                                                    alert('Entrega criada com sucesso!');
+                                                    try {
+                                                        const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
+                                                        await service.createFromOrder(order.id);
+                                                        alert('Entrega criada com sucesso!');
+                                                        navigate('/logistics/deliveries');
+                                                    } catch (err: any) {
+                                                        alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
+                                                    }
                                                 }
                                             }}
                                             className="text-green-600 hover:text-green-800"

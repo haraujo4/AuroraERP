@@ -6,7 +6,7 @@ import { branchService } from '../../../services/branchService';
 import { inventoryService } from '../../../services/inventoryService';
 import type { Material } from '../../../types/materials';
 import type { Branch, Deposito } from '../../../types/organization';
-import { StockMovementType, type CreateStockMovement } from '../../../types/inventory';
+import { StockMovementTypes, type StockMovementType, type CreateStockMovement } from '../../../types/inventory';
 
 export function StockAdjustmentForm() {
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ export function StockAdjustmentForm() {
         materialId: '',
         branchId: '',
         depositoId: '',
-        type: StockMovementType.In,
+        type: StockMovementTypes.In,
         quantity: 0,
         batchNumber: '',
         referenceDocument: ''
@@ -196,11 +196,11 @@ export function StockAdjustmentForm() {
                                     className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary"
                                     required
                                 >
-                                    <option value={StockMovementType.In}>Entrada (In)</option>
-                                    <option value={StockMovementType.Out}>Saída (Out)</option>
-                                    <option value={StockMovementType.Transfer}>Transferência</option>
-                                    <option value={StockMovementType.Adjustment}>Ajuste</option>
-                                    <option value={StockMovementType.InitialBalance}>Saldo Inicial</option>
+                                    <option value={StockMovementTypes.In}>Entrada (In)</option>
+                                    <option value={StockMovementTypes.Out}>Saída (Out)</option>
+                                    <option value={StockMovementTypes.Transfer}>Transferência</option>
+                                    <option value={StockMovementTypes.Adjustment}>Ajuste</option>
+                                    <option value={StockMovementTypes.InitialBalance}>Saldo Inicial</option>
                                 </select>
                             </div>
 

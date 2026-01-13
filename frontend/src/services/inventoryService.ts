@@ -1,5 +1,5 @@
 import api from './api';
-import type { StockLevel, CreateStockMovement } from '../types/inventory';
+import type { StockLevel, CreateStockMovement, TransferStock } from '../types/inventory';
 
 export const inventoryService = {
     getAll: async (): Promise<StockLevel[]> => {
@@ -14,5 +14,9 @@ export const inventoryService = {
 
     createMovement: async (data: CreateStockMovement): Promise<void> => {
         await api.post('/logistics/inventory/movement', data);
+    },
+
+    transferStock: async (data: TransferStock): Promise<void> => {
+        await api.post('/logistics/inventory/transfer', data);
     }
 };

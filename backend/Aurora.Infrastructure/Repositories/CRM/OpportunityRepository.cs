@@ -14,20 +14,32 @@ namespace Aurora.Infrastructure.Repositories.CRM
         {
         }
         
-        public override async Task<IEnumerable<Opportunity>> GetAllAsync()
+        public override async Task<IEnumerable<Opportunity>> GetAllAsync(params System.Linq.Expressions.Expression<Func<Opportunity, object>>[] includes)
         {
-            return await _context.Opportunities
+            IQueryable<Opportunity> query = _context.Opportunities
                 .Include(o => o.BusinessPartner)
-                .Include(o => o.Lead)
-                .ToListAsync();
+                .Include(o => o.Lead);
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public override async Task<Opportunity?> GetByIdAsync(Guid id)
+        public override async Task<Opportunity?> GetByIdAsync(Guid id, params System.Linq.Expressions.Expression<Func<Opportunity, object>>[] includes)
         {
-             return await _context.Opportunities
+             IQueryable<Opportunity> query = _context.Opportunities
                 .Include(o => o.BusinessPartner)
-                .Include(o => o.Lead)
-                .FirstOrDefaultAsync(o => o.Id == id);
+                .Include(o => o.Lead);
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(o => o.Id == id);
         }
     }
 }

@@ -13,3 +13,4 @@
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Application/obj/Debug/net8.0/refint/Aurora.Application.dll
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Application/obj/Debug/net8.0/Aurora.Application.pdb
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Application/obj/Debug/net8.0/ref/Aurora.Application.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/obj/Debug/net8.0/Aurora.Application.sourcelink.json

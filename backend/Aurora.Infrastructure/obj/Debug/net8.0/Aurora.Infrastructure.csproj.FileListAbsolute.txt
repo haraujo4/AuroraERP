@@ -15,3 +15,4 @@
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/refint/Aurora.Infrastructure.dll
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.pdb
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/ref/Aurora.Infrastructure.dll
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.sourcelink.json

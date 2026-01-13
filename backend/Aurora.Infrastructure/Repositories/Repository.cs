@@ -21,19 +21,34 @@ namespace Aurora.Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task<T?> GetByIdAsync(Guid id)
+        public virtual async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.FindAsync(id);
+            IQueryable<T> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.ToListAsync();
+            IQueryable<T> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
         }
 
-        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            IQueryable<T> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.Where(predicate).ToListAsync();
         }
 
         public async Task AddAsync(T entity)

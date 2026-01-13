@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Aurora.Application.Interfaces.Finance;
+using Aurora.Application.Interfaces.Repositories;
+using Aurora.Domain.Entities.Finance;
+
+namespace Aurora.Application.Services.Finance
+{
+    public class JournalEntryService : IJournalEntryService
+    {
+        private readonly IRepository<JournalEntry> _entryRepo;
+        private readonly IRepository<Account> _accountRepo;
+
+        public JournalEntryService(IRepository<JournalEntry> entryRepo, IRepository<Account> accountRepo)
+        {
+            _entryRepo = entryRepo;
+            _accountRepo = accountRepo;
+        }
+
+        public async Task<JournalEntryDto> CreateAsync(CreateJournalEntryDto dto)
+        {
+            var entry = new JournalEntry(dto.PostingDate, dto.DocumentDate, dto.Description, dto.Reference);
+            
+            foreach (var line in dto.Lines)
+            {
+                var type = Enum.Parse<JournalEntryLineType>(line.Type);
+                entry.AddLine(line.AccountId, line.Amount, type, line.CostCenterId);
+            }
+
+            await _entryRepo.AddAsync(entry);
+            return await GetByIdAsync(entry.Id);
+        }
+
+        public async Task<JournalEntryDto> GetByIdAsync(Guid id)
+        {
+            var entry = await _entryRepo.GetByIdAsync(id);
+            if (entry == null) throw new Exception("Journal Entry not found");
+
+            // Ideally, the repository would include lines. 
+            // Since our generic repository is simple, we might need a specific one or rely on EF tracking if appropriate.
+            // For now, let's assume it's loaded (or we should add Include to Repository).
+            
+            return MapToDto(entry);
+        }
+
+        public async Task<IEnumerable<JournalEntryDto>> GetAllAsync()
+        {
+            var entries = await _entryRepo.GetAllAsync();
+            return entries.Select(MapToDto);
+        }
+
+        public async Task PostAsync(Guid id)
+        {
+            var entry = await _entryRepo.GetByIdAsync(id);
+            if (entry == null) throw new Exception("Journal Entry not found");
+
+            entry.Post();
+            await _entryRepo.UpdateAsync(entry);
+        }
+
+        private JournalEntryDto MapToDto(JournalEntry entry)
+        {
+            return new JournalEntryDto
+            {
+                Id = entry.Id,
+                PostingDate = entry.PostingDate,
+                DocumentDate = entry.DocumentDate,
+                Description = entry.Description,
+                Reference = entry.Reference,
+                Status = entry.Status.ToString(),
+                Lines = entry.Lines.Select(l => new JournalEntryLineDto
+                {
+                    AccountId = l.AccountId,
+                    AccountName = l.Account?.Name ?? "N/A",
+                    Amount = l.Amount,
+                    Type = l.Type.ToString(),
+                    CostCenterId = l.CostCenterId
+                }).ToList()
+            };
+        }
+    }
+}

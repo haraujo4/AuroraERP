@@ -14,15 +14,17 @@ namespace Aurora.Domain.Entities.Logistics
 
         public string? BatchNumber { get; private set; }
         public decimal Quantity { get; private set; }
+        public decimal AverageUnitCost { get; private set; }
         public DateTime LastUpdated { get; private set; }
 
         private StockLevel() { }
 
-        public StockLevel(Guid materialId, Guid depositoId, decimal quantity, string? batchNumber = null)
+        public StockLevel(Guid materialId, Guid depositoId, decimal quantity, decimal averageUnitCost = 0, string? batchNumber = null)
         {
             MaterialId = materialId;
             DepositoId = depositoId;
             Quantity = quantity;
+            AverageUnitCost = averageUnitCost;
             BatchNumber = batchNumber;
             LastUpdated = DateTime.UtcNow;
         }
@@ -40,6 +42,17 @@ namespace Aurora.Domain.Entities.Logistics
             
             Quantity -= quantity;
             LastUpdated = DateTime.UtcNow;
+        }
+
+        public void UpdateCost(decimal newQuantity, decimal unitCost)
+        {
+            if (newQuantity <= 0) return;
+
+            // Moving Average Formula: ((OldQty * OldCost) + (NewQty * NewCost)) / (OldQty + NewQty)
+            var totalValue = (Quantity * AverageUnitCost) + (newQuantity * unitCost);
+            var totalQuantity = Quantity + newQuantity;
+
+            AverageUnitCost = totalValue / totalQuantity;
         }
     }
 }

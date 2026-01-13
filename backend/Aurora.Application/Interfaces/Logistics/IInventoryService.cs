@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aurora.Application.DTOs.Logistics;
 using Aurora.Domain.Enums;
 
 namespace Aurora.Application.Interfaces.Logistics
@@ -11,6 +12,7 @@ namespace Aurora.Application.Interfaces.Logistics
         Task<IEnumerable<StockLevelDto>> GetStockByMaterialAsync(Guid materialId);
         Task<IEnumerable<StockLevelDto>> GetAllStocksAsync();
         Task AddStockMovementAsync(CreateStockMovementDto dto);
+        Task TransferStockAsync(TransferStockDto dto);
     }
 
     public class StockLevelDto
@@ -22,6 +24,7 @@ namespace Aurora.Application.Interfaces.Logistics
         public string DepositoName { get; set; }
         public string? BatchNumber { get; set; }
         public decimal Quantity { get; set; }
+        public decimal AverageUnitCost { get; set; }
         public DateTime LastUpdated { get; set; }
     }
 
@@ -31,6 +34,7 @@ namespace Aurora.Application.Interfaces.Logistics
         public Guid DepositoId { get; set; }
         public StockMovementType Type { get; set; }
         public decimal Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
         public string? BatchNumber { get; set; }
         public string ReferenceDocument { get; set; }
     }

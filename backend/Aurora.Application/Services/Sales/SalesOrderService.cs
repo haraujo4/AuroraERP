@@ -13,11 +13,22 @@ namespace Aurora.Application.Services.Sales
     {
         private readonly ISalesOrderRepository _repository;
         private readonly ISalesQuoteRepository _quoteRepository;
+        private readonly IBusinessPartnerRepository _bpRepository;
+        private readonly Aurora.Application.Interfaces.Fiscal.ITaxService _taxService;
+        private readonly IPricingService _pricingService;
 
-        public SalesOrderService(ISalesOrderRepository repository, ISalesQuoteRepository quoteRepository)
+        public SalesOrderService(
+            ISalesOrderRepository repository, 
+            ISalesQuoteRepository quoteRepository,
+            IBusinessPartnerRepository bpRepository,
+            Aurora.Application.Interfaces.Fiscal.ITaxService taxService,
+            IPricingService pricingService)
         {
             _repository = repository;
             _quoteRepository = quoteRepository;
+            _bpRepository = bpRepository;
+            _taxService = taxService;
+            _pricingService = pricingService;
         }
 
         public async Task<IEnumerable<SalesOrderDto>> GetAllAsync()
@@ -38,9 +49,42 @@ namespace Aurora.Application.Services.Sales
             var number = $"SO-{DateTime.Now.Year}-{new Random().Next(1000, 9999)}";
             var order = new SalesOrder(number, dto.BusinessPartnerId, dto.OrderDate, dto.QuoteId);
 
+            // Get BP Info for Tax Calculation
+            var bp = await _bpRepository.GetByIdAsync(dto.BusinessPartnerId);
+            var destState = bp?.Addresses.FirstOrDefault(a => a.IsPrincipal)?.Address.State ?? "SP";
+            var sourceState = "SP"; // Assuming Company/Branch in SP
+
             foreach (var itemDto in dto.Items)
             {
-                order.AddItem(itemDto.MaterialId, itemDto.Quantity, itemDto.UnitPrice, itemDto.DiscountPercentage);
+                var unitPrice = itemDto.UnitPrice;
+                var discount = itemDto.DiscountPercentage;
+
+                if (unitPrice == 0)
+                {
+                    var pricing = await _pricingService.CalculatePricingAsync(itemDto.MaterialId, dto.BusinessPartnerId, itemDto.Quantity);
+                    unitPrice = pricing.BasePrice; // Using BasePrice from material/pricelist
+                    discount = pricing.DiscountPercentage;
+                }
+
+                order.AddItem(itemDto.MaterialId, itemDto.Quantity, unitPrice, discount);
+                
+                // Calculate Taxes
+                var orderItem = order.Items.Last();
+                var taxResult = await _taxService.CalculateTaxAsync(new Aurora.Application.DTOs.Fiscal.TaxCalculationInputDto
+                {
+                    SourceState = sourceState,
+                    DestState = destState,
+                    OperationType = Aurora.Domain.Enums.OperationType.Sales,
+                    ItemValue = orderItem.TotalValue
+                });
+
+                orderItem.SetFiscalInfo(
+                    taxResult.Cfop,
+                    taxResult.IcmsRate,
+                    taxResult.IpiRate,
+                    taxResult.PisRate,
+                    taxResult.CofinsRate
+                );
             }
 
             await _repository.AddAsync(order);

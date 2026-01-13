@@ -3,6 +3,7 @@ import { deliveryService, type DeliveryDto } from '../../../services/deliverySer
 import { Package, Truck, CheckCircle } from 'lucide-react';
 
 export function DeliveryList() {
+    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     const [deliveries, setDeliveries] = useState<DeliveryDto[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -21,7 +22,15 @@ export function DeliveryList() {
         }
     };
 
-    const handlePost = async (id: string) => {
+    const toggleRow = (id: string) => {
+        const newSet = new Set(expandedRows);
+        if (newSet.has(id)) newSet.delete(id);
+        else newSet.add(id);
+        setExpandedRows(newSet);
+    };
+
+    const handlePost = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
         if (!confirm('Confirmar expedição e baixar estoque?')) return;
         try {
             await deliveryService.postDelivery(id);
@@ -48,46 +57,90 @@ export function DeliveryList() {
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-bg-header sticky top-0 z-10">
                         <tr>
+                            <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b w-10"></th>
                             <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b">Número</th>
                             <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b">Pedido</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b">Data</th>
-                            <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b">Status</th>
+                            <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b text-right">Data</th>
+                            <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b text-center">Status</th>
                             <th className="p-3 text-xs font-bold text-text-secondary uppercase border-b text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-default">
                         {deliveries.map((delivery) => (
-                            <tr key={delivery.id} className="hover:bg-bg-main">
-                                <td className="p-3 font-mono text-sm">{delivery.number}</td>
-                                <td className="p-3 text-sm">{delivery.salesOrderNumber}</td>
-                                <td className="p-3 text-sm">{new Date(delivery.deliveryDate).toLocaleDateString()}</td>
-                                <td className="p-3 text-sm">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-bold
-                                        ${delivery.status === 'Draft' ? 'bg-yellow-100 text-yellow-800' :
-                                            delivery.status === 'Posted' ? 'bg-green-100 text-green-800' :
-                                                'bg-gray-100 text-gray-800'}`}>
-                                        {delivery.status}
-                                    </span>
-                                </td>
-                                <td className="p-3 text-right">
-                                    {delivery.status === 'Draft' && (
-                                        <button
-                                            onClick={() => handlePost(delivery.id)}
-                                            className="ml-2 text-green-600 hover:text-green-800 flex items-center justify-end gap-1 float-right"
-                                            title="Postar Saída (Baixar Estoque)"
-                                        >
-                                            <Package size={16} />
-                                            <span className="text-xs font-bold">Postar</span>
-                                        </button>
-                                    )}
-                                    {delivery.status === 'Posted' && (
-                                        <span className="text-green-600 flex items-center justify-end gap-1">
-                                            <CheckCircle size={16} />
-                                            <span className="text-xs">Concluído</span>
+                            <React.Fragment key={delivery.id}>
+                                <tr
+                                    className="hover:bg-bg-main cursor-pointer"
+                                    onClick={() => toggleRow(delivery.id)}
+                                >
+                                    <td className="p-3 text-text-secondary">
+                                        {expandedRows.has(delivery.id) ? '▼' : '▶'}
+                                    </td>
+                                    <td className="p-3 font-mono text-sm font-bold text-brand-primary">{delivery.number}</td>
+                                    <td className="p-3 text-sm text-text-secondary">Pedido: {delivery.salesOrderNumber}</td>
+                                    <td className="p-3 text-sm text-right">{new Date(delivery.deliveryDate).toLocaleDateString()}</td>
+                                    <td className="p-3 text-center">
+                                        <span className={`inline-block px-2 py-1 rounded-full text-[10px] font-bold uppercase
+                                            ${delivery.status === 'Draft' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                                                delivery.status === 'Posted' ? 'bg-green-100 text-green-800 border border-green-200' :
+                                                    'bg-gray-100 text-gray-800 border border-gray-200'}`}>
+                                            {delivery.status === 'Draft' ? 'Rascunho' :
+                                                delivery.status === 'Posted' ? 'Enviado' : delivery.status}
                                         </span>
-                                    )}
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td className="p-3 text-right">
+                                        <div className="flex justify-end items-center space-x-2">
+                                            {delivery.status === 'Draft' && (
+                                                <button
+                                                    onClick={(e) => handlePost(e, delivery.id)}
+                                                    className="flex items-center gap-1.5 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-xs font-bold"
+                                                    title="Postar Saída (Baixar Estoque)"
+                                                >
+                                                    <Package size={14} />
+                                                    Postar
+                                                </button>
+                                            )}
+                                            {delivery.status === 'Posted' && (
+                                                <span className="flex items-center gap-1.5 text-green-600 font-bold text-xs">
+                                                    <CheckCircle size={14} />
+                                                    Concluído
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {expandedRows.has(delivery.id) && (
+                                    <tr className="bg-bg-main/50">
+                                        <td colSpan={6} className="p-0">
+                                            <div className="px-12 py-4">
+                                                <h4 className="text-xs font-bold text-text-secondary uppercase mb-2">Itens da Entrega</h4>
+                                                <div className="bg-white border border-border-default rounded overflow-hidden">
+                                                    <table className="w-full text-left text-xs">
+                                                        <thead className="bg-bg-header border-b">
+                                                            <tr>
+                                                                <th className="p-2 font-bold text-text-secondary">Material</th>
+                                                                <th className="p-2 font-bold text-text-secondary text-right">Quantidade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y">
+                                                            {delivery.items?.map((item) => (
+                                                                <tr key={item.id}>
+                                                                    <td className="p-2 text-text-primary">{item.materialName}</td>
+                                                                    <td className="p-2 text-text-primary text-right font-mono font-bold">{item.quantity} UN</td>
+                                                                </tr>
+                                                            ))}
+                                                            {(!delivery.items || delivery.items.length === 0) && (
+                                                                <tr>
+                                                                    <td colSpan={2} className="p-4 text-center text-text-muted italic">Nenhum item encontrado.</td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
                         ))}
                     </tbody>
                 </table>

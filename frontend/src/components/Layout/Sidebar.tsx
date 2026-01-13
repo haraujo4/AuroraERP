@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronDown, LayoutGrid, DollarSign, Package, ShoppingCart, Users, Truck, Settings } from 'lucide-react';
+import {
+    ChevronRight, ChevronDown, LayoutGrid, DollarSign, Package, ShoppingCart, Users, Truck,
+    Factory,
+    Percent
+} from 'lucide-react';
 import { cn } from '../../utils';
 
 interface SubItem {
@@ -59,18 +63,55 @@ const MENU_ITEMS: MenuItem[] = [
         subItems: [
             { id: 'materials', label: 'Gestão de Materiais', path: '/logistics/materials' },
             { id: 'inventory', label: 'Gestão de Estoques', path: '/logistics/inventory' },
+            { id: 'inventory-in', label: 'Entrada (MIGO)', path: '/logistics/inventory/in' },
+            { id: 'inventory-out', label: 'Saída de Estoque', path: '/logistics/inventory/out' },
+            { id: 'inventory-transfer', label: 'Transferência', path: '/logistics/inventory/transfer' },
         ]
     },
-    { id: 'finance', label: 'Financeiro (FI)', icon: DollarSign },
-    { id: 'production', label: 'Produção (PP)', icon: Settings },
-    { id: 'purchasing', label: 'Compras', icon: ShoppingCart },
-    { id: 'expedition', label: 'Expedição', icon: Truck },
+    {
+        id: 'finance',
+        label: 'Financeiro (FI)',
+        icon: DollarSign,
+        subItems: [
+            { id: 'accounts', label: 'Plano de Contas', path: '/finance/accounts' },
+            { id: 'journal-entries', label: 'Lançamentos', path: '/finance/journal-entries' },
+            { id: 'invoices', label: 'Faturas (AR/AP)', path: '/finance/invoices' },
+            { id: 'payments', label: 'Pagamentos', path: '/finance/payments' },
+        ]
+    },
+    {
+        id: 'production',
+        label: 'Produção (PP)',
+        icon: Factory,
+        subItems: [
+            { id: 'work-centers', label: 'Centros de Trabalho', path: '/production/work-centers' },
+            { id: 'boms', label: 'Listas de Materiais', path: '/production/boms' },
+            { id: 'orders', label: 'Ordens de Produção', path: '/production/orders' },
+        ]
+    },
+    {
+        id: 'purchasing',
+        label: 'Compras (MM)',
+        icon: ShoppingCart,
+        subItems: [
+            { id: 'requisitions', label: 'Requisições de Compra', path: '/purchasing/requisitions' },
+            { id: 'orders', label: 'Pedidos de Compra', path: '/purchasing/orders' },
+        ]
+    },
+    {
+        id: 'fiscal',
+        label: 'Fiscal',
+        icon: Percent,
+        subItems: [
+            { id: 'tax-rules', label: 'Regras Fiscais', path: '/fiscal/tax-rules' }
+        ]
+    },
+    { id: 'expedition', label: 'Expedição', icon: Truck, subItems: [{ id: 'deliveries', label: 'Entregas', path: '/logistics/deliveries' }] },
 ];
 
 export function Sidebar({ isOpen }: { isOpen: boolean }) {
     const location = useLocation();
-    const [openModules, setOpenModules] = useState<string[]>(['organization']); // Default open for dev
-
+    const [openModules, setOpenModules] = useState<string[]>(['organization', 'production']);
     const toggleModule = (id: string) => {
         setOpenModules(prev =>
             prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
@@ -134,9 +175,11 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
                 })}
             </nav>
 
-            {/* Footer */}
-            <div className="p-4 border-t border-border-default text-[10px] text-text-muted text-center">
-                v1.0.0
+            {/* Footer with Version Only */}
+            <div className="p-4 border-t border-border-default">
+                <div className="text-[10px] text-text-muted text-center">
+                    Aurora ERP v1.0.0
+                </div>
             </div>
         </aside>
     );

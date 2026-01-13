@@ -7,19 +7,20 @@ using Aurora.Application.Interfaces.Logistics;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Domain.Entities.Logistics;
 using Aurora.Domain.Entities.Sales;
+using Aurora.Application.Interfaces.Repositories.Logistics;
 using Aurora.Domain.Enums;
 
 namespace Aurora.Application.Services.Logistics
 {
     public class DeliveryService : IDeliveryService
     {
-        private readonly IRepository<Delivery> _deliveryRepository;
+        private readonly IDeliveryRepository _deliveryRepository;
         private readonly ISalesOrderRepository _salesOrderRepository;
         private readonly IInventoryService _inventoryService;
         private readonly IRepository<Material> _materialRepository;
 
         public DeliveryService(
-            IRepository<Delivery> deliveryRepository,
+            IDeliveryRepository deliveryRepository,
             ISalesOrderRepository salesOrderRepository,
             IInventoryService inventoryService,
             IRepository<Material> materialRepository)
@@ -47,7 +48,8 @@ namespace Aurora.Application.Services.Logistics
             // Copy items
             foreach (var item in order.Items)
             {
-                delivery.AddItem(item.MaterialId, item.Quantity, item.Id);
+                // Initial unit cost is 0, will be updated during posting with current MAC
+                delivery.AddItem(item.MaterialId, item.Quantity, 0, item.Id);
             }
 
             await _deliveryRepository.AddAsync(delivery);
@@ -57,67 +59,39 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task PostDeliveryAsync(Guid deliveryId)
         {
-            var delivery = await _deliveryRepository.GetByIdAsync(deliveryId);
+            var delivery = await _deliveryRepository.GetByIdWithDetailsAsync(deliveryId);
             if (delivery == null) throw new KeyNotFoundException("Delivery not found");
 
             // Post Logic
             delivery.Post();
 
             // Create Inventory Movements (Goods Issue)
-            // Strategy: For each item, create an OUT movement.
-            // Warehouse Issue: We need to know WHICH warehouse to deduct from.
-            // For MVP: We will simply fetch the first available warehouse ID from InventoryService (or generic repo) 
-            // OR - we can rely on a default warehouse logic.
-            // To be safe, I'll temporarily fetch *any* warehouse or fail if none.
-            // In real app, user selects warehouse in UI.
-            
-            // Hack for MVP: Get first warehouse.
-            // We need a repository for Deposito? Or use InventoryService?
-            // InventoryService 'GetAllStocksAsync' gives us typical stocks.
-            // Let's rely on a helper or just fail if we can't find one? 
-            // Actually, let's inject Deposito Repo in future. For now, let's assume we pass a DepositoId?
-            // Wait, I can't easily get a warehouse here without injection.
-            // I will use a placeholder GUID for now and warn user? No that crashes FKs.
-            // I will inject IDepositoRepository if needed or search via IInventoryService?
-            // Let's modify constructor to get IDepositoRepository?
-            // Or better: Let's assume there is at least one warehouse and fetch it via IInventoryService.GetStockByMaterial?
-            
-            // Let's loop items
             foreach (var item in delivery.Items)
             {
-               // Create Movement
-               // We need a DepositoId. 
-               // Let's try to get stocks for this material and pick one with enough quantity?
-               var stocks = await _inventoryService.GetStockByMaterialAsync(item.MaterialId);
-               var validStock = stocks.FirstOrDefault(s => s.Quantity >= item.Quantity);
-               
-               if (validStock == null)
-               {
-                   // Fallback: Just pick the first one found, even if insufficient (InventoryService handles negative check/creation maybe?)
-                   validStock = stocks.FirstOrDefault();
-               }
-               
-               Guid targetDepositoId = validStock?.DepositoId ?? Guid.Empty; // This will crash if Empty.
-               
-               if (targetDepositoId == Guid.Empty)
-               {
-                   // Try to find ANY warehouse if stock didn't exist?
-                   // This is getting complex for a blind edit.
-                   // I will throw exception if no stock found.
-                   throw new InvalidOperationException($"No stock found for material {item.MaterialId} to fulfill delivery.");
-               }
+                // 1. Get current stock levels to find a warehouse and CURRENT MAC
+                var stocks = await _inventoryService.GetStockByMaterialAsync(item.MaterialId);
+                var validStock = stocks.FirstOrDefault(s => s.Quantity >= item.Quantity) ?? stocks.FirstOrDefault();
+                
+                if (validStock == null)
+                {
+                    throw new InvalidOperationException($"No stock found for material {item.MaterialId} to fulfill delivery.");
+                }
 
-               var movementDto = new CreateStockMovementDto
-               {
-                   MaterialId = item.MaterialId,
-                   DepositoId = targetDepositoId,
-                   Type = StockMovementType.Out,
-                   Quantity = item.Quantity,
-                   ReferenceDocument = delivery.Number,
-                   BatchNumber = validStock?.BatchNumber
-               };
+                // 2. Update Delivery Item with the cost at the time of posting (COGS)
+                delivery.UpdateItemCost(item.MaterialId, validStock.AverageUnitCost);
+                
+                var movementDto = new CreateStockMovementDto
+                {
+                    MaterialId = item.MaterialId,
+                    DepositoId = validStock.DepositoId,
+                    Type = StockMovementType.Out,
+                    Quantity = item.Quantity,
+                    ReferenceDocument = delivery.Number,
+                    BatchNumber = validStock.BatchNumber,
+                    UnitPrice = validStock.AverageUnitCost // Pass current MAC
+                };
 
-               await _inventoryService.AddStockMovementAsync(movementDto);
+                await _inventoryService.AddStockMovementAsync(movementDto);
             }
 
             await _deliveryRepository.UpdateAsync(delivery);
@@ -134,7 +108,7 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task<IEnumerable<DeliveryDto>> GetAllAsync()
         {
-            var deliveries = await _deliveryRepository.GetAllAsync();
+            var deliveries = await _deliveryRepository.GetAllWithDetailsAsync();
             var dtos = new List<DeliveryDto>();
             foreach (var d in deliveries)
             {
@@ -145,7 +119,7 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task<DeliveryDto> GetByIdAsync(Guid id)
         {
-            var d = await _deliveryRepository.GetByIdAsync(id);
+            var d = await _deliveryRepository.GetByIdWithDetailsAsync(id);
             if (d == null) return null;
             return await MapToDto(d);
         }

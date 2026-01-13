@@ -51,5 +51,19 @@ namespace Aurora.API.Controllers.Logistics
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("transfer")]
+        public async Task<IActionResult> Transfer(TransferStockDto dto)
+        {
+            try
+            {
+                await _service.TransferStockAsync(dto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
