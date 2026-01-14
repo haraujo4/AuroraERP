@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, FileText, Search } from 'lucide-react';
+import { ArrowLeft, FileText, Search } from 'lucide-react';
 import { salesOrderService } from '../../../services/salesOrderService';
 import { financeService } from '../../../services/financeService';
 import type { SalesOrder } from '../../../types/sales-orders';
