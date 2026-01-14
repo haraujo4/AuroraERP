@@ -48,7 +48,7 @@ namespace Aurora.Domain.Entities.Finance
 
             var item = new InvoiceItem(Id, description, quantity, unitPrice, taxAmount);
             _items.Add(item);
-            RecalculateTotals();
+            UpdateTotals();
         }
 
         public void RemoveItem(Guid itemId)
@@ -60,11 +60,11 @@ namespace Aurora.Domain.Entities.Finance
             if (item != null)
             {
                 _items.Remove(item);
-                RecalculateTotals();
+                UpdateTotals();
             }
         }
 
-        private void RecalculateTotals()
+        public void UpdateTotals()
         {
             GrossAmount = _items.Sum(i => i.TotalAmount);
             TaxAmount = _items.Sum(i => i.TaxAmount);

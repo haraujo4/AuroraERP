@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, Eye, Truck, RefreshCw } from 'lucide-react';
+import { Plus, Eye, Truck, RefreshCw, CheckCircle } from 'lucide-react';
 import { ALVGrid } from '../../../components/Common/ALVGrid';
 import type { Column } from '../../../components/Common/ALVGrid';
 import { salesOrderService } from '../../../services/salesOrderService';
@@ -87,6 +87,26 @@ export function SalesOrderList() {
                     >
                         <Eye size={16} />
                     </button>
+                    {order.status === 'Draft' && (
+                        <button
+                            onClick={async (e) => {
+                                e.stopPropagation();
+                                if (confirm('Confirmar este pedido?')) {
+                                    try {
+                                        await salesOrderService.updateStatus(order.id, 'Confirmed');
+                                        loadOrders();
+                                    } catch (err) {
+                                        alert('Erro ao confirmar pedido');
+                                        console.error(err);
+                                    }
+                                }
+                            }}
+                            className="text-green-600 hover:text-green-800 p-1 transition-colors"
+                            title="Confirmar Pedido"
+                        >
+                            <CheckCircle size={16} />
+                        </button>
+                    )}
                     {order.status === 'Confirmed' && (
                         <button
                             onClick={async (e) => {

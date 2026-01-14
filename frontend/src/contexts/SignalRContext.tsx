@@ -28,7 +28,8 @@ export function SignalRProvider({ children }: { children: React.ReactNode }) {
         const token = authService.getToken();
         if (!token) return;
 
-        const baseUrl = import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api';
+        //const baseUrl = import.meta.env.VITE_API_URL || 'https://auroraerp.softnexus.com.br/api';
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5283/api';
         const hubUrl = baseUrl.replace(/\/api$/, '') + '/hubs/notifications';
         const newConnection = new signalR.HubConnectionBuilder()
             .withUrl(hubUrl, {

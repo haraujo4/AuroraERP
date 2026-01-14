@@ -18,6 +18,7 @@ namespace Aurora.Application.Services.Finance
         private readonly IAccountService _accountService;
         private readonly Aurora.Application.Interfaces.Repositories.IPurchasingRepository _purchasingRepository;
         private readonly Aurora.Application.Interfaces.Repositories.ISalesOrderRepository _salesOrderRepository;
+        private readonly IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> _bpRepository;
 
         public InvoiceService(
             IRepository<Invoice> invoiceRepository,
@@ -25,7 +26,8 @@ namespace Aurora.Application.Services.Finance
             IJournalEntryService journalEntryService,
             IAccountService accountService,
             Aurora.Application.Interfaces.Repositories.IPurchasingRepository purchasingRepository,
-            Aurora.Application.Interfaces.Repositories.ISalesOrderRepository salesOrderRepository)
+            Aurora.Application.Interfaces.Repositories.ISalesOrderRepository salesOrderRepository,
+            IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> bpRepository)
         {
             _invoiceRepository = invoiceRepository;
             _itemRepository = itemRepository;
@@ -33,6 +35,7 @@ namespace Aurora.Application.Services.Finance
             _accountService = accountService;
             _purchasingRepository = purchasingRepository;
             _salesOrderRepository = salesOrderRepository;
+            _bpRepository = bpRepository;
         }
 
         public async Task<IEnumerable<InvoiceDto>> GetAllAsync()
@@ -43,24 +46,40 @@ namespace Aurora.Application.Services.Finance
             // Let's rely on lazy loading if enabled or manually handle it.
             // Given the previous repo implementation was generic basic, I'll assume I need to fetch.
             
-            var invoices = await _invoiceRepository.GetAllAsync();
-            // We need to eager load BusinessPartner. If repository doesn't support it, 
-            // we'll have to rely on what is available. 
-            // Assuming we can cast to IQueryable in this service or modify repository.
-            // I'll assume basic mapping for now.
-            
-            return invoices.Select(MapToDto).ToList();
+            var invoices = await _invoiceRepository.GetAllAsync(i => i.BusinessPartner);
+            var dtos = new List<InvoiceDto>();
+
+            foreach (var inv in invoices)
+            {
+                var dto = MapToDto(inv);
+                if (inv.BusinessPartner == null)
+                {
+                   var bp = await _bpRepository.GetByIdAsync(inv.BusinessPartnerId);
+                   Console.WriteLine($"[InvoiceService] Manual Lookup for Inv {inv.Number}, BP ID {inv.BusinessPartnerId} -> {bp?.RazaoSocial ?? "NULL"}");
+                   dto.BusinessPartnerName = bp?.RazaoSocial ?? "Unknown";
+                }
+                dtos.Add(dto);
+            }
+
+            return dtos;
         }
 
         public async Task<InvoiceDto> GetByIdAsync(Guid id)
         {
-            var invoice = await _invoiceRepository.GetByIdAsync(id);
+            var invoice = await _invoiceRepository.GetByIdAsync(id, i => i.Items, i => i.BusinessPartner);
             if (invoice == null) return null;
             
             // Should load items
             // Basic repository normally doesn't verify includes. 
-            // I'll assume we need to fetch items separately if not included.
-            return MapToDto(invoice); 
+            var dto = MapToDto(invoice);
+            
+            if (invoice.BusinessPartner == null)
+            {
+                var bp = await _bpRepository.GetByIdAsync(invoice.BusinessPartnerId);
+                dto.BusinessPartnerName = bp?.RazaoSocial ?? "Unknown";
+            }
+            
+            return dto;
         }
 
         public async Task<InvoiceDto> CreateAsync(CreateInvoiceDto dto)
@@ -97,14 +116,17 @@ namespace Aurora.Application.Services.Finance
 
         public async Task PostAsync(Guid id)
         {
-            var invoice = await _invoiceRepository.GetByIdAsync(id);
+            var invoice = await _invoiceRepository.GetByIdAsync(id, i => i.Items, i => i.BusinessPartner);
             if (invoice == null) throw new Exception("Invoice not found");
+            
+            Console.WriteLine($"[InvoiceService] Posting Invoice {id}. Items Count: {invoice.Items?.Count ?? 0}");
 
             if (invoice.Status != InvoiceStatus.Draft)
                 throw new Exception("Only draft invoices can be posted");
 
             // 1. Mark as Posted
             invoice.MarkAsPosted();
+            Console.WriteLine($"[InvoiceService] Marked as Posted. GrossAmount: {invoice.GrossAmount}");
             await _invoiceRepository.UpdateAsync(invoice);
 
             // 2. GL Integration
@@ -156,11 +178,19 @@ namespace Aurora.Application.Services.Finance
             if (order == null) throw new Exception("Sales Order not found");
 
             var number = $"INV-{DateTime.Now.Year}-{new Random().Next(1000, 9999)}";
+            
+            // 1. Create and Save Invoice Header FIRST
             var invoice = new Invoice(number, order.BusinessPartnerId, InvoiceType.Outbound, issueDate, dueDate);
             invoice.SetReferences(null, salesOrderId);
+            
+            await _invoiceRepository.AddAsync(invoice);
+            Console.WriteLine($"[InvoiceService] Header Saved: {invoice.Id}");
 
+            // 2. Add Items one by one and Save them (Bypassing EF Core Cascading issues)
             foreach (var item in order.Items)
             {
+                Console.WriteLine($"[InvoiceService] Processing Item: {item.Material?.Description} | Qty: {item.Quantity} | UnitPrice: {item.UnitPrice} | Tax: {item.TotalTaxValue}");
+                
                 invoice.AddItem(item.Material?.Description ?? "Material", item.Quantity, item.UnitPrice, item.TotalTaxValue);
                 
                 var invoiceItem = invoice.Items.Last();
@@ -172,15 +202,34 @@ namespace Aurora.Application.Services.Finance
                     item.PisRate,
                     item.CofinsRate
                 );
+                
+                Console.WriteLine($"[InvoiceService] Added Item to Invoice. TotalAmount: {invoiceItem.TotalAmount}");
+                await _itemRepository.AddAsync(invoiceItem);
             }
 
-            await _invoiceRepository.AddAsync(invoice);
-
-            // Update SO status
+            // 3. Update Invoice to save calculated totals (triggering update on header)
+            invoice.UpdateTotals();
+            Console.WriteLine($"[InvoiceService] Recalculated Invoice Totals. Gross: {invoice.GrossAmount} | Tax: {invoice.TaxAmount} | Net: {invoice.NetAmount}");
+            Console.WriteLine($"[InvoiceService] Saving Invoice {invoice.Id} with GrossAmount: {invoice.GrossAmount}");
+            await _invoiceRepository.UpdateAsync(invoice);
+            
+            // 4. Update SO status
             order.UpdateStatus(Aurora.Domain.Entities.Sales.SalesOrderStatus.Invoiced);
             await _salesOrderRepository.UpdateAsync(order);
 
-            return MapToDto(invoice);
+            // 5. Force Reload to ensure data integrity
+            var reloaded = await _invoiceRepository.GetByIdAsync(invoice.Id, i => i.Items, i => i.BusinessPartner);
+            
+            var dto = MapToDto(reloaded ?? invoice);
+            
+            // Manual BP Patch if still missing
+            if (dto.BusinessPartnerName == "Unknown" || string.IsNullOrEmpty(dto.BusinessPartnerName))
+            {
+                 var bp = await _bpRepository.GetByIdAsync(order.BusinessPartnerId);
+                 dto.BusinessPartnerName = bp?.RazaoSocial ?? "Unknown";
+            }
+
+            return dto;
         }
 
         private InvoiceDto MapToDto(Invoice entity)
@@ -255,6 +304,7 @@ namespace Aurora.Application.Services.Finance
 
             if (invoice.Type == InvoiceType.Outbound)
             {
+                Console.WriteLine($"[InvoiceService] Creating JE for Outbound Invoice. Amount: {invoice.GrossAmount}");
                 // Dr Receivable
                 jeParams.Lines.Add(new CreateJournalEntryLineDto
                 {

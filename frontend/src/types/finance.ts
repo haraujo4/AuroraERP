@@ -79,6 +79,7 @@ export interface InvoiceItem {
 
 export interface Invoice {
     id: string;
+    number: string;
     businessPartnerId: string;
     businessPartnerName: string;
     type: InvoiceType;

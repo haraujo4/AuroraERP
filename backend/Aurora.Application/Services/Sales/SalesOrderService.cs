@@ -64,7 +64,10 @@ namespace Aurora.Application.Services.Sales
                     var pricing = await _pricingService.CalculatePricingAsync(itemDto.MaterialId, dto.BusinessPartnerId, itemDto.Quantity);
                     unitPrice = pricing.BasePrice; // Using BasePrice from material/pricelist
                     discount = pricing.DiscountPercentage;
+                    Console.WriteLine($"[SalesOrderService] Pricing Service Returned: BasePrice={pricing.BasePrice}, Discount={pricing.DiscountPercentage} for Material {itemDto.MaterialId}");
                 }
+                
+                Console.WriteLine($"[SalesOrderService] Adding Item: Material={itemDto.MaterialId}, Qty={itemDto.Quantity}, UnitPrice={unitPrice}");
 
                 order.AddItem(itemDto.MaterialId, itemDto.Quantity, unitPrice, discount);
                 

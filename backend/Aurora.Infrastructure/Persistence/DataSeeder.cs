@@ -61,6 +61,20 @@ namespace Aurora.Infrastructure.Persistence
 
                 await context.SaveChangesAsync();
             }
+
+            // 4. Ensure Revenue/Receivable Accounts exist (Fix for existing databases)
+            if (!context.Accounts.Any(a => a.Type == Aurora.Domain.Enums.AccountType.Revenue))
+            {
+                var revenueAcct = new Aurora.Domain.Entities.Finance.Account("4.1.01", "Receita de Vendas", Aurora.Domain.Enums.AccountType.Revenue, Aurora.Domain.Enums.AccountNature.Credit, 3);
+                context.Accounts.Add(revenueAcct);
+            }
+
+            if (!context.Accounts.Any(a => a.Name.Contains("Clientes")))
+            {
+                var receivableAcct = new Aurora.Domain.Entities.Finance.Account("1.1.02", "Clientes", Aurora.Domain.Enums.AccountType.Asset, Aurora.Domain.Enums.AccountNature.Debit, 3);
+                context.Accounts.Add(receivableAcct);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

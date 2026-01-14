@@ -6,7 +6,10 @@ import { BusinessPartnerService } from '../../../services/businessPartnerService
 import type { CreateInvoice } from '../../../types/finance';
 import type { BusinessPartner } from '../../../types/crm';
 
+import { useParams } from 'react-router-dom';
+
 export function InvoiceForm() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [partners, setPartners] = useState<BusinessPartner[]>([]);
@@ -29,7 +32,38 @@ export function InvoiceForm() {
 
     useEffect(() => {
         loadPartners();
-    }, []);
+        if (id) {
+            loadInvoice(id);
+        }
+    }, [id]);
+
+    const loadInvoice = async (invoiceId: string) => {
+        try {
+            setLoading(true);
+            const data = await financeService.getInvoiceById(invoiceId);
+            setBusinessPartnerId(data.businessPartnerId);
+            setType(data.type);
+            setIssueDate(data.issueDate.split('T')[0]);
+            setDueDate(data.dueDate.split('T')[0]);
+
+            // Map items
+            if (data.items && data.items.length > 0) {
+                setItems(data.items.map((item, index) => ({
+                    id: index + 1,
+                    description: item.description,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    taxAmount: item.taxAmount
+                })));
+            }
+        } catch (error) {
+            console.error('Failed to load invoice:', error);
+            alert('Erro ao carregar fatura');
+            navigate('/finance/invoices');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const loadPartners = async () => {
         try {
@@ -106,7 +140,9 @@ export function InvoiceForm() {
                     <button onClick={() => navigate('/finance/invoices')} className="text-gray-500 hover:text-gray-700">
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-xl font-bold text-text-primary">Nova Fatura</h1>
+                    <h1 className="text-xl font-bold text-text-primary">
+                        {id ? 'Editar Fatura' : 'Nova Fatura'}
+                    </h1>
                 </div>
                 <button
                     onClick={handleSubmit}
@@ -272,6 +308,6 @@ export function InvoiceForm() {
                     </div>
                 </form>
             </div>
-        </div>
+        </div >
     );
 }

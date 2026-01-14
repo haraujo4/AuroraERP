@@ -286,7 +286,10 @@ export function SalesQuoteForm() {
                                                 step="0.01"
                                                 className="w-full p-1 border border-border-input rounded text-right focus:border-brand-primary outline-none"
                                                 value={item.quantity}
-                                                onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value))}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value);
+                                                    handleItemChange(index, 'quantity', isNaN(val) ? 0 : val);
+                                                }}
                                             />
                                         </td>
                                         <td className="p-3">
@@ -297,7 +300,10 @@ export function SalesQuoteForm() {
                                                 step="0.01"
                                                 className="w-full p-1 border border-border-input rounded text-right focus:border-brand-primary outline-none"
                                                 value={item.unitPrice}
-                                                onChange={(e) => handleItemChange(index, 'unitPrice', parseFloat(e.target.value))}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value);
+                                                    handleItemChange(index, 'unitPrice', isNaN(val) ? 0 : val);
+                                                }}
                                             />
                                         </td>
                                         <td className="p-3">
@@ -308,7 +314,10 @@ export function SalesQuoteForm() {
                                                 step="0.1"
                                                 className="w-full p-1 border border-border-input rounded text-right focus:border-brand-primary outline-none"
                                                 value={item.discountPercentage}
-                                                onChange={(e) => handleItemChange(index, 'discountPercentage', parseFloat(e.target.value))}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value);
+                                                    handleItemChange(index, 'discountPercentage', isNaN(val) ? 0 : val);
+                                                }}
                                             />
                                         </td>
                                         <td className="p-3 text-right font-medium text-text-primary">

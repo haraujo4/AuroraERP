@@ -24,6 +24,7 @@ namespace Aurora.Domain.Entities.Fiscal
             AccessKey = accessKey;
             Status = FiscalDocumentStatus.Draft;
             IssuedAt = DateTime.Now;
+            XmlContent = "<nfeProc>Mock XML Content</nfeProc>";
         }
 
         private FiscalDocument() { }

@@ -53,6 +53,8 @@ import { JournalEntryList } from './pages/Finance/JournalEntries/JournalEntryLis
 import { JournalEntryForm } from './pages/Finance/JournalEntries/JournalEntryForm';
 import { InvoiceList } from './pages/Finance/Invoices/InvoiceList';
 import { InvoiceForm } from './pages/Finance/Invoices/InvoiceForm';
+import { BillingForm } from './pages/Finance/Invoices/BillingForm';
+import { MiroForm } from './pages/Finance/Invoices/MiroForm';
 import { PaymentList } from './pages/Finance/Payments/PaymentList';
 import PaymentForm from './pages/Finance/Payments/PaymentForm';
 
@@ -154,6 +156,7 @@ function App() {
             {/* Logistics */}
             <Route path="logistics/materials" element={<MaterialList />} />
             <Route path="logistics/materials/new" element={<MaterialForm />} />
+            <Route path="logistics/materials/:id" element={<MaterialForm />} />
             <Route path="logistics/inventory" element={<StockList />} />
             <Route path="logistics/inventory/movement" element={<StockAdjustmentForm />} />
             <Route path="logistics/inventory/in" element={<GoodsReceiptForm />} />
@@ -216,10 +219,15 @@ function App() {
             <Route path="finance/accounts/:id" element={<AccountForm />} />
             <Route path="finance/journal-entries" element={<JournalEntryList />} />
             <Route path="finance/journal-entries/new" element={<JournalEntryForm />} />
+            <Route path="finance/journal-entries/:id" element={<JournalEntryForm />} />
             <Route path="finance/invoices" element={<InvoiceList />} />
             <Route path="finance/invoices/new" element={<InvoiceForm />} />
+            <Route path="finance/invoices/billing" element={<BillingForm />} />
+            <Route path="finance/invoices/miro" element={<MiroForm />} />
+            <Route path="finance/invoices/:id" element={<InvoiceForm />} />
             <Route path="finance/payments" element={<PaymentList />} />
             <Route path="finance/payments/new" element={<PaymentForm />} />
+            <Route path="finance/payments/:id" element={<PaymentForm />} />
             <Route path="finance/reports" element={<FinancialReports />} />
 
             {/* Analytics */}

@@ -78,7 +78,19 @@ namespace Aurora.Application.Services.Logistics
                 }
 
                 // 2. Update Delivery Item with the cost at the time of posting (COGS)
-                delivery.UpdateItemCost(item.MaterialId, validStock.AverageUnitCost);
+                decimal unitCost = validStock.AverageUnitCost;
+
+                if (unitCost <= 0)
+                {
+                    // Fallback to Standard Cost
+                    var material = await _materialRepository.GetByIdAsync(item.MaterialId);
+                    if (material != null)
+                    {
+                        unitCost = material.StandardCost ?? material.BasePrice;
+                    }
+                }
+
+                delivery.UpdateItemCost(item.MaterialId, unitCost);
                 
                 var movementDto = new CreateStockMovementDto
                 {
@@ -88,7 +100,7 @@ namespace Aurora.Application.Services.Logistics
                     Quantity = item.Quantity,
                     ReferenceDocument = delivery.Number,
                     BatchNumber = validStock.BatchNumber,
-                    UnitPrice = validStock.AverageUnitCost // Pass current MAC
+                    UnitPrice = unitCost // Pass current MAC or Fallback
                 };
 
                 await _inventoryService.AddStockMovementAsync(movementDto);

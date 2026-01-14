@@ -25,6 +25,8 @@ namespace Aurora.Infrastructure.Persistence.Configurations.Finance
                 .WithOne(x => x.Invoice)
                 .HasForeignKey(x => x.InvoiceId)
                 .OnDelete(DeleteBehavior.Cascade);
+                
+            builder.Navigation(x => x.Items).HasField("_items");
         }
     }
 
