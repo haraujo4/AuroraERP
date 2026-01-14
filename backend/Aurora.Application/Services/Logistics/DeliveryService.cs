@@ -80,6 +80,7 @@ namespace Aurora.Application.Services.Logistics
                 // 2. Update Delivery Item with the cost at the time of posting (COGS)
                 decimal unitCost = validStock.AverageUnitCost;
 
+
                 if (unitCost <= 0)
                 {
                     // Fallback to Standard Cost

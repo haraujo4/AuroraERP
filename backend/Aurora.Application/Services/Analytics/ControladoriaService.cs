@@ -24,12 +24,19 @@ namespace Aurora.Application.Services.Analytics
 
         public async Task<DreDto> GetDreAsync(DateTime startDate, DateTime endDate, Guid? costCenterId = null, Guid? profitCenterId = null)
         {
+            // Ensure endDate encompasses the entire day
+            endDate = endDate.Date.AddDays(1).AddTicks(-1);
+            
+            Console.WriteLine($"[KE30] Fetching for range: {startDate} to {endDate}");
+
             var entries = await _journalRepo.GetAllAsync(j => j.Lines);
             
             var validEntries = entries.Where(j => 
                 j.PostingDate >= startDate && 
                 j.PostingDate <= endDate &&
-                j.Status == JournalEntryStatus.Posted);
+                j.Status == JournalEntryStatus.Posted).ToList();
+
+            Console.WriteLine($"[KE30] Found {validEntries.Count} posted entries in range.");
 
             var dre = new DreDto();
             var allAccounts = await _accountRepo.GetAllAsync();

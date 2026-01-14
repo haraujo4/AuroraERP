@@ -35,20 +35,18 @@ namespace Aurora.Application.Services.Finance
 
         public async Task<JournalEntryDto> GetByIdAsync(Guid id)
         {
-            var entry = await _entryRepo.GetByIdAsync(id);
+            var entry = await _entryRepo.GetByIdAsync(id, x => x.Lines);
             if (entry == null) throw new Exception("Journal Entry not found");
 
-            // Ideally, the repository would include lines. 
-            // Since our generic repository is simple, we might need a specific one or rely on EF tracking if appropriate.
-            // For now, let's assume it's loaded (or we should add Include to Repository).
-            
-            return MapToDto(entry);
+            var accounts = await LoadAccountsForEntries(new[] { entry });
+            return MapToDto(entry, accounts);
         }
 
         public async Task<IEnumerable<JournalEntryDto>> GetAllAsync()
         {
-            var entries = await _entryRepo.GetAllAsync();
-            return entries.Select(MapToDto);
+            var entries = await _entryRepo.GetAllAsync(e => e.Lines);
+            var accounts = await LoadAccountsForEntries(entries);
+            return entries.Select(e => MapToDto(e, accounts));
         }
 
         public async Task PostAsync(Guid id)
@@ -60,7 +58,18 @@ namespace Aurora.Application.Services.Finance
             await _entryRepo.UpdateAsync(entry);
         }
 
-        private JournalEntryDto MapToDto(JournalEntry entry)
+        private async Task<Dictionary<Guid, Account>> LoadAccountsForEntries(IEnumerable<JournalEntry> entries)
+        {
+            var accountIds = entries.SelectMany(e => e.Lines).Select(l => l.AccountId).Distinct().ToList();
+            if (accountIds.Any())
+            {
+                var accounts = await _accountRepo.FindAsync(a => accountIds.Contains(a.Id));
+                return accounts.ToDictionary(a => a.Id);
+            }
+            return new Dictionary<Guid, Account>();
+        }
+
+        private JournalEntryDto MapToDto(JournalEntry entry, Dictionary<Guid, Account> accountLookup = null)
         {
             return new JournalEntryDto
             {
@@ -70,13 +79,20 @@ namespace Aurora.Application.Services.Finance
                 Description = entry.Description,
                 Reference = entry.Reference,
                 Status = entry.Status.ToString(),
-                Lines = entry.Lines.Select(l => new JournalEntryLineDto
+                Lines = entry.Lines.Select(l => 
                 {
-                    AccountId = l.AccountId,
-                    AccountName = l.Account?.Name ?? "N/A",
-                    Amount = l.Amount,
-                    Type = l.Type.ToString(),
-                    CostCenterId = l.CostCenterId
+                    string accountName = "N/A";
+                    if (l.Account != null) accountName = l.Account.Name;
+                    else if (accountLookup != null && accountLookup.TryGetValue(l.AccountId, out var acc)) accountName = acc.Name;
+
+                    return new JournalEntryLineDto
+                    {
+                        AccountId = l.AccountId,
+                        AccountName = accountName,
+                        Amount = l.Amount,
+                        Type = l.Type.ToString(),
+                        CostCenterId = l.CostCenterId
+                    };
                 }).ToList()
             };
         }

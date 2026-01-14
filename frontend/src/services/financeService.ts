@@ -28,6 +28,10 @@ export const financeService = {
         const response = await api.get('/finance/journalentry');
         return response.data;
     },
+    getJournalEntry: async (id: string): Promise<JournalEntry> => {
+        const response = await api.get(`/finance/journalentry/${id}`);
+        return response.data;
+    },
     getJournalEntryById: async (id: string): Promise<JournalEntry> => {
         const response = await api.get(`/finance/journalentry/${id}`);
         return response.data;

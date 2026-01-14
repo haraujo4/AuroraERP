@@ -55,7 +55,6 @@ namespace Aurora.Application.Services.Finance
                 if (inv.BusinessPartner == null)
                 {
                    var bp = await _bpRepository.GetByIdAsync(inv.BusinessPartnerId);
-                   Console.WriteLine($"[InvoiceService] Manual Lookup for Inv {inv.Number}, BP ID {inv.BusinessPartnerId} -> {bp?.RazaoSocial ?? "NULL"}");
                    dto.BusinessPartnerName = bp?.RazaoSocial ?? "Unknown";
                 }
                 dtos.Add(dto);
@@ -119,14 +118,12 @@ namespace Aurora.Application.Services.Finance
             var invoice = await _invoiceRepository.GetByIdAsync(id, i => i.Items, i => i.BusinessPartner);
             if (invoice == null) throw new Exception("Invoice not found");
             
-            Console.WriteLine($"[InvoiceService] Posting Invoice {id}. Items Count: {invoice.Items?.Count ?? 0}");
 
             if (invoice.Status != InvoiceStatus.Draft)
                 throw new Exception("Only draft invoices can be posted");
 
             // 1. Mark as Posted
             invoice.MarkAsPosted();
-            Console.WriteLine($"[InvoiceService] Marked as Posted. GrossAmount: {invoice.GrossAmount}");
             await _invoiceRepository.UpdateAsync(invoice);
 
             // 2. GL Integration
@@ -184,13 +181,10 @@ namespace Aurora.Application.Services.Finance
             invoice.SetReferences(null, salesOrderId);
             
             await _invoiceRepository.AddAsync(invoice);
-            Console.WriteLine($"[InvoiceService] Header Saved: {invoice.Id}");
 
             // 2. Add Items one by one and Save them (Bypassing EF Core Cascading issues)
             foreach (var item in order.Items)
             {
-                Console.WriteLine($"[InvoiceService] Processing Item: {item.Material?.Description} | Qty: {item.Quantity} | UnitPrice: {item.UnitPrice} | Tax: {item.TotalTaxValue}");
-                
                 invoice.AddItem(item.Material?.Description ?? "Material", item.Quantity, item.UnitPrice, item.TotalTaxValue);
                 
                 var invoiceItem = invoice.Items.Last();
@@ -203,14 +197,11 @@ namespace Aurora.Application.Services.Finance
                     item.CofinsRate
                 );
                 
-                Console.WriteLine($"[InvoiceService] Added Item to Invoice. TotalAmount: {invoiceItem.TotalAmount}");
                 await _itemRepository.AddAsync(invoiceItem);
             }
 
-            // 3. Update Invoice to save calculated totals (triggering update on header)
+            // 3. Update Invoice to save calculated totals
             invoice.UpdateTotals();
-            Console.WriteLine($"[InvoiceService] Recalculated Invoice Totals. Gross: {invoice.GrossAmount} | Tax: {invoice.TaxAmount} | Net: {invoice.NetAmount}");
-            Console.WriteLine($"[InvoiceService] Saving Invoice {invoice.Id} with GrossAmount: {invoice.GrossAmount}");
             await _invoiceRepository.UpdateAsync(invoice);
             
             // 4. Update SO status
@@ -304,7 +295,6 @@ namespace Aurora.Application.Services.Finance
 
             if (invoice.Type == InvoiceType.Outbound)
             {
-                Console.WriteLine($"[InvoiceService] Creating JE for Outbound Invoice. Amount: {invoice.GrossAmount}");
                 // Dr Receivable
                 jeParams.Lines.Add(new CreateJournalEntryLineDto
                 {

@@ -1,0 +1,290 @@
+Compilando...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (26ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1 FROM pg_catalog.pg_class c
+          JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+          WHERE n.nspname='public' AND
+                c.relname='__EFMigrationsHistory'
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Users" AS u)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM organization."GruposEmpresariais" AS g)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a
+          WHERE a."Type" = 'Revenue')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a
+          WHERE a."Name" LIKE '%Clientes%')
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5283
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /home/helisson/Projetos/AurroraERP/backend/Aurora.API
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BloqueadoFinanceiro", t."Codigo", t."CpfCnpj", t."CreatedAt", t."CreatedBy", t."IsActive", t."LimiteCredito", t."NomeFantasia", t."RazaoSocial", t."RgIe", t."Status", t."Tipo", t."UpdatedAt", t."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM (
+          SELECT b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy"
+          FROM commercial."BusinessPartners" AS b
+          WHERE b."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON t."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON t."Id" = b1."BusinessPartnerId"
+      ORDER BY t."Id", b0."Id"
+[SalesOrderService] Adding Item: Material=f3af7015-3080-4911-b5d3-6beeb184534b, Qty=1, UnitPrice=30000
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."Cfop", f."CofinsRate", f."CreatedAt", f."CreatedBy", f."CstIcms", f."DestState", f."IcmsRate", f."IpiRate", f."IsActive", f."NcmCode", f."OperationType", f."PisRate", f."SourceState", f."UpdatedAt", f."UpdatedBy"
+      FROM "Fiscal_TaxRules" AS f
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p13='?' (DbType = Guid), @p14='?', @p15='?', @p16='?' (DbType = DateTime), @p17='?', @p18='?', @p19='?' (DbType = Boolean), @p20='?', @p21='?', @p22='?' (DbType = Guid), @p23='?', @p24='?' (DbType = DateTime), @p25='?', @p26='?' (DbType = Guid), @p27='?' (DbType = Guid), @p28='?' (DbType = DateTime), @p29='?', @p30='?' (DbType = DateTime), @p31='?' (DbType = Boolean), @p32='?', @p33='?' (DbType = DateTime), @p34='?' (DbType = Guid), @p35='?', @p36='?' (DbType = Decimal), @p37='?' (DbType = DateTime), @p38='?', @p39='?' (DbType = Guid), @p40='?' (DbType = Int32), @p41='?' (DbType = Decimal), @p42='?' (DbType = Decimal), @p43='?' (DbType = DateTime), @p44='?', @p45='?' (DbType = Decimal), @p46='?' (DbType = Decimal), @p47='?' (DbType = Decimal), @p48='?' (DbType = Decimal), @p49='?' (DbType = Decimal), @p50='?' (DbType = Boolean), @p51='?' (DbType = Guid), @p52='?' (DbType = Decimal), @p53='?' (DbType = Decimal), @p54='?' (DbType = Decimal), @p55='?' (DbType = Guid), @p56='?' (DbType = Decimal), @p57='?' (DbType = Decimal), @p58='?' (DbType = Decimal), @p59='?' (DbType = DateTime), @p60='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25);
+      INSERT INTO sales."SalesOrders" ("Id", "BusinessPartnerId", "CreatedAt", "CreatedBy", "DeliveryDate", "IsActive", "Number", "OrderDate", "QuoteId", "Status", "TotalValue", "UpdatedAt", "UpdatedBy")
+      VALUES (@p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38);
+      INSERT INTO sales."SalesOrderItems" ("Id", "Cfop", "CofinsRate", "CofinsValue", "CreatedAt", "CreatedBy", "DiscountPercentage", "IcmsRate", "IcmsValue", "IpiRate", "IpiValue", "IsActive", "MaterialId", "PisRate", "PisValue", "Quantity", "SalesOrderId", "TotalTaxValue", "TotalValue", "UnitPrice", "UpdatedAt", "UpdatedBy")
+      VALUES (@p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, @p56, @p57, @p58, @p59, @p60);
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", t."Id0", t0."Id", t0."Cfop", t0."CofinsRate", t0."CofinsValue", t0."CreatedAt", t0."CreatedBy", t0."DiscountPercentage", t0."IcmsRate", t0."IcmsValue", t0."IpiRate", t0."IpiValue", t0."IsActive", t0."MaterialId", t0."PisRate", t0."PisValue", t0."Quantity", t0."SalesOrderId", t0."TotalTaxValue", t0."TotalValue", t0."UnitPrice", t0."UpdatedAt", t0."UpdatedBy", t0."Id0", t0."BasePrice", t0."Code", t0."CreatedAt0", t0."CreatedBy0", t0."Description", t0."DimensionUnit", t0."GrossWeight", t0."Group", t0."Height", t0."IsActive0", t0."IsBatchManaged", t0."IsSerialManaged", t0."LeadTimeDays", t0."Length", t0."MaxStock", t0."MinStock", t0."NetWeight", t0."ProcurementType", t0."PurchasingUnit", t0."SafetyStock", t0."SalesUnit", t0."StandardCost", t0."TaxClassification", t0."Type", t0."UnitOfMeasure", t0."UpdatedAt0", t0."UpdatedBy0", t0."WeightUnit", t0."Width", t."BloqueadoFinanceiro", t."Codigo", t."CpfCnpj", t."CreatedAt0", t."CreatedBy0", t."IsActive0", t."LimiteCredito", t."NomeFantasia", t."RazaoSocial", t."RgIe", t."Status0", t."Tipo", t."UpdatedAt0", t."UpdatedBy0", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy", b."Id" AS "Id0", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt" AS "CreatedAt0", b."CreatedBy" AS "CreatedBy0", b."IsActive" AS "IsActive0", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status" AS "Status0", b."Tipo", b."UpdatedAt" AS "UpdatedAt0", b."UpdatedBy" AS "UpdatedBy0"
+          FROM sales."SalesOrders" AS s
+          INNER JOIN commercial."BusinessPartners" AS b ON s."BusinessPartnerId" = b."Id"
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN (
+          SELECT s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy", m."Id" AS "Id0", m."BasePrice", m."Code", m."CreatedAt" AS "CreatedAt0", m."CreatedBy" AS "CreatedBy0", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive" AS "IsActive0", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt" AS "UpdatedAt0", m."UpdatedBy" AS "UpdatedBy0", m."WeightUnit", m."Width"
+          FROM sales."SalesOrderItems" AS s0
+          LEFT JOIN logistics."Materials" AS m ON s0."MaterialId" = m."Id"
+      ) AS t0 ON t."Id" = t0."SalesOrderId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON t."Id0" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON t."Id0" = b1."BusinessPartnerId"
+      ORDER BY t."Id", t."Id0", t0."Id", t0."Id0", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", t."Id0", t0."Id", t0."Cfop", t0."CofinsRate", t0."CofinsValue", t0."CreatedAt", t0."CreatedBy", t0."DiscountPercentage", t0."IcmsRate", t0."IcmsValue", t0."IpiRate", t0."IpiValue", t0."IsActive", t0."MaterialId", t0."PisRate", t0."PisValue", t0."Quantity", t0."SalesOrderId", t0."TotalTaxValue", t0."TotalValue", t0."UnitPrice", t0."UpdatedAt", t0."UpdatedBy", t0."Id0", t0."BasePrice", t0."Code", t0."CreatedAt0", t0."CreatedBy0", t0."Description", t0."DimensionUnit", t0."GrossWeight", t0."Group", t0."Height", t0."IsActive0", t0."IsBatchManaged", t0."IsSerialManaged", t0."LeadTimeDays", t0."Length", t0."MaxStock", t0."MinStock", t0."NetWeight", t0."ProcurementType", t0."PurchasingUnit", t0."SafetyStock", t0."SalesUnit", t0."StandardCost", t0."TaxClassification", t0."Type", t0."UnitOfMeasure", t0."UpdatedAt0", t0."UpdatedBy0", t0."WeightUnit", t0."Width", t."BloqueadoFinanceiro", t."Codigo", t."CpfCnpj", t."CreatedAt0", t."CreatedBy0", t."IsActive0", t."LimiteCredito", t."NomeFantasia", t."RazaoSocial", t."RgIe", t."Status0", t."Tipo", t."UpdatedAt0", t."UpdatedBy0", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy", b."Id" AS "Id0", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt" AS "CreatedAt0", b."CreatedBy" AS "CreatedBy0", b."IsActive" AS "IsActive0", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status" AS "Status0", b."Tipo", b."UpdatedAt" AS "UpdatedAt0", b."UpdatedBy" AS "UpdatedBy0"
+          FROM sales."SalesOrders" AS s
+          INNER JOIN commercial."BusinessPartners" AS b ON s."BusinessPartnerId" = b."Id"
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN (
+          SELECT s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy", m."Id" AS "Id0", m."BasePrice", m."Code", m."CreatedAt" AS "CreatedAt0", m."CreatedBy" AS "CreatedBy0", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive" AS "IsActive0", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt" AS "UpdatedAt0", m."UpdatedBy" AS "UpdatedBy0", m."WeightUnit", m."Width"
+          FROM sales."SalesOrderItems" AS s0
+          LEFT JOIN logistics."Materials" AS m ON s0."MaterialId" = m."Id"
+      ) AS t0 ON t."Id" = t0."SalesOrderId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON t."Id0" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON t."Id0" = b1."BusinessPartnerId"
+      ORDER BY t."Id", t."Id0", t0."Id", t0."Id0", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p13='?' (DbType = Guid), @p14='?' (DbType = Guid), @p15='?' (DbType = DateTime), @p16='?', @p17='?' (DbType = DateTime), @p18='?' (DbType = Decimal), @p19='?' (DbType = Boolean), @p20='?' (DbType = DateTime), @p21='?' (DbType = Decimal), @p22='?', @p23='?' (DbType = Guid), @p24='?' (DbType = Guid), @p25='?', @p26='?' (DbType = Decimal), @p27='?', @p28='?' (DbType = DateTime), @p29='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      INSERT INTO "Invoices" ("Id", "BusinessPartnerId", "CreatedAt", "CreatedBy", "DueDate", "GrossAmount", "IsActive", "IssueDate", "NetAmount", "Number", "PurchaseOrderId", "SalesOrderId", "Status", "TaxAmount", "Type", "UpdatedAt", "UpdatedBy")
+      VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29);
+[InvoiceService] Header Saved: e27ce61f-cfbb-4b52-bcd5-cb06550e31e8
+[InvoiceService] Processing Item: Produto Semiacabado | Qty: 1,0000 | UnitPrice: 30000,00 | Tax: 0
+[InvoiceService] Added Item to Invoice. TotalAmount: 30000,000000
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p13='?' (DbType = Guid), @p14='?', @p15='?', @p16='?' (DbType = DateTime), @p17='?', @p18='?', @p19='?' (DbType = Boolean), @p20='?', @p21='?', @p22='?' (DbType = Guid), @p23='?', @p24='?' (DbType = DateTime), @p25='?', @p26='?' (DbType = Guid), @p27='?' (DbType = Int32), @p28='?' (DbType = Decimal), @p29='?' (DbType = Decimal), @p30='?' (DbType = Guid), @p31='?' (DbType = DateTime), @p32='?', @p33='?', @p34='?' (DbType = Decimal), @p35='?' (DbType = Decimal), @p36='?' (DbType = Guid), @p37='?' (DbType = Decimal), @p38='?' (DbType = Decimal), @p39='?' (DbType = Boolean), @p40='?' (DbType = Guid), @p41='?' (DbType = Decimal), @p42='?' (DbType = Decimal), @p43='?' (DbType = Guid), @p44='?' (DbType = Decimal), @p45='?' (DbType = Decimal), @p46='?' (DbType = Decimal), @p47='?' (DbType = Decimal), @p48='?' (DbType = DateTime), @p49='?', @p52='?' (DbType = Guid), @p50='?' (DbType = Decimal), @p51='?' (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25);
+      INSERT INTO "InvoiceItems" ("Id", "Cfop", "CofinsRate", "CofinsValue", "CostCenterId", "CreatedAt", "CreatedBy", "Description", "IcmsRate", "IcmsValue", "InvoiceId", "IpiRate", "IpiValue", "IsActive", "MaterialId", "PisRate", "PisValue", "ProfitCenterId", "Quantity", "TaxAmount", "TotalAmount", "UnitPrice", "UpdatedAt", "UpdatedBy")
+      VALUES (@p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49);
+      UPDATE "Invoices" SET "GrossAmount" = @p50, "NetAmount" = @p51
+      WHERE "Id" = @p52;
+[InvoiceService] Recalculated Invoice Totals. Gross: 30000,000000 | Tax: 0 | Net: 30000,000000
+[InvoiceService] Saving Invoice e27ce61f-cfbb-4b52-bcd5-cb06550e31e8 with GrossAmount: 30000,000000
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p29='?' (DbType = Guid), @p13='?' (DbType = Guid), @p14='?' (DbType = DateTime), @p15='?', @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Boolean), @p19='?' (DbType = DateTime), @p20='?' (DbType = Decimal), @p21='?', @p22='?' (DbType = Guid), @p23='?' (DbType = Guid), @p24='?', @p25='?' (DbType = Decimal), @p26='?', @p27='?' (DbType = DateTime), @p28='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      UPDATE "Invoices" SET "BusinessPartnerId" = @p13, "CreatedAt" = @p14, "CreatedBy" = @p15, "DueDate" = @p16, "GrossAmount" = @p17, "IsActive" = @p18, "IssueDate" = @p19, "NetAmount" = @p20, "Number" = @p21, "PurchaseOrderId" = @p22, "SalesOrderId" = @p23, "Status" = @p24, "TaxAmount" = @p25, "Type" = @p26, "UpdatedAt" = @p27, "UpdatedBy" = @p28
+      WHERE "Id" = @p29;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p25='?' (DbType = Guid), @p13='?' (DbType = Guid), @p14='?' (DbType = DateTime), @p15='?', @p16='?' (DbType = DateTime), @p17='?' (DbType = Boolean), @p18='?', @p19='?' (DbType = DateTime), @p20='?' (DbType = Guid), @p21='?', @p22='?' (DbType = Decimal), @p23='?' (DbType = DateTime), @p24='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      UPDATE sales."SalesOrders" SET "BusinessPartnerId" = @p13, "CreatedAt" = @p14, "CreatedBy" = @p15, "DeliveryDate" = @p16, "IsActive" = @p17, "Number" = @p18, "OrderDate" = @p19, "QuoteId" = @p20, "Status" = @p21, "TotalValue" = @p22, "UpdatedAt" = @p23, "UpdatedBy" = @p24
+      WHERE "Id" = @p25;
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DueDate", t."GrossAmount", t."IsActive", t."IssueDate", t."NetAmount", t."Number", t."PurchaseOrderId", t."SalesOrderId", t."Status", t."TaxAmount", t."Type", t."UpdatedAt", t."UpdatedBy", t."Id0", i0."Id", i0."Cfop", i0."CofinsRate", i0."CofinsValue", i0."CostCenterId", i0."CreatedAt", i0."CreatedBy", i0."Description", i0."IcmsRate", i0."IcmsValue", i0."InvoiceId", i0."IpiRate", i0."IpiValue", i0."IsActive", i0."MaterialId", i0."PisRate", i0."PisValue", i0."ProfitCenterId", i0."Quantity", i0."TaxAmount", i0."TotalAmount", i0."UnitPrice", i0."UpdatedAt", i0."UpdatedBy", t."BloqueadoFinanceiro", t."Codigo", t."CpfCnpj", t."CreatedAt0", t."CreatedBy0", t."IsActive0", t."LimiteCredito", t."NomeFantasia", t."RazaoSocial", t."RgIe", t."Status0", t."Tipo", t."UpdatedAt0", t."UpdatedBy0", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM (
+          SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id" AS "Id0", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt" AS "CreatedAt0", b."CreatedBy" AS "CreatedBy0", b."IsActive" AS "IsActive0", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status" AS "Status0", b."Tipo", b."UpdatedAt" AS "UpdatedAt0", b."UpdatedBy" AS "UpdatedBy0"
+          FROM "Invoices" AS i
+          INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+          WHERE i."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "InvoiceItems" AS i0 ON t."Id" = i0."InvoiceId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON t."Id0" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON t."Id0" = b1."BusinessPartnerId"
+      ORDER BY t."Id", t."Id0", i0."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DueDate", t."GrossAmount", t."IsActive", t."IssueDate", t."NetAmount", t."Number", t."PurchaseOrderId", t."SalesOrderId", t."Status", t."TaxAmount", t."Type", t."UpdatedAt", t."UpdatedBy", t."Id0", i0."Id", i0."Cfop", i0."CofinsRate", i0."CofinsValue", i0."CostCenterId", i0."CreatedAt", i0."CreatedBy", i0."Description", i0."IcmsRate", i0."IcmsValue", i0."InvoiceId", i0."IpiRate", i0."IpiValue", i0."IsActive", i0."MaterialId", i0."PisRate", i0."PisValue", i0."ProfitCenterId", i0."Quantity", i0."TaxAmount", i0."TotalAmount", i0."UnitPrice", i0."UpdatedAt", i0."UpdatedBy", t."BloqueadoFinanceiro", t."Codigo", t."CpfCnpj", t."CreatedAt0", t."CreatedBy0", t."IsActive0", t."LimiteCredito", t."NomeFantasia", t."RazaoSocial", t."RgIe", t."Status0", t."Tipo", t."UpdatedAt0", t."UpdatedBy0", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM (
+          SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id" AS "Id0", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt" AS "CreatedAt0", b."CreatedBy" AS "CreatedBy0", b."IsActive" AS "IsActive0", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status" AS "Status0", b."Tipo", b."UpdatedAt" AS "UpdatedAt0", b."UpdatedBy" AS "UpdatedBy0"
+          FROM "Invoices" AS i
+          INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+          WHERE i."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "InvoiceItems" AS i0 ON t."Id" = i0."InvoiceId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON t."Id0" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON t."Id0" = b1."BusinessPartnerId"
+      ORDER BY t."Id", t."Id0", i0."Id", b0."Id"
+[InvoiceService] Posting Invoice e27ce61f-cfbb-4b52-bcd5-cb06550e31e8. Items Count: 1
+[InvoiceService] Marked as Posted. GrossAmount: 30000,0000
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p29='?' (DbType = Guid), @p13='?' (DbType = Guid), @p14='?' (DbType = DateTime), @p15='?', @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Boolean), @p19='?' (DbType = DateTime), @p20='?' (DbType = Decimal), @p21='?', @p22='?' (DbType = Guid), @p23='?' (DbType = Guid), @p24='?', @p25='?' (DbType = Decimal), @p26='?', @p27='?' (DbType = DateTime), @p28='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      UPDATE "Invoices" SET "BusinessPartnerId" = @p13, "CreatedAt" = @p14, "CreatedBy" = @p15, "DueDate" = @p16, "GrossAmount" = @p17, "IsActive" = @p18, "IssueDate" = @p19, "NetAmount" = @p20, "Number" = @p21, "PurchaseOrderId" = @p22, "SalesOrderId" = @p23, "Status" = @p24, "TaxAmount" = @p25, "Type" = @p26, "UpdatedAt" = @p27, "UpdatedBy" = @p28
+      WHERE "Id" = @p29;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+[InvoiceService] Creating JE for Outbound Invoice. Amount: 30000,0000
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p13='?' (DbType = Guid), @p14='?', @p15='?', @p16='?' (DbType = DateTime), @p17='?', @p18='?', @p19='?' (DbType = Boolean), @p20='?', @p21='?', @p22='?' (DbType = Guid), @p23='?', @p24='?' (DbType = DateTime), @p25='?', @p26='?' (DbType = Guid), @p27='?', @p28='?', @p29='?' (DbType = DateTime), @p30='?', @p31='?', @p32='?' (DbType = Boolean), @p33='?', @p34='?', @p35='?' (DbType = Guid), @p36='?', @p37='?' (DbType = DateTime), @p38='?', @p39='?' (DbType = Guid), @p40='?' (DbType = DateTime), @p41='?', @p42='?', @p43='?' (DbType = DateTime), @p44='?' (DbType = Boolean), @p45='?' (DbType = DateTime), @p46='?', @p47='?', @p48='?' (DbType = DateTime), @p49='?', @p50='?' (DbType = Guid), @p51='?' (DbType = Guid), @p52='?' (DbType = Decimal), @p53='?' (DbType = Guid), @p54='?' (DbType = DateTime), @p55='?', @p56='?' (DbType = Boolean), @p57='?' (DbType = Guid), @p58='?' (DbType = Guid), @p59='?', @p60='?' (DbType = DateTime), @p61='?', @p62='?' (DbType = Guid), @p63='?' (DbType = Guid), @p64='?' (DbType = Decimal), @p65='?' (DbType = Guid), @p66='?' (DbType = DateTime), @p67='?', @p68='?' (DbType = Boolean), @p69='?' (DbType = Guid), @p70='?' (DbType = Guid), @p71='?', @p72='?' (DbType = DateTime), @p73='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25);
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38);
+      INSERT INTO "JournalEntries" ("Id", "CreatedAt", "CreatedBy", "Description", "DocumentDate", "IsActive", "PostingDate", "Reference", "Status", "UpdatedAt", "UpdatedBy")
+      VALUES (@p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49);
+      INSERT INTO "JournalEntryLines" ("Id", "AccountId", "Amount", "CostCenterId", "CreatedAt", "CreatedBy", "IsActive", "JournalEntryId", "ProfitCenterId", "Type", "UpdatedAt", "UpdatedBy")
+      VALUES (@p50, @p51, @p52, @p53, @p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61);
+      INSERT INTO "JournalEntryLines" ("Id", "AccountId", "Amount", "CostCenterId", "CreatedAt", "CreatedBy", "IsActive", "JournalEntryId", "ProfitCenterId", "Type", "UpdatedAt", "UpdatedBy")
+      VALUES (@p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69, @p70, @p71, @p72, @p73);
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+      WHERE j."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+      WHERE j."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?' (DbType = Boolean), @p7='?', @p8='?', @p9='?' (DbType = Guid), @p10='?', @p11='?' (DbType = DateTime), @p12='?', @p23='?' (DbType = Guid), @p13='?' (DbType = DateTime), @p14='?', @p15='?', @p16='?' (DbType = DateTime), @p17='?' (DbType = Boolean), @p18='?' (DbType = DateTime), @p19='?', @p20='?', @p21='?' (DbType = DateTime), @p22='?'], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "AuditLogs" ("Id", "Action", "ChangedColumns", "CreatedAt", "CreatedBy", "EntityName", "IsActive", "NewValues", "OldValues", "PrimaryKey", "TableName", "UpdatedAt", "UpdatedBy")
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+      UPDATE "JournalEntries" SET "CreatedAt" = @p13, "CreatedBy" = @p14, "Description" = @p15, "DocumentDate" = @p16, "IsActive" = @p17, "PostingDate" = @p18, "Reference" = @p19, "Status" = @p20, "UpdatedAt" = @p21, "UpdatedBy" = @p22
+      WHERE "Id" = @p23;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+      FROM "JournalEntries" AS j

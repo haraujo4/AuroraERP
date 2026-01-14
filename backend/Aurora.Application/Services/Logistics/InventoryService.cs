@@ -108,7 +108,12 @@ namespace Aurora.Application.Services.Logistics
 
             if (IsOutgoing(dto.Type))
             {
-                movementUnitPrice = level.AverageUnitCost;
+                if (level.AverageUnitCost > 0)
+                {
+                    movementUnitPrice = level.AverageUnitCost;
+                }
+                // Else: keep movementUnitPrice as dto.UnitPrice (which has the fallback)
+                
                 level.RemoveQuantity(dto.Quantity);
             }
             else

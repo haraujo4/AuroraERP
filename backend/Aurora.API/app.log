@@ -1,0 +1,1102 @@
+Compilando...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (26ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1 FROM pg_catalog.pg_class c
+          JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+          WHERE n.nspname='public' AND
+                c.relname='__EFMigrationsHistory'
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Users" AS u)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM organization."GruposEmpresariais" AS g)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a
+          WHERE a."Type" = 'Revenue')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Accounts" AS a
+          WHERE a."Name" LIKE '%Clientes%')
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5283
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /home/helisson/Projetos/AurroraERP/backend/Aurora.API
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__grupoId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."GrupoEmpresarialId" = @__grupoId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__grupoId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."GrupoEmpresarialId" = @__grupoId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."Codigo", c."CreatedAt", c."CreatedBy", c."Descricao", c."EmpresaId", c."IsActive", c."Responsavel", c."UnidadeNegocioId", c."UpdatedAt", c."UpdatedBy"
+      FROM organization."CentrosLucro" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__grupoId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."GrupoEmpresarialId" = @__grupoId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__grupoId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."GrupoEmpresarialId" = @__grupoId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."Codigo", c."CreatedAt", c."CreatedBy", c."Descricao", c."EmpresaId", c."HierarquiaPaiId", c."IsActive", c."Responsavel", c."UpdatedAt", c."UpdatedBy", c."ValidadeFim", c."ValidadeInicio"
+      FROM organization."CentrosCusto" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."Codigo", f."CreatedAt", f."CreatedBy", f."Descricao", f."EmpresaId", f."IsActive", f."Tipo", f."UpdatedAt", f."UpdatedBy", f."City", f."Complement", f."Country", f."Neighborhood", f."Number", f."State", f."Street", f."ZipCode"
+      FROM organization."Filiais" AS f
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."Codigo", f."CreatedAt", f."CreatedBy", f."Descricao", f."EmpresaId", f."IsActive", f."Tipo", f."UpdatedAt", f."UpdatedBy", f."City", f."Complement", f."Country", f."Neighborhood", f."Number", f."State", f."Street", f."ZipCode"
+      FROM organization."Filiais" AS f
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__grupoId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT e."Id", e."CNAEPrincipal", e."CNPJ", e."Codigo", e."CreatedAt", e."CreatedBy", e."GrupoEmpresarialId", e."InscricaoEstadual", e."InscricaoMunicipal", e."IsActive", e."MoedaLocal", e."NaturezaJuridica", e."NomeFantasia", e."RazaoSocial", e."RegimeTributario", e."UpdatedAt", e."UpdatedBy", e."City", e."Complement", e."Country", e."Neighborhood", e."Number", e."State", e."Street", e."ZipCode"
+      FROM organization."Empresas" AS e
+      WHERE e."GrupoEmpresarialId" = @__grupoId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy", b."Id", t."Id", t."Cfop", t."CofinsRate", t."CofinsValue", t."CreatedAt", t."CreatedBy", t."DiscountPercentage", t."IcmsRate", t."IcmsValue", t."IpiRate", t."IpiValue", t."IsActive", t."MaterialId", t."PisRate", t."PisValue", t."Quantity", t."SalesOrderId", t."TotalTaxValue", t."TotalValue", t."UnitPrice", t."UpdatedAt", t."UpdatedBy", t."Id0", t."BasePrice", t."Code", t."CreatedAt0", t."CreatedBy0", t."Description", t."DimensionUnit", t."GrossWeight", t."Group", t."Height", t."IsActive0", t."IsBatchManaged", t."IsSerialManaged", t."LeadTimeDays", t."Length", t."MaxStock", t."MinStock", t."NetWeight", t."ProcurementType", t."PurchasingUnit", t."SafetyStock", t."SalesUnit", t."StandardCost", t."TaxClassification", t."Type", t."UnitOfMeasure", t."UpdatedAt0", t."UpdatedBy0", t."WeightUnit", t."Width", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM sales."SalesOrders" AS s
+      INNER JOIN commercial."BusinessPartners" AS b ON s."BusinessPartnerId" = b."Id"
+      LEFT JOIN (
+          SELECT s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy", m."Id" AS "Id0", m."BasePrice", m."Code", m."CreatedAt" AS "CreatedAt0", m."CreatedBy" AS "CreatedBy0", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive" AS "IsActive0", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt" AS "UpdatedAt0", m."UpdatedBy" AS "UpdatedBy0", m."WeightUnit", m."Width"
+          FROM sales."SalesOrderItems" AS s0
+          LEFT JOIN logistics."Materials" AS m ON s0."MaterialId" = m."Id"
+      ) AS t ON s."Id" = t."SalesOrderId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY s."Id", b."Id", t."Id", t."Id0", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy", b."Id", t."Id", t."Cfop", t."CofinsRate", t."CofinsValue", t."CreatedAt", t."CreatedBy", t."DiscountPercentage", t."IcmsRate", t."IcmsValue", t."IpiRate", t."IpiValue", t."IsActive", t."MaterialId", t."PisRate", t."PisValue", t."Quantity", t."SalesOrderId", t."TotalTaxValue", t."TotalValue", t."UnitPrice", t."UpdatedAt", t."UpdatedBy", t."Id0", t."BasePrice", t."Code", t."CreatedAt0", t."CreatedBy0", t."Description", t."DimensionUnit", t."GrossWeight", t."Group", t."Height", t."IsActive0", t."IsBatchManaged", t."IsSerialManaged", t."LeadTimeDays", t."Length", t."MaxStock", t."MinStock", t."NetWeight", t."ProcurementType", t."PurchasingUnit", t."SafetyStock", t."SalesUnit", t."StandardCost", t."TaxClassification", t."Type", t."UnitOfMeasure", t."UpdatedAt0", t."UpdatedBy0", t."WeightUnit", t."Width", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM sales."SalesOrders" AS s
+      INNER JOIN commercial."BusinessPartners" AS b ON s."BusinessPartnerId" = b."Id"
+      LEFT JOIN (
+          SELECT s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy", m."Id" AS "Id0", m."BasePrice", m."Code", m."CreatedAt" AS "CreatedAt0", m."CreatedBy" AS "CreatedBy0", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive" AS "IsActive0", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt" AS "UpdatedAt0", m."UpdatedBy" AS "UpdatedBy0", m."WeightUnit", m."Width"
+          FROM sales."SalesOrderItems" AS s0
+          LEFT JOIN logistics."Materials" AS m ON s0."MaterialId" = m."Id"
+      ) AS t ON s."Id" = t."SalesOrderId"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY s."Id", b."Id", t."Id", t."Id0", b0."Id"
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (26ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT d."Id", d."CreatedAt", d."CreatedBy", d."DeliveryDate", d."IsActive", d."Number", d."PostingDate", d."SalesOrderId", d."Status", d."UpdatedAt", d."UpdatedBy", d0."Id", d0."CreatedAt", d0."CreatedBy", d0."DeliveryId", d0."IsActive", d0."MaterialId", d0."Quantity", d0."SalesOrderItemId", d0."UnitCost", d0."UpdatedAt", d0."UpdatedBy"
+      FROM logistics."Deliveries" AS d
+      LEFT JOIN logistics."DeliveryItems" AS d0 ON d."Id" = d0."DeliveryId"
+      ORDER BY d."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT d."Id", d."CreatedAt", d."CreatedBy", d."DeliveryDate", d."IsActive", d."Number", d."PostingDate", d."SalesOrderId", d."Status", d."UpdatedAt", d."UpdatedBy", d0."Id", d0."CreatedAt", d0."CreatedBy", d0."DeliveryId", d0."IsActive", d0."MaterialId", d0."Quantity", d0."SalesOrderItemId", d0."UnitCost", d0."UpdatedAt", d0."UpdatedBy"
+      FROM logistics."Deliveries" AS d
+      LEFT JOIN logistics."DeliveryItems" AS d0 ON d."Id" = d0."DeliveryId"
+      ORDER BY d."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."BusinessPartnerId", t."CreatedAt", t."CreatedBy", t."DeliveryDate", t."IsActive", t."Number", t."OrderDate", t."QuoteId", t."Status", t."TotalValue", t."UpdatedAt", t."UpdatedBy", s0."Id", s0."Cfop", s0."CofinsRate", s0."CofinsValue", s0."CreatedAt", s0."CreatedBy", s0."DiscountPercentage", s0."IcmsRate", s0."IcmsValue", s0."IpiRate", s0."IpiValue", s0."IsActive", s0."MaterialId", s0."PisRate", s0."PisValue", s0."Quantity", s0."SalesOrderId", s0."TotalTaxValue", s0."TotalValue", s0."UnitPrice", s0."UpdatedAt", s0."UpdatedBy"
+      FROM (
+          SELECT s."Id", s."BusinessPartnerId", s."CreatedAt", s."CreatedBy", s."DeliveryDate", s."IsActive", s."Number", s."OrderDate", s."QuoteId", s."Status", s."TotalValue", s."UpdatedAt", s."UpdatedBy"
+          FROM sales."SalesOrders" AS s
+          WHERE s."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN sales."SalesOrderItems" AS s0 ON t."Id" = s0."SalesOrderId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM logistics."Materials" AS m
+      WHERE m."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."CreatedAt", t."CreatedBy", t."Description", t."DocumentDate", t."IsActive", t."PostingDate", t."Reference", t."Status", t."UpdatedAt", t."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM (
+          SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+          FROM "JournalEntries" AS j
+          WHERE j."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "JournalEntryLines" AS j0 ON t."Id" = j0."JournalEntryId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."CreatedAt", t."CreatedBy", t."Description", t."DocumentDate", t."IsActive", t."PostingDate", t."Reference", t."Status", t."UpdatedAt", t."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM (
+          SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+          FROM "JournalEntries" AS j
+          WHERE j."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "JournalEntryLines" AS j0 ON t."Id" = j0."JournalEntryId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."CreatedAt", t."CreatedBy", t."Description", t."DocumentDate", t."IsActive", t."PostingDate", t."Reference", t."Status", t."UpdatedAt", t."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM (
+          SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+          FROM "JournalEntries" AS j
+          WHERE j."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "JournalEntryLines" AS j0 ON t."Id" = j0."JournalEntryId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT t."Id", t."CreatedAt", t."CreatedBy", t."Description", t."DocumentDate", t."IsActive", t."PostingDate", t."Reference", t."Status", t."UpdatedAt", t."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM (
+          SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy"
+          FROM "JournalEntries" AS j
+          WHERE j."Id" = @__id_0
+          LIMIT 1
+      ) AS t
+      LEFT JOIN "JournalEntryLines" AS j0 ON t."Id" = j0."JournalEntryId"
+      ORDER BY t."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__accountIds_0='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+      WHERE a."Id" = ANY (@__accountIds_0)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT g."Id", g."Codigo", g."CreatedAt", g."CreatedBy", g."IdiomaPadrao", g."IsActive", g."MoedaBase", g."NomeFantasia", g."PaisConsolidacao", g."RazaoSocialConsolidada", g."RegimeFiscalConsolidado", g."UpdatedAt", g."UpdatedBy"
+      FROM organization."GruposEmpresariais" AS g
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BaseQuantity", b."CreatedAt", b."CreatedBy", b."Description", b."IsActive", b."ProductId", b."UpdatedAt", b."UpdatedBy", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM "BillOfMaterials" AS b
+      INNER JOIN logistics."Materials" AS m ON b."ProductId" = m."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BaseQuantity", b."CreatedAt", b."CreatedBy", b."Description", b."IsActive", b."ProductId", b."UpdatedAt", b."UpdatedBy", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM "BillOfMaterials" AS b
+      INNER JOIN logistics."Materials" AS m ON b."ProductId" = m."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."CreatedAt", p."CreatedBy", p."EndDate", p."IsActive", p."OrderNumber", p."ProductId", p."Quantity", p."StartDate", p."Status", p."TotalMaterialCost", p."UpdatedAt", p."UpdatedBy", p."WorkCenterId", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width", w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "ProductionOrders" AS p
+      INNER JOIN logistics."Materials" AS m ON p."ProductId" = m."Id"
+      LEFT JOIN "WorkCenters" AS w ON p."WorkCenterId" = w."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."CreatedAt", p."CreatedBy", p."EndDate", p."IsActive", p."OrderNumber", p."ProductId", p."Quantity", p."StartDate", p."Status", p."TotalMaterialCost", p."UpdatedAt", p."UpdatedBy", p."WorkCenterId", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width", w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "ProductionOrders" AS p
+      INNER JOIN logistics."Materials" AS m ON p."ProductId" = m."Id"
+      LEFT JOIN "WorkCenters" AS w ON p."WorkCenterId" = w."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BaseQuantity", b."CreatedAt", b."CreatedBy", b."Description", b."IsActive", b."ProductId", b."UpdatedAt", b."UpdatedBy", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM "BillOfMaterials" AS b
+      INNER JOIN logistics."Materials" AS m ON b."ProductId" = m."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BaseQuantity", b."CreatedAt", b."CreatedBy", b."Description", b."IsActive", b."ProductId", b."UpdatedAt", b."UpdatedBy", m."Id", m."BasePrice", m."Code", m."CreatedAt", m."CreatedBy", m."Description", m."DimensionUnit", m."GrossWeight", m."Group", m."Height", m."IsActive", m."IsBatchManaged", m."IsSerialManaged", m."LeadTimeDays", m."Length", m."MaxStock", m."MinStock", m."NetWeight", m."ProcurementType", m."PurchasingUnit", m."SafetyStock", m."SalesUnit", m."StandardCost", m."TaxClassification", m."Type", m."UnitOfMeasure", m."UpdatedAt", m."UpdatedBy", m."WeightUnit", m."Width"
+      FROM "BillOfMaterials" AS b
+      INNER JOIN logistics."Materials" AS m ON b."ProductId" = m."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+[KE30] Fetching for range: 01/01/2026 00:00:00 to 14/01/2026 23:59:59
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+[KE30] Found 28 posted entries in range.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+[KE30] Fetching for range: 01/01/2026 00:00:00 to 14/01/2026 23:59:59
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT j."Id", j."CreatedAt", j."CreatedBy", j."Description", j."DocumentDate", j."IsActive", j."PostingDate", j."Reference", j."Status", j."UpdatedAt", j."UpdatedBy", j0."Id", j0."AccountId", j0."Amount", j0."CostCenterId", j0."CreatedAt", j0."CreatedBy", j0."IsActive", j0."JournalEntryId", j0."ProfitCenterId", j0."Type", j0."UpdatedAt", j0."UpdatedBy"
+      FROM "JournalEntries" AS j
+      LEFT JOIN "JournalEntryLines" AS j0 ON j."Id" = j0."JournalEntryId"
+      ORDER BY j."Id"
+[KE30] Found 28 posted entries in range.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."AccountId", p."Amount", p."BusinessPartnerId", p."CreatedAt", p."CreatedBy", p."InvoiceId", p."IsActive", p."Method", p."PaymentDate", p."Reference", p."Status", p."UpdatedAt", p."UpdatedBy"
+      FROM "Payments" AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."AccountId", p."Amount", p."BusinessPartnerId", p."CreatedAt", p."CreatedBy", p."InvoiceId", p."IsActive", p."Method", p."PaymentDate", p."Reference", p."Status", p."UpdatedAt", p."UpdatedBy"
+      FROM "Payments" AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Code", a."CreatedAt", a."CreatedBy", a."IsActive", a."Level", a."Name", a."Nature", a."ParentId", a."Type", a."UpdatedAt", a."UpdatedBy"
+      FROM "Accounts" AS a
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i."Id", i."BusinessPartnerId", i."CreatedAt", i."CreatedBy", i."DueDate", i."GrossAmount", i."IsActive", i."IssueDate", i."NetAmount", i."Number", i."PurchaseOrderId", i."SalesOrderId", i."Status", i."TaxAmount", i."Type", i."UpdatedAt", i."UpdatedBy", b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM "Invoices" AS i
+      INNER JOIN commercial."BusinessPartners" AS b ON i."BusinessPartnerId" = b."Id"
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY i."Id", b."Id", b0."Id"
+warn: Microsoft.EntityFrameworkCore.Query[20504]
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM commercial."BusinessPartners" AS b
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."BloqueadoFinanceiro", b."Codigo", b."CpfCnpj", b."CreatedAt", b."CreatedBy", b."IsActive", b."LimiteCredito", b."NomeFantasia", b."RazaoSocial", b."RgIe", b."Status", b."Tipo", b."UpdatedAt", b."UpdatedBy", b0."Id", b0."BusinessPartnerId", b0."IsPrincipal", b0."Type", b0."City", b0."Complement", b0."Country", b0."Neighborhood", b0."Number", b0."State", b0."Street", b0."ZipCode", b1."Id", b1."BusinessPartnerId", b1."Email", b1."Name", b1."Phone", b1."Role"
+      FROM commercial."BusinessPartners" AS b
+      LEFT JOIN commercial."BusinessPartnerAddresses" AS b0 ON b."Id" = b0."BusinessPartnerId"
+      LEFT JOIN commercial."BusinessPartnerContacts" AS b1 ON b."Id" = b1."BusinessPartnerId"
+      ORDER BY b."Id", b0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."AccountId", p."Amount", p."BusinessPartnerId", p."CreatedAt", p."CreatedBy", p."InvoiceId", p."IsActive", p."Method", p."PaymentDate", p."Reference", p."Status", p."UpdatedAt", p."UpdatedBy"
+      FROM "Payments" AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."AccountId", p."Amount", p."BusinessPartnerId", p."CreatedAt", p."CreatedBy", p."InvoiceId", p."IsActive", p."Method", p."PaymentDate", p."Reference", p."Status", p."UpdatedAt", p."UpdatedBy"
+      FROM "Payments" AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT w."Id", w."Code", w."CostCenterId", w."CreatedAt", w."CreatedBy", w."IsActive", w."Name", w."UpdatedAt", w."UpdatedBy"
+      FROM "WorkCenters" AS w

@@ -22,7 +22,7 @@ export interface CreateAccount {
     parentId?: string;
 }
 
-export type JournalEntryStatus = 'Draft' | 'Posted';
+export type JournalEntryStatus = 'Draft' | 'Posted' | 'Cancelled';
 
 export interface JournalEntry {
     id: string;

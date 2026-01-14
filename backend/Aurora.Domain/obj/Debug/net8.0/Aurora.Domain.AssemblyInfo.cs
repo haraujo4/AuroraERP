@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurora.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f166a5116cd0d4bbf045281f7690b254f07d1f48")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52fe62e7692cb9c72bc4202e4012f0d438cc44bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurora.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurora.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
