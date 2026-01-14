@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import fiscalService from '../../../services/fiscalService';
 import { STATES, CstIcmsValues } from '../../../types/fiscal';
@@ -7,6 +7,7 @@ import type { OperationType, CstIcms } from '../../../types/fiscal';
 
 const TaxRuleForm: React.FC = () => {
     const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
     const [formData, setFormData] = useState({
         sourceState: '',
         destState: '',
@@ -20,16 +21,55 @@ const TaxRuleForm: React.FC = () => {
         cofinsRate: 7.60
     });
 
+
+
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (id) {
+            loadRule(id);
+        }
+    }, [id]);
+
+    const loadRule = async (ruleId: string) => {
+        try {
+            setLoading(true);
+            const rule = await fiscalService.getRuleById(ruleId);
+            setFormData({
+                sourceState: rule.sourceState,
+                destState: rule.destState,
+                ncmCode: rule.ncmCode || '',
+                operationType: rule.operationType,
+                cfop: rule.cfop,
+                cstIcms: rule.cstIcms,
+                icmsRate: rule.icmsRate,
+                ipiRate: rule.ipiRate,
+                pisRate: rule.pisRate,
+                cofinsRate: rule.cofinsRate
+            });
+        } catch (error) {
+            console.error('Error loading rule', error);
+            alert('Erro ao carregar regra');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await fiscalService.createRule({
+
+            const payload = {
                 ...formData,
                 ncmCode: formData.ncmCode.trim() || undefined
-            });
+            };
+
+            if (id) {
+                await fiscalService.updateRule(id, payload);
+            } else {
+                await fiscalService.createRule(payload);
+            }
             navigate('/fiscal/tax-rules');
         } catch (error) {
             console.error('Error creating rule', error);
@@ -48,7 +88,9 @@ const TaxRuleForm: React.FC = () => {
                 >
                     <ArrowLeft size={20} className="text-gray-500" />
                 </button>
-                <h1 className="text-2xl font-bold text-gray-900">Nova Regra Fiscal (FIS01)</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                    {id ? 'Editar Regra Fiscal' : 'Nova Regra Fiscal (FIS01)'}
+                </h1>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-8">

@@ -27,6 +27,9 @@ namespace Aurora.Application.DTOs.Logistics
         public decimal BasePrice { get; set; }
         public string? SalesUnit { get; set; }
         public string? TaxClassification { get; set; } // NCM
+        public int Origin { get; set; }
+        public decimal DefaultIpiRate { get; set; }
+        public decimal DefaultIcmsRate { get; set; }
 
         // Purchasing
         public decimal? StandardCost { get; set; }
@@ -60,6 +63,9 @@ namespace Aurora.Application.DTOs.Logistics
         public decimal BasePrice { get; set; }
         public string? SalesUnit { get; set; }
         public string? TaxClassification { get; set; }
+        public int Origin { get; set; }
+        public decimal DefaultIpiRate { get; set; }
+        public decimal DefaultIcmsRate { get; set; }
 
         // Purchasing
         public decimal? StandardCost { get; set; }

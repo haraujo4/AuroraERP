@@ -12,39 +12,20 @@ namespace Aurora.Application.Services.Fiscal
     public class FiscalDocumentService : IFiscalDocumentService
     {
         private readonly IRepository<FiscalDocument> _repository;
-        private readonly IRepository<Invoice> _invoiceRepository;
+        private readonly IFiscalService _fiscalService;
 
         public FiscalDocumentService(
             IRepository<FiscalDocument> repository,
-            IRepository<Invoice> invoiceRepository)
+            IFiscalService fiscalService)
         {
             _repository = repository;
-            _invoiceRepository = invoiceRepository;
+            _fiscalService = fiscalService;
         }
 
         public async Task<FiscalDocumentDto> GenerateFromInvoiceAsync(Guid invoiceId)
         {
-            var invoice = await _invoiceRepository.GetByIdAsync(invoiceId);
-            if (invoice == null) throw new Exception("Invoice not found");
-            if (invoice.Status != Aurora.Domain.Enums.InvoiceStatus.Posted)
-                throw new Exception("Invoice must be Posted to generate NFe");
-
-            // Check if already exists
-            var existing = (await _repository.FindAsync(f => f.InvoiceId == invoiceId)).FirstOrDefault();
-            if (existing != null) return MapToDto(existing);
-
-            // Generate Mock NFe
-            var random = new Random();
-            var docNumber = random.Next(1000, 999999).ToString();
-            var series = "1";
-            var accessKey = string.Join("", Enumerable.Range(0, 44).Select(_ => random.Next(0, 10).ToString()));
-
-            var doc = new FiscalDocument(invoiceId, docNumber, series, accessKey);
-            
-            // Mock implicit authorization for MVP
-            doc.Authorize("MOCK-PROTOCOL", "<nfe>Mock</nfe>", "http://mock-url.com/danfe.pdf", "http://mock-url.com/nfe.xml");
-
-            await _repository.AddAsync(doc);
+            // Delegate logic to Fiscal Service (which handles Provider and Email)
+            var doc = await _fiscalService.EmitirNotaFiscalAsync(invoiceId);
             return MapToDto(doc);
         }
 
@@ -66,6 +47,11 @@ namespace Aurora.Application.Services.Fiscal
             if (doc == null) throw new Exception("Document not found");
             doc.Cancel();
             await _repository.UpdateAsync(doc);
+        }
+
+        public async Task<byte[]> GetPdfBytesByInvoiceIdAsync(Guid invoiceId)
+        {
+            return await _fiscalService.GetPdfBytesAsync(invoiceId);
         }
 
         private FiscalDocumentDto MapToDto(FiscalDocument entity)

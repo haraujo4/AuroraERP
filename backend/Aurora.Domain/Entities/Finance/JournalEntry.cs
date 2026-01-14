@@ -12,6 +12,8 @@ namespace Aurora.Domain.Entities.Finance
         public string Description { get; private set; }
         public string? Reference { get; private set; }
         public JournalEntryStatus Status { get; private set; }
+        public Guid? ReversedEntryId { get; private set; }
+        public bool IsReversal { get; private set; }
         
         private readonly List<JournalEntryLine> _lines = new List<JournalEntryLine>();
         public IReadOnlyCollection<JournalEntryLine> Lines => _lines.AsReadOnly();
@@ -47,6 +49,37 @@ namespace Aurora.Domain.Entities.Finance
                 throw new InvalidOperationException($"Journal entry is out of balance. Debits: {debitSum}, Credits: {creditSum}");
 
             Status = JournalEntryStatus.Posted;
+        }
+
+        public void Cancel()
+        {
+            if (Status == JournalEntryStatus.Cancelled)
+                throw new InvalidOperationException("Journal entry is already cancelled.");
+            
+            Status = JournalEntryStatus.Cancelled;
+        }
+
+        public JournalEntry CreateReversal(string reason)
+        {
+            if (Status != JournalEntryStatus.Posted)
+                throw new InvalidOperationException("Only posted entries can be reversed.");
+            
+            if (ReversedEntryId != null)
+                throw new InvalidOperationException("Entry is already reversed.");
+
+            var reversal = new JournalEntry(DateTime.Now, DateTime.Now, $"Estorno de {Description} - Motivo: {reason}", Reference);
+            reversal.IsReversal = true;
+
+            foreach (var line in _lines)
+            {
+                var reversedType = line.Type == JournalEntryLineType.Debit ? JournalEntryLineType.Credit : JournalEntryLineType.Debit;
+                reversal.AddLine(line.AccountId, line.Amount, reversedType, line.CostCenterId);
+            }
+
+            ReversedEntryId = reversal.Id;
+            Status = JournalEntryStatus.Cancelled;
+
+            return reversal;
         }
     }
 

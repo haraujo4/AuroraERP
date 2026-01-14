@@ -19,5 +19,10 @@ export const salesQuoteService = {
 
     updateStatus: async (id: string, status: string): Promise<void> => {
         await api.patch(`/sales/quotes/${id}/status`, { status });
+    },
+
+    simulateTax: async (dto: { businessPartnerId: string, materialId: string, quantity: number, unitPrice: number }): Promise<any> => {
+        const response = await api.post('/sales/quotes/simulate-tax', dto);
+        return response.data;
     }
 };

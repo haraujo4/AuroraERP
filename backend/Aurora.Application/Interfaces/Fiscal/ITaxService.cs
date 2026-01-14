@@ -9,6 +9,8 @@ namespace Aurora.Application.Interfaces.Fiscal
     public interface ITaxService
     {
         Task<TaxRule> CreateRuleAsync(CreateTaxRuleDto dto);
+        Task<TaxRule> GetRuleByIdAsync(Guid id);
+        Task<TaxRule> UpdateRuleAsync(Guid id, UpdateTaxRuleDto dto);
         Task<IEnumerable<TaxRule>> GetAllRulesAsync();
         Task<TaxCalculationResultDto> CalculateTaxAsync(TaxCalculationInputDto input);
     }

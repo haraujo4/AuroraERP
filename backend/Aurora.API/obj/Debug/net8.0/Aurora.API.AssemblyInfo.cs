@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurora.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3697cf5e075f0ecbf9ce60de07596a575d04b86")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f6bf14947b95d64d3c2d32824298cd8d9221426")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurora.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurora.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

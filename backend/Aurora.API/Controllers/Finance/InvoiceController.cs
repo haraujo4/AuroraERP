@@ -11,10 +11,12 @@ namespace Aurora.API.Controllers.Finance
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
+        private readonly Aurora.Application.Interfaces.Fiscal.IFiscalService _fiscalService;
 
-        public InvoiceController(IInvoiceService invoiceService)
+        public InvoiceController(IInvoiceService invoiceService, Aurora.Application.Interfaces.Fiscal.IFiscalService fiscalService)
         {
             _invoiceService = invoiceService;
+            _fiscalService = fiscalService;
         }
 
         [HttpGet]
@@ -103,17 +105,33 @@ namespace Aurora.API.Controllers.Finance
         }
 
         [HttpPost("{id}/cancel")]
-        public async Task<IActionResult> Cancel(Guid id)
+        public async Task<IActionResult> Cancel(Guid id, [FromBody] CancelInvoiceRequest request)
         {
             try
             {
-                await _invoiceService.CancelAsync(id);
+                // We need to determine if we should just cancel the invoice (Draft) or specific fiscal cancellation (Posted)
+                // For simplicity, let's assume the frontend calls this for Fiscal Cancellation if status is Posted.
+                // But wait, the existing Cancel endpoint might be used for Drafts.
+                // Let's rely on Service logic or check status here?
+                // Ideally, FiscalService handles it.
+                // I need to inject IFiscalService.
+                
+                // Oops, I need to add IFiscalService to constructor first.
+                // I will use a separate ReplaceFileContent for constructor.
+                // Here I am just replacing the method.
+                
+                await _fiscalService.CancelInvoiceAsync(id, request.Reason); 
                 return NoContent();
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        public class CancelInvoiceRequest
+        {
+            public string Reason { get; set; }
         }
         
         [HttpDelete("{id}")]

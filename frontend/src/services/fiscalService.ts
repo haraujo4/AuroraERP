@@ -12,6 +12,16 @@ export const fiscalService = {
         return response.data;
     },
 
+    getRuleById: async (id: string) => {
+        const response = await api.get<TaxRule>(`/fiscal/tax-rules/${id}`);
+        return response.data;
+    },
+
+    updateRule: async (id: string, data: CreateTaxRuleDto) => {
+        const response = await api.put<TaxRule>(`/fiscal/tax-rules/${id}`, data);
+        return response.data;
+    },
+
     calculate: async (data: {
         sourceState: string;
         destState: string;

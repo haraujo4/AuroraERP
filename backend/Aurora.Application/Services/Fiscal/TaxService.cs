@@ -42,6 +42,35 @@ namespace Aurora.Application.Services.Fiscal
             return await _repository.GetAllAsync();
         }
 
+        public async Task<TaxRule> GetRuleByIdAsync(Guid id)
+        {
+            var rule = await _repository.GetByIdAsync(id);
+            if (rule == null) throw new Exception("Rule not found");
+            return rule;
+        }
+
+        public async Task<TaxRule> UpdateRuleAsync(Guid id, UpdateTaxRuleDto dto)
+        {
+            var rule = await _repository.GetByIdAsync(id);
+            if (rule == null) throw new Exception("Rule not found");
+
+            rule.Update(
+                dto.SourceState,
+                dto.DestState,
+                dto.OperationType,
+                dto.Cfop,
+                dto.IcmsRate,
+                dto.IpiRate,
+                dto.PisRate,
+                dto.CofinsRate,
+                dto.CstIcms,
+                dto.NcmCode
+            );
+
+            await _repository.UpdateAsync(rule);
+            return rule;
+        }
+
         public async Task<TaxCalculationResultDto> CalculateTaxAsync(TaxCalculationInputDto input)
         {
             // Naive implementation: Fetch all and filter in memory (efficient enough for < 1000 rules)
@@ -51,8 +80,9 @@ namespace Aurora.Application.Services.Fiscal
             var rule = rules
                 .Where(r => r.SourceState == input.SourceState && 
                             r.DestState == input.DestState && 
-                            r.OperationType == input.OperationType)
-                .OrderByDescending(r => r.NcmCode == input.NcmCode) // Prioritize exact NCM match
+                            r.OperationType == input.OperationType &&
+                            (string.IsNullOrEmpty(r.NcmCode) || r.NcmCode == input.NcmCode))
+                .OrderByDescending(r => r.NcmCode == input.NcmCode) // Exact match (true) comes first
                 .FirstOrDefault();
 
             if (rule == null)

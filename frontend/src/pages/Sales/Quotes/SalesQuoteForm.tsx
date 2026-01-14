@@ -24,6 +24,8 @@ export function SalesQuoteForm() {
     const [formData, setFormData] = useState<CreateSalesQuote>({
         businessPartnerId: '',
         validUntil: new Date().toISOString().split('T')[0],
+        paymentCondition: 'A Vista',
+        freightType: 'FOB',
         items: []
     });
 
@@ -66,7 +68,7 @@ export function SalesQuoteForm() {
         setFormData({ ...formData, items: newItems });
     };
 
-    const handleItemChange = (index: number, field: keyof CreateSalesQuoteItem, value: any) => {
+    const handleItemChange = async (index: number, field: keyof CreateSalesQuoteItem, value: any) => {
         const newItems = [...formData.items];
         const item = { ...newItems[index], [field]: value };
 
@@ -75,18 +77,39 @@ export function SalesQuoteForm() {
             const material = materials.find(m => m.id === value);
             if (material) {
                 item.unitPrice = material.basePrice;
+                // Default to material defaults first
+                item.ipiRate = material.defaultIpiRate || 0;
+                item.icmsRate = material.defaultIcmsRate || 0;
+
+                // Try to simulate tax from rules
+                if (formData.businessPartnerId) {
+                    try {
+                        const taxResult = await salesQuoteService.simulateTax({
+                            businessPartnerId: formData.businessPartnerId,
+                            materialId: value,
+                            quantity: item.quantity,
+                            unitPrice: item.unitPrice
+                        });
+                        item.ipiRate = taxResult.ipiRate;
+                        item.icmsRate = taxResult.icmsRate;
+                    } catch (error) {
+                        console.error("Error simulating tax:", error);
+                    }
+                }
             }
         }
 
         newItems[index] = item;
-        setFormData({ ...formData, items: newItems });
+        setFormData(prev => ({ ...prev, items: newItems }));
     };
 
     const calculateTotal = () => {
         return formData.items.reduce((acc, item) => {
             const gross = item.quantity * item.unitPrice;
             const discount = gross * (item.discountPercentage / 100);
-            return acc + (gross - discount);
+            const net = gross - discount;
+            const ipi = net * ((item.ipiRate || 0) / 100);
+            return acc + net + ipi;
         }, 0);
     };
 
@@ -237,6 +260,36 @@ export function SalesQuoteForm() {
                     </div>
                 </div>
 
+                <div className="bg-white p-6 rounded shadow-sm border border-border-default grid grid-cols-2 gap-6">
+                    <div className="col-span-2 border-b border-border-default pb-2 mb-2 font-bold text-text-primary flex items-center">
+                        Condições Comerciais
+                    </div>
+                    <div className="space-y-1">
+                        <label className="block text-sm font-medium text-text-secondary">Condição de Pagamento</label>
+                        <select
+                            className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none bg-white"
+                            value={formData.paymentCondition}
+                            onChange={(e) => setFormData({ ...formData, paymentCondition: e.target.value })}
+                        >
+                            <option value="A Vista">A Vista</option>
+                            <option value="30 Dias">30 Dias</option>
+                            <option value="30/60 Dias">30/60 Dias</option>
+                            <option value="30/60/90 Dias">30/60/90 Dias</option>
+                        </select>
+                    </div>
+                    <div className="space-y-1">
+                        <label className="block text-sm font-medium text-text-secondary">Tipo de Frete</label>
+                        <select
+                            className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none bg-white"
+                            value={formData.freightType}
+                            onChange={(e) => setFormData({ ...formData, freightType: e.target.value as 'CIF' | 'FOB' })}
+                        >
+                            <option value="FOB">FOB (Por conta do Destinatário)</option>
+                            <option value="CIF">CIF (Por conta do Remetente)</option>
+                        </select>
+                    </div>
+                </div>
+
                 {/* Items */}
                 <div className="bg-white p-6 rounded shadow-sm border border-border-default">
                     <div className="flex justify-between items-center mb-4 pb-2 border-b border-border-default">
@@ -258,6 +311,8 @@ export function SalesQuoteForm() {
                                     <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-24 text-right">Qtd</th>
                                     <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-32 text-right">Preço Unit.</th>
                                     <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-24 text-right">Desc %</th>
+                                    <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-24 text-right">IPI %</th>
+                                    <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-24 text-right">ICMS %</th>
                                     <th className="p-3 text-xs font-bold text-text-secondary uppercase tracking-wider border-b border-border-default w-32 text-right">Total</th>
                                     <th className="p-3 border-b border-border-default w-10"></th>
                                 </tr>
@@ -320,8 +375,39 @@ export function SalesQuoteForm() {
                                                 }}
                                             />
                                         </td>
+                                        <td className="p-3">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="100"
+                                                step="0.1"
+                                                className="w-full p-1 border border-border-input rounded text-right focus:border-brand-primary outline-none"
+                                                value={item.ipiRate || 0}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value);
+                                                    handleItemChange(index, 'ipiRate', isNaN(val) ? 0 : val);
+                                                }}
+                                            />
+                                        </td>
+                                        <td className="p-3">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="100"
+                                                step="0.1"
+                                                className="w-full p-1 border border-border-input rounded text-right focus:border-brand-primary outline-none"
+                                                value={item.icmsRate || 0}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value);
+                                                    handleItemChange(index, 'icmsRate', isNaN(val) ? 0 : val);
+                                                }}
+                                            />
+                                        </td>
                                         <td className="p-3 text-right font-medium text-text-primary">
-                                            R$ {((item.quantity * item.unitPrice) * (1 - item.discountPercentage / 100)).toFixed(2)}
+                                            R$ {(
+                                                ((item.quantity * item.unitPrice) * (1 - item.discountPercentage / 100)) +
+                                                (((item.quantity * item.unitPrice) * (1 - item.discountPercentage / 100)) * ((item.ipiRate || 0) / 100))
+                                            ).toFixed(2)}
                                         </td>
                                         <td className="p-3 text-center">
                                             <button

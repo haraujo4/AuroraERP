@@ -5,6 +5,10 @@ export interface SalesQuoteItem {
     quantity: number;
     unitPrice: number;
     discountPercentage: number;
+    ipiRate: number;
+    ipiValue: number;
+    icmsRate: number;
+    icmsValue: number;
     totalValue: number;
 }
 
@@ -18,6 +22,8 @@ export interface SalesQuote {
     validUntil: string;
     status: 'Draft' | 'Sent' | 'Accepted' | 'Rejected' | 'Converted';
     totalValue: number;
+    paymentCondition?: string;
+    freightType?: 'CIF' | 'FOB';
     items: SalesQuoteItem[];
 }
 
@@ -26,11 +32,15 @@ export interface CreateSalesQuoteItem {
     quantity: number;
     unitPrice: number;
     discountPercentage: number;
+    ipiRate?: number;
+    icmsRate?: number;
 }
 
 export interface CreateSalesQuote {
     businessPartnerId: string;
     opportunityId?: string;
     validUntil: string;
+    paymentCondition?: string;
+    freightType?: 'CIF' | 'FOB';
     items: CreateSalesQuoteItem[];
 }

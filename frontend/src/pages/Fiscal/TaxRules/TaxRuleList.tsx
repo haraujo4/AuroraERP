@@ -65,6 +65,7 @@ const TaxRuleList: React.FC = () => {
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">ICMS</th>
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">IPI</th>
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">PIS/COFINS</th>
+                                    <th className="px-4 py-3 text-right text-xs font-bold uppercase">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,6 +79,14 @@ const TaxRuleList: React.FC = () => {
                                         <td className="px-4 py-3 text-blue-600 text-sm font-bold">{rule.icmsRate}%</td>
                                         <td className="px-4 py-3 text-sm">{rule.ipiRate}%</td>
                                         <td className="px-4 py-3 text-sm">{rule.pisRate}% / {rule.cofinsRate}%</td>
+                                        <td className="px-4 py-3 text-right">
+                                            <button
+                                                onClick={() => navigate(`/fiscal/tax-rules/${rule.id}`)}
+                                                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                            >
+                                                Editar
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                                 {filteredRules.length === 0 && (

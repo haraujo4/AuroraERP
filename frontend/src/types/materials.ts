@@ -21,6 +21,9 @@ export interface Material {
     basePrice: number;
     salesUnit?: string;
     taxClassification?: string;
+    origin: number;
+    defaultIpiRate: number;
+    defaultIcmsRate: number;
 
     // Purchasing
     standardCost?: number;
@@ -53,6 +56,9 @@ export interface CreateMaterial {
     basePrice: number;
     salesUnit?: string;
     taxClassification?: string;
+    origin: number;
+    defaultIpiRate: number;
+    defaultIcmsRate: number;
 
     // Purchasing
     standardCost?: number;

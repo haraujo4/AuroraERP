@@ -44,6 +44,22 @@ namespace Aurora.API.Controllers.Fiscal
             }
         }
 
+        [HttpGet("invoice/{invoiceId}/pdf")]
+        public async Task<IActionResult> GetPdf(Guid invoiceId)
+        {
+            Console.WriteLine($"[PDF] Request received for invoice: {invoiceId}");
+            try
+            {
+                var bytes = await _service.GetPdfBytesByInvoiceIdAsync(invoiceId);
+                Console.WriteLine($"[PDF] Returning {bytes.Length} bytes for invoice: {invoiceId}");
+                return File(bytes, "application/pdf", $"NFe_{invoiceId}.pdf");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("{id}/cancel")]
         public async Task<IActionResult> Cancel(Guid id)
         {

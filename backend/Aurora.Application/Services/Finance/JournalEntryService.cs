@@ -58,6 +58,38 @@ namespace Aurora.Application.Services.Finance
             await _entryRepo.UpdateAsync(entry);
         }
 
+        public async Task CancelAsync(Guid id)
+        {
+            var entry = await _entryRepo.GetByIdAsync(id);
+            if (entry == null) throw new Exception("Journal Entry not found");
+
+            entry.Cancel();
+            await _entryRepo.UpdateAsync(entry);
+        }
+
+        public async Task ReverseAsync(Guid id, string reason)
+        {
+            var entry = await _entryRepo.GetByIdAsync(id, x => x.Lines);
+            if (entry == null) throw new Exception("Journal Entry not found");
+
+            var reversal = entry.CreateReversal(reason);
+
+            await _entryRepo.AddAsync(reversal);
+            
+            // Post the reversal entry immediately
+            reversal.Post();
+
+            await _entryRepo.UpdateAsync(entry); // Updates original entry status and link
+            await _entryRepo.UpdateAsync(reversal); // Updates reversal status to Posted
+        }
+
+        public async Task<JournalEntryDto> GetByReferenceAsync(string reference)
+        {
+            var entry = (await _entryRepo.FindAsync(x => x.Reference == reference)).FirstOrDefault();
+            if (entry == null) return null;
+            return await GetByIdAsync(entry.Id);
+        }
+
         private async Task<Dictionary<Guid, Account>> LoadAccountsForEntries(IEnumerable<JournalEntry> entries)
         {
             var accountIds = entries.SelectMany(e => e.Lines).Select(l => l.AccountId).Distinct().ToList();
@@ -69,7 +101,7 @@ namespace Aurora.Application.Services.Finance
             return new Dictionary<Guid, Account>();
         }
 
-        private JournalEntryDto MapToDto(JournalEntry entry, Dictionary<Guid, Account> accountLookup = null)
+        private JournalEntryDto MapToDto(JournalEntry entry, Dictionary<Guid, Account>? accountLookup = null)
         {
             return new JournalEntryDto
             {

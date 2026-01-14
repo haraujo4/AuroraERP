@@ -52,5 +52,19 @@ namespace Aurora.API.Controllers.Sales
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("simulate-tax")]
+        public async Task<IActionResult> SimulateTax([FromBody] SimulateTaxDto dto)
+        {
+             try
+             {
+                 var result = await _service.SimulateTaxAsync(dto);
+                 return Ok(result);
+             }
+             catch(Exception ex)
+             {
+                 return BadRequest(ex.Message);
+             }
+        }
     }
 }

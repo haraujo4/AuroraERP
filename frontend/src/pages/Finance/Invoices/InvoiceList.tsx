@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, CheckCircle, XCircle, FileText } from 'lucide-react';
+import { Plus, CheckCircle, XCircle, FileText, Loader2 } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
-import { fiscalService } from '../../../services/fiscalService';
+import { BASE_URL } from '../../../services/api';
+
 import type { Invoice } from '../../../types/finance';
 import { format } from 'date-fns';
 
@@ -11,6 +12,7 @@ export function InvoiceList() {
     const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
+    const [processingId, setProcessingId] = useState<string | null>(null);
 
     useEffect(() => {
         loadInvoices();
@@ -29,32 +31,47 @@ export function InvoiceList() {
 
     const handlePost = async (id: string) => {
         if (!confirm('Deseja realmente postar esta fatura? Isso gerará lançamentos contábeis.')) return;
+        setProcessingId(id);
         try {
             await financeService.postInvoice(id);
-            loadInvoices();
+            await loadInvoices();
         } catch (error) {
+            console.error(error);
             alert('Erro ao postar fatura');
+        } finally {
+            setProcessingId(null);
         }
     };
 
-    const handleCancel = async (id: string) => {
+    const handleCancel = async (id: string, reason?: string) => {
         if (!confirm('Deseja realmente cancelar esta fatura?')) return;
+        setProcessingId(id);
         try {
-            await financeService.cancelInvoice(id);
-            loadInvoices();
+            await financeService.cancelInvoice(id, reason);
+            await loadInvoices();
         } catch (error) {
+            console.error(error);
             alert('Erro ao cancelar fatura');
+        } finally {
+            setProcessingId(null);
         }
     };
 
-    const handleGenerateNfe = async (id: string) => {
+    const handleDelete = async (id: string) => {
+        if (!confirm('Deseja realmente excluir este rascunho?')) return;
+        setProcessingId(id);
         try {
-            const doc = await fiscalService.generateNfe(id);
-            alert(`NFe Gerada com Sucesso! Chave: ${doc.accessKey}`);
-        } catch (error: any) {
-            alert('Erro ao gerar NFe: ' + (error.response?.data || error.message));
+            await financeService.deleteInvoice(id);
+            await loadInvoices();
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao excluir rascunho');
+        } finally {
+            setProcessingId(null);
         }
     };
+
+
 
     const filteredInvoices = invoices.filter(inv =>
         searchTerm === '' ||
@@ -98,6 +115,7 @@ export function InvoiceList() {
                         <table className="w-full">
                             <thead className="bg-bg-secondary border-b border-border-default">
                                 <tr>
+                                    <th className="px-4 py-3 text-left text-xs font-bold uppercase">Código</th>
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">Emissão</th>
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">Vencimento</th>
                                     <th className="px-4 py-3 text-left text-xs font-bold uppercase">Tipo</th>
@@ -110,6 +128,7 @@ export function InvoiceList() {
                             <tbody>
                                 {filteredInvoices.map((invoice) => (
                                     <tr key={invoice.id} className="border-b border-border-default hover:bg-bg-subtle">
+                                        <td className="px-4 py-3 text-sm font-medium text-blue-600">{invoice.number}</td>
                                         <td className="px-4 py-3 text-sm">
                                             {format(new Date(invoice.issueDate), 'dd/MM/yyyy')}
                                         </td>
@@ -142,28 +161,43 @@ export function InvoiceList() {
                                                 <>
                                                     <button
                                                         onClick={() => handlePost(invoice.id)}
-                                                        className="text-green-600 hover:text-green-700 p-1"
+                                                        disabled={processingId === invoice.id}
+                                                        className="text-green-600 hover:text-green-700 p-1 disabled:opacity-50"
                                                         title="Postar"
                                                     >
-                                                        <CheckCircle size={16} />
+                                                        {processingId === invoice.id ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />}
                                                     </button>
                                                     <button
-                                                        onClick={() => handleCancel(invoice.id)}
-                                                        className="text-red-600 hover:text-red-700 p-1"
-                                                        title="Cancelar"
+                                                        onClick={() => handleDelete(invoice.id)}
+                                                        disabled={processingId === invoice.id}
+                                                        className="text-red-600 hover:text-red-700 p-1 disabled:opacity-50"
+                                                        title="Excluir Rascunho"
                                                     >
                                                         <XCircle size={16} />
                                                     </button>
                                                 </>
                                             )}
-                                            {invoice.status === 'Posted' && invoice.type === 'Outbound' && (
-                                                <button
-                                                    onClick={() => handleGenerateNfe(invoice.id)}
-                                                    className="text-blue-600 hover:text-blue-700 p-1"
-                                                    title="Gerar NFe"
-                                                >
-                                                    <FileText size={16} />
-                                                </button>
+                                            {invoice.status === 'Posted' && (
+                                                <>
+                                                    <button
+                                                        onClick={() => window.open(`${BASE_URL}/fiscal/documents/invoice/${invoice.id}/pdf`, '_blank')}
+                                                        className="text-blue-600 hover:text-blue-700 p-1"
+                                                        title="Visualizar PDF"
+                                                    >
+                                                        <FileText size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            const reason = prompt("Motivo do cancelamento:");
+                                                            if (reason) handleCancel(invoice.id, reason);
+                                                        }}
+                                                        disabled={processingId === invoice.id}
+                                                        className="text-red-600 hover:text-red-700 p-1 disabled:opacity-50"
+                                                        title="Cancelar Nota"
+                                                    >
+                                                        {processingId === invoice.id ? <Loader2 size={16} className="animate-spin" /> : <XCircle size={16} />}
+                                                    </button>
+                                                </>
                                             )}
                                         </td>
                                     </tr>

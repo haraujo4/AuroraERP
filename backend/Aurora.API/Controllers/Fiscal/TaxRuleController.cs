@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Aurora.Application.DTOs.Fiscal;
 using Aurora.Application.Interfaces.Fiscal;
@@ -28,6 +29,33 @@ namespace Aurora.API.Controllers.Fiscal
         {
             var rules = await _taxService.GetAllRulesAsync();
             return Ok(rules);
+        }
+        [HttpGet("tax-rules/{id}")]
+        public async Task<IActionResult> GetRuleById(Guid id)
+        {
+            try
+            {
+                var rule = await _taxService.GetRuleByIdAsync(id);
+                return Ok(rule);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPut("tax-rules/{id}")]
+        public async Task<IActionResult> UpdateRule(Guid id, [FromBody] UpdateTaxRuleDto dto)
+        {
+            try
+            {
+                var rule = await _taxService.UpdateRuleAsync(id, dto);
+                return Ok(rule);
+            }
+            catch(Exception ex)
+            {
+               return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("calculate")]

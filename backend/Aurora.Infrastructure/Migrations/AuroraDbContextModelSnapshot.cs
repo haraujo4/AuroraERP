@@ -498,12 +498,18 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsReversal")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("PostingDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Reference")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<Guid?>("ReversedEntryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -1012,6 +1018,12 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("DefaultIcmsRate")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("DefaultIpiRate")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -1061,6 +1073,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<decimal?>("NetWeight")
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)");
+
+                    b.Property<int>("Origin")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ProcurementType")
                         .HasColumnType("integer");
@@ -2372,6 +2387,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<int>("FreightType")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -2382,6 +2400,9 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.Property<Guid?>("OpportunityId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("PaymentCondition")
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -3525,6 +3546,18 @@ namespace Aurora.Infrastructure.Migrations
                             b1.Property<decimal>("DiscountPercentage")
                                 .HasPrecision(5, 2)
                                 .HasColumnType("numeric(5,2)");
+
+                            b1.Property<decimal>("IcmsRate")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal>("IcmsValue")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal>("IpiRate")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal>("IpiValue")
+                                .HasColumnType("numeric");
 
                             b1.Property<bool>("IsActive")
                                 .HasColumnType("boolean");

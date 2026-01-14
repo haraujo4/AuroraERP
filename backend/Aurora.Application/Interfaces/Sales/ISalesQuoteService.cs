@@ -11,5 +11,6 @@ namespace Aurora.Application.Interfaces.Sales
         Task<SalesQuoteDto> GetByIdAsync(Guid id);
         Task<SalesQuoteDto> CreateAsync(CreateSalesQuoteDto dto);
         Task UpdateStatusAsync(Guid id, string status);
+        Task<SimulatedTaxResultDto> SimulateTaxAsync(SimulateTaxDto dto);
     }
 }

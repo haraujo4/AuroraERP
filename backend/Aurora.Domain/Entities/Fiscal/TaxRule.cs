@@ -49,12 +49,31 @@ namespace Aurora.Domain.Entities.Fiscal
             NcmCode = ncmCode;
         }
 
-        public void UpdateRates(decimal icms, decimal ipi, decimal pis, decimal cofins)
+        public void Update(
+            string sourceState,
+            string destState,
+            OperationType operationType,
+            int cfop,
+            decimal icmsRate,
+            decimal ipiRate,
+            decimal pisRate,
+            decimal cofinsRate,
+            CstIcms cstIcms,
+            string? ncmCode)
         {
-            IcmsRate = icms;
-            IpiRate = ipi;
-            PisRate = pis;
-            CofinsRate = cofins;
+            if (string.IsNullOrWhiteSpace(sourceState)) throw new ArgumentNullException(nameof(sourceState));
+            if (string.IsNullOrWhiteSpace(destState)) throw new ArgumentNullException(nameof(destState));
+
+            SourceState = sourceState.ToUpper();
+            DestState = destState.ToUpper();
+            OperationType = operationType;
+            Cfop = cfop;
+            IcmsRate = icmsRate;
+            IpiRate = ipiRate;
+            PisRate = pisRate;
+            CofinsRate = cofinsRate;
+            CstIcms = cstIcms;
+            NcmCode = ncmCode;
             UpdatedAt = DateTime.UtcNow;
         }
     }

@@ -137,7 +137,8 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.HR.IEmployeeService, Au
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentService, Aurora.Application.Services.Fiscal.FiscalDocumentService>();
-builder.Services.AddHttpClient<Aurora.Application.Interfaces.Fiscal.IFiscalProvider, Aurora.Infrastructure.Integrations.NuvemFiscal.NuvemFiscalProvider>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalProvider, Aurora.Infrastructure.Integrations.Mock.MockFiscalProvider>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalService, Aurora.Application.Services.Fiscal.FiscalService>();
 
 // ... (existing code)

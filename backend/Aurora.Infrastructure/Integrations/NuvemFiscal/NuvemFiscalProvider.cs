@@ -110,5 +110,35 @@ namespace Aurora.Infrastructure.Integrations.NuvemFiscal
 
             return statusResponse;
         }
+        public async Task<byte[]> GetPdfBytesAsync(string providerReference, Invoice? invoice = null)
+        {
+            var status = await ConsultarNfeAsync(providerReference);
+            if (string.IsNullOrEmpty(status.PdfUrl)) throw new Exception("PDF URL not available.");
+            return await _httpClient.GetByteArrayAsync(status.PdfUrl);
+        }
+
+        public async Task<string> GetXmlContentAsync(string providerReference, Invoice? invoice = null)
+        {
+            var status = await ConsultarNfeAsync(providerReference);
+            if (string.IsNullOrEmpty(status.XmlUrl)) throw new Exception("XML URL not available.");
+            return await _httpClient.GetStringAsync(status.XmlUrl);
+        }
+
+        public async Task CancelarNfeAsync(FiscalDocument document, string reason)
+        {
+            await AuthenticateAsync();
+
+            var baseUrl = _configuration["NuvemFiscal:BaseUrl"] ?? "https://api.nuvemfiscal.com.br/v2";
+            var endpoint = $"{baseUrl}/nfe/{document.ProviderReference}/cancelar";
+
+            var payload = new { justificativa = reason };
+            
+            var response = await _httpClient.PostAsJsonAsync(endpoint, payload);
+             if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Nuvem Fiscal Cancellation Error: {response.StatusCode} - {error}");
+            }
+        }
     }
 }

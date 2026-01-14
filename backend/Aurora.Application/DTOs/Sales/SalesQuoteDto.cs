@@ -15,6 +15,8 @@ namespace Aurora.Application.DTOs.Sales
         public DateTime ValidUntil { get; set; }
         public string Status { get; set; }
         public decimal TotalValue { get; set; }
+        public string? PaymentCondition { get; set; }
+        public string FreightType { get; set; }
         public List<SalesQuoteItemDto> Items { get; set; } = new();
     }
 
@@ -26,6 +28,10 @@ namespace Aurora.Application.DTOs.Sales
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
+        public decimal IpiRate { get; set; }
+        public decimal IpiValue { get; set; }
+        public decimal IcmsRate { get; set; }
+        public decimal IcmsValue { get; set; }
         public decimal TotalValue { get; set; }
     }
 
@@ -34,6 +40,8 @@ namespace Aurora.Application.DTOs.Sales
         public Guid BusinessPartnerId { get; set; }
         public Guid? OpportunityId { get; set; }
         public DateTime ValidUntil { get; set; }
+        public string? PaymentCondition { get; set; }
+        public string FreightType { get; set; }
         public List<CreateSalesQuoteItemDto> Items { get; set; } = new();
     }
 
@@ -43,6 +51,8 @@ namespace Aurora.Application.DTOs.Sales
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
+        public decimal IpiRate { get; set; }
+        public decimal IcmsRate { get; set; }
     }
 
     public class UpdateSalesQuoteStatusDto

@@ -10,6 +10,9 @@ namespace Aurora.Application.Interfaces.Finance
         Task<JournalEntryDto> GetByIdAsync(Guid id);
         Task<IEnumerable<JournalEntryDto>> GetAllAsync();
         Task PostAsync(Guid id);
+        Task CancelAsync(Guid id);
+        Task ReverseAsync(Guid id, string reason);
+        Task<JournalEntryDto> GetByReferenceAsync(string reference);
     }
 
     public class JournalEntryDto

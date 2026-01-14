@@ -10,6 +10,7 @@ namespace Aurora.Application.Interfaces.Fiscal
         Task<FiscalDocumentDto> GetByInvoiceIdAsync(Guid invoiceId);
         Task CancelAsync(Guid id);
         Task<IEnumerable<FiscalDocumentDto>> GetAllAsync();
+        Task<byte[]> GetPdfBytesByInvoiceIdAsync(Guid invoiceId);
     }
 
     public class FiscalDocumentDto

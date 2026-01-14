@@ -60,8 +60,11 @@ export const financeService = {
     postInvoice: async (id: string): Promise<void> => {
         await api.post(`/finance/invoices/${id}/post`);
     },
-    cancelInvoice: async (id: string): Promise<void> => {
-        await api.post(`/finance/invoices/${id}/cancel`);
+    cancelInvoice: async (id: string, reason?: string): Promise<void> => {
+        await api.post(`/finance/invoices/${id}/cancel`, { reason });
+    },
+    deleteInvoice: async (id: string): Promise<void> => {
+        await api.delete(`/finance/invoices/${id}`);
     },
     createFromPurchaseOrder: async (data: { purchaseOrderId: string; issueDate: string; dueDate: string }): Promise<Invoice> => {
         const response = await api.post('/finance/invoices/from-purchase-order', data);

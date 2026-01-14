@@ -11,11 +11,14 @@ namespace Aurora.Application.Interfaces.Fiscal
         // Provider implementation decides how to map invoice/bp to its specific payload
         Task<string> EmitirNfeAsync(FiscalDocument document, Invoice invoice, BusinessPartner bp);
         Task<FiscalDocumentStatusResponse> ConsultarNfeAsync(string providerReference);
+        Task<byte[]> GetPdfBytesAsync(string providerReference, Invoice? invoice = null);
+        Task<string> GetXmlContentAsync(string providerReference, Invoice? invoice = null);
+        Task CancelarNfeAsync(FiscalDocument document, string reason);
     }
 
     public class FiscalDocumentStatusResponse
     {
-        public string Status { get; set; } // "Authorized", "Rejected", "Processing"
+        public string Status { get; set; } // "Authorized", "Rejected", "Processing", "Cancelled"
         public string Protocol { get; set; }
         public string XmlUrl { get; set; }
         public string PdfUrl { get; set; }

@@ -49,7 +49,7 @@ namespace Aurora.Application.Services.Logistics
             material.UpdateLogisticsData(dto.NetWeight, dto.GrossWeight, dto.WeightUnit, 
                                        dto.Width, dto.Height, dto.Length, dto.DimensionUnit,
                                        dto.MinStock, dto.MaxStock);
-            material.UpdateSalesData(dto.BasePrice, dto.SalesUnit, dto.TaxClassification);
+            material.UpdateSalesData(dto.BasePrice, dto.SalesUnit, dto.TaxClassification, dto.Origin, dto.DefaultIpiRate, dto.DefaultIcmsRate);
             material.UpdatePurchasingData(dto.StandardCost, dto.PurchasingUnit);
             material.UpdateControlData(dto.IsBatchManaged, dto.IsSerialManaged);
 
@@ -66,7 +66,7 @@ namespace Aurora.Application.Services.Logistics
             material.UpdateLogisticsData(dto.NetWeight, dto.GrossWeight, dto.WeightUnit,
                                        dto.Width, dto.Height, dto.Length, dto.DimensionUnit,
                                        dto.MinStock, dto.MaxStock);
-            material.UpdateSalesData(dto.BasePrice, dto.SalesUnit, dto.TaxClassification);
+            material.UpdateSalesData(dto.BasePrice, dto.SalesUnit, dto.TaxClassification, dto.Origin, dto.DefaultIpiRate, dto.DefaultIcmsRate);
             material.UpdatePurchasingData(dto.StandardCost, dto.PurchasingUnit);
             material.UpdateControlData(dto.IsBatchManaged, dto.IsSerialManaged);
 
@@ -101,6 +101,9 @@ namespace Aurora.Application.Services.Logistics
                 BasePrice = m.BasePrice,
                 SalesUnit = m.SalesUnit,
                 TaxClassification = m.TaxClassification,
+                Origin = m.Origin,
+                DefaultIpiRate = m.DefaultIpiRate,
+                DefaultIcmsRate = m.DefaultIcmsRate,
                 StandardCost = m.StandardCost,
                 PurchasingUnit = m.PurchasingUnit,
                 IsBatchManaged = m.IsBatchManaged,

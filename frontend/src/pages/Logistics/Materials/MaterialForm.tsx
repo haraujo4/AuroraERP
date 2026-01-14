@@ -35,6 +35,9 @@ export function MaterialForm() {
         basePrice: 0,
         salesUnit: 'UN',
         taxClassification: '',
+        origin: 0,
+        defaultIpiRate: 0,
+        defaultIcmsRate: 0,
 
         // Purchasing
         standardCost: 0,
@@ -75,6 +78,9 @@ export function MaterialForm() {
                 basePrice: data.basePrice,
                 salesUnit: data.salesUnit || 'UN',
                 taxClassification: data.taxClassification || '',
+                origin: data.origin || 0,
+                defaultIpiRate: data.defaultIpiRate || 0,
+                defaultIcmsRate: data.defaultIcmsRate || 0,
 
                 standardCost: data.standardCost || 0,
                 purchasingUnit: data.purchasingUnit || 'UN',
@@ -297,27 +303,64 @@ export function MaterialForm() {
                         )}
 
                         {activeTab === 'sales' && (
-                            <div className="grid grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-text-secondary mb-1">Preço Base de Venda</label>
-                                    <div className="relative">
-                                        <span className="absolute left-3 top-2 text-text-tertiary">R$</span>
-                                        <input
-                                            type="number"
-                                            name="basePrice"
-                                            value={formData.basePrice}
-                                            onChange={handleChange}
-                                            className="w-full pl-10 pr-4 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                                        />
+                            <div>
+                                <div className="grid grid-cols-2 gap-6 mb-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Preço Base de Venda</label>
+                                        <div className="relative">
+                                            <span className="absolute left-3 top-2 text-text-tertiary">R$</span>
+                                            <input
+                                                type="number"
+                                                name="basePrice"
+                                                value={formData.basePrice}
+                                                onChange={handleChange}
+                                                className="w-full pl-10 pr-4 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Unidade de Venda</label>
+                                        <input type="text" name="salesUnit" value={formData.salesUnit} onChange={handleChange} className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Classificação Fiscal (NCM)</label>
+                                        <input type="text" name="taxClassification" value={formData.taxClassification} onChange={handleChange} className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary" />
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-text-secondary mb-1">Unidade de Venda</label>
-                                    <input type="text" name="salesUnit" value={formData.salesUnit} onChange={handleChange} className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-text-secondary mb-1">Classificação Fiscal (NCM)</label>
-                                    <input type="text" name="taxClassification" value={formData.taxClassification} onChange={handleChange} className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary" />
+                                <div className="grid grid-cols-3 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Origem</label>
+                                        <select
+                                            name="origin"
+                                            value={formData.origin}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                                        >
+                                            <option value={0}>0 - Nacional</option>
+                                            <option value={1}>1 - Importado</option>
+                                            <option value={2}>2 - Estrangeira (Adq. no mercado interno)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Aliq. Padrão IPI (%)</label>
+                                        <input
+                                            type="number"
+                                            name="defaultIpiRate"
+                                            value={formData.defaultIpiRate}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-text-secondary mb-1">Aliq. Padrão ICMS (%)</label>
+                                        <input
+                                            type="number"
+                                            name="defaultIcmsRate"
+                                            value={formData.defaultIcmsRate}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         )}

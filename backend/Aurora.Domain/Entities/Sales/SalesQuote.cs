@@ -16,6 +16,12 @@ namespace Aurora.Domain.Entities.Sales
         Converted // To Sales Order
     }
 
+    public enum FreightType
+    {
+        CIF,
+        FOB
+    }
+
     public class SalesQuote : BaseEntity
     {
         public string Number { get; private set; } // Auto-generated human readable ID (e.g., QT-2024-0001)
@@ -28,7 +34,11 @@ namespace Aurora.Domain.Entities.Sales
 
         public DateTime ValidUntil { get; private set; }
         public SalesQuoteStatus Status { get; private set; }
+
         public decimal TotalValue { get; private set; }
+        
+        public string? PaymentCondition { get; private set; }
+        public FreightType FreightType { get; private set; } = FreightType.FOB;
         
         private readonly List<SalesQuoteItem> _items = new();
         public IReadOnlyCollection<SalesQuoteItem> Items => _items.AsReadOnly();
@@ -43,13 +53,21 @@ namespace Aurora.Domain.Entities.Sales
             OpportunityId = opportunityId;
             Status = SalesQuoteStatus.Draft;
             TotalValue = 0;
+            PaymentCondition = "A Vista"; // Default
+            FreightType = FreightType.FOB;
         }
 
-        public void AddItem(Guid materialId, decimal quantity, decimal unitPrice, decimal discountPercentage = 0)
+        public void AddItem(Guid materialId, decimal quantity, decimal unitPrice, decimal discountPercentage = 0, decimal ipiRate = 0, decimal icmsRate = 0)
         {
-            var item = new SalesQuoteItem(materialId, quantity, unitPrice, discountPercentage);
+            var item = new SalesQuoteItem(materialId, quantity, unitPrice, discountPercentage, ipiRate, icmsRate);
             _items.Add(item);
             CalculateTotal();
+        }
+
+        public void UpdateHeader(string paymentCondition, FreightType freightType)
+        {
+            PaymentCondition = paymentCondition;
+            FreightType = freightType;
         }
 
         public void CalculateTotal()

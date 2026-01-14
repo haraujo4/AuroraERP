@@ -27,7 +27,10 @@ namespace Aurora.Domain.Entities.Logistics
         // Sales
         public decimal BasePrice { get; private set; }
         public string? SalesUnit { get; private set; }
-        public string? TaxClassification { get; private set; } // NCM, HS Code
+        public string? TaxClassification { get; private set; } // NCM
+        public int Origin { get; private set; } // 0=Nac, 1=Imp...
+        public decimal DefaultIpiRate { get; private set; }
+        public decimal DefaultIcmsRate { get; private set; }
 
         // Purchasing
         public decimal? StandardCost { get; private set; }
@@ -78,11 +81,14 @@ namespace Aurora.Domain.Entities.Logistics
             MaxStock = maxStock;
         }
 
-        public void UpdateSalesData(decimal basePrice, string? salesUnit, string? taxClassification)
+        public void UpdateSalesData(decimal basePrice, string? salesUnit, string? taxClassification, int origin, decimal defaultIpiRate, decimal defaultIcmsRate)
         {
             BasePrice = basePrice;
             SalesUnit = salesUnit;
             TaxClassification = taxClassification;
+            Origin = origin;
+            DefaultIpiRate = defaultIpiRate;
+            DefaultIcmsRate = defaultIcmsRate;
         }
 
         public void UpdatePurchasingData(decimal? standardCost, string? purchasingUnit)
