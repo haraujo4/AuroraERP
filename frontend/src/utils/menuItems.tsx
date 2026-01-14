@@ -1,6 +1,6 @@
 import {
     LayoutGrid, DollarSign, Package, ShoppingCart, Users, Truck,
-    Factory, Percent, Star
+    Factory, Percent, Star, LayoutDashboard
 } from 'lucide-react';
 
 export interface SubItem {
@@ -21,6 +21,14 @@ export const MENU_ITEMS: MenuItem[] = [
         id: 'favorites',
         label: 'Favoritos',
         icon: Star
+    },
+    {
+        id: 'overview',
+        label: 'Visão Geral',
+        icon: LayoutDashboard,
+        subItems: [
+            { id: 'dashboard', label: 'Painel Principal', path: '/dashboard' }
+        ]
     },
     {
         id: 'organization',

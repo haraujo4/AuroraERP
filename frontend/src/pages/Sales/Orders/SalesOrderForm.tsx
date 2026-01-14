@@ -16,6 +16,7 @@ export function SalesOrderForm() {
     const [partners, setPartners] = useState<BusinessPartner[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
     const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false);
 
     // For view mode
     const [order, setOrder] = useState<SalesOrder | null>(null);
@@ -91,12 +92,15 @@ export function SalesOrderForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setActionLoading(true);
         try {
             await salesOrderService.create(formData);
             navigate('/sales/orders');
         } catch (error) {
             console.error('Failed to save sales order', error);
             alert('Failed to save sales order');
+        } finally {
+            setActionLoading(false);
         }
     };
 
@@ -118,15 +122,18 @@ export function SalesOrderForm() {
                         <span className={`px-2 py-0.5 text-xs font-semibold rounded-full
                                     ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
                                 order.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
-                                    'bg-blue-100 text-blue-800'}`}>
-                            {order.status}
+                                    order.status === 'Processing' ? 'bg-orange-100 text-orange-800' :
+                                        'bg-blue-100 text-blue-800'}`}>
+                            {order.status === 'Processing' ? 'AGUARD. EXPEDIÇÃO' : order.status}
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         {order.status === 'Draft' && (
                             <button
+                                disabled={actionLoading}
                                 onClick={async () => {
                                     if (confirm('Confirmar este pedido? Isso permitirá a expedição.')) {
+                                        setActionLoading(true);
                                         try {
                                             await salesOrderService.updateStatus(order.id, 'Confirmed');
                                             const updated = await salesOrderService.getById(order.id);
@@ -134,18 +141,23 @@ export function SalesOrderForm() {
                                         } catch (e) {
                                             alert('Erro ao confirmar pedido');
                                             console.error(e);
+                                        } finally {
+                                            setActionLoading(false);
                                         }
                                     }
                                 }}
-                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium"
+                                className={`flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium ${actionLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                <CheckCircle size={16} className="mr-2" /> Confirmar
+                                <CheckCircle size={16} className="mr-2" />
+                                {actionLoading ? 'Processando...' : 'Confirmar'}
                             </button>
                         )}
                         {order.status === 'Confirmed' && (
                             <button
+                                disabled={actionLoading}
                                 onClick={async () => {
                                     if (confirm('Gerar entrega para este pedido?')) {
+                                        setActionLoading(true);
                                         try {
                                             const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
                                             await service.createFromOrder(order.id);
@@ -153,12 +165,15 @@ export function SalesOrderForm() {
                                             navigate('/logistics/deliveries');
                                         } catch (err: any) {
                                             alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
+                                        } finally {
+                                            setActionLoading(false);
                                         }
                                     }
                                 }}
-                                className="flex items-center px-3 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium"
+                                className={`flex items-center px-3 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium ${actionLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                <Truck size={16} className="mr-2" /> Gerar Entrega
+                                <Truck size={16} className="mr-2" />
+                                {actionLoading ? 'Criando...' : 'Gerar Entrega'}
                             </button>
                         )}
                         <button
@@ -245,11 +260,12 @@ export function SalesOrderForm() {
                 </div>
                 <div className="flex items-center space-x-2">
                     <button
+                        disabled={actionLoading}
                         onClick={handleSubmit}
-                        className="flex items-center px-4 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium"
+                        className={`flex items-center px-4 py-2 bg-brand-primary text-white rounded hover:bg-brand-secondary transition-colors text-sm font-medium ${actionLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         <Save size={16} className="mr-2" />
-                        Salvar Pedido
+                        {actionLoading ? 'Salvando...' : 'Salvar Pedido'}
                     </button>
                 </div>
             </div>

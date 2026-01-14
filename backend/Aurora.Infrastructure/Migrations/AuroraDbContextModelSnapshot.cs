@@ -212,6 +212,58 @@ namespace Aurora.Infrastructure.Migrations
                     b.ToTable("Opportunities", "commercial");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Communication.EmailLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ErrorMessage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Recipient")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailLogs");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Finance.Account", b =>
                 {
                     b.Property<Guid>("Id")
@@ -589,6 +641,9 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("AuthorizationUrl")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -599,6 +654,9 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("text");
+
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uuid");
 
@@ -607,6 +665,12 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Protocol")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderReference")
+                        .HasColumnType("text");
 
                     b.Property<string>("Series")
                         .IsRequired()
@@ -623,6 +687,9 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.Property<string>("XmlContent")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("XmlUrl")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -2546,19 +2613,16 @@ namespace Aurora.Infrastructure.Migrations
                                         .HasColumnName("City");
 
                                     b2.Property<string>("Complement")
-                                        .IsRequired()
                                         .HasMaxLength(50)
                                         .HasColumnType("character varying(50)")
                                         .HasColumnName("Complement");
 
                                     b2.Property<string>("Country")
-                                        .IsRequired()
                                         .HasMaxLength(50)
                                         .HasColumnType("character varying(50)")
                                         .HasColumnName("Country");
 
                                     b2.Property<string>("Neighborhood")
-                                        .IsRequired()
                                         .HasMaxLength(100)
                                         .HasColumnType("character varying(100)")
                                         .HasColumnName("Neighborhood");
@@ -2791,17 +2855,14 @@ namespace Aurora.Infrastructure.Migrations
                                 .HasColumnName("City");
 
                             b1.Property<string>("Complement")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Complement");
 
                             b1.Property<string>("Country")
-                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Neighborhood")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
                                 .HasColumnName("Neighborhood");
@@ -2946,19 +3007,16 @@ namespace Aurora.Infrastructure.Migrations
                                 .HasColumnName("City");
 
                             b1.Property<string>("Complement")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Complement");
 
                             b1.Property<string>("Country")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Country");
 
                             b1.Property<string>("Neighborhood")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
                                 .HasColumnName("Neighborhood");
@@ -3021,19 +3079,16 @@ namespace Aurora.Infrastructure.Migrations
                                 .HasColumnName("City");
 
                             b1.Property<string>("Complement")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Complement");
 
                             b1.Property<string>("Country")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Country");
 
                             b1.Property<string>("Neighborhood")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
                                 .HasColumnName("Neighborhood");
@@ -3096,19 +3151,16 @@ namespace Aurora.Infrastructure.Migrations
                                 .HasColumnName("City");
 
                             b1.Property<string>("Complement")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Complement");
 
                             b1.Property<string>("Country")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("Country");
 
                             b1.Property<string>("Neighborhood")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
                                 .HasColumnName("Neighborhood");

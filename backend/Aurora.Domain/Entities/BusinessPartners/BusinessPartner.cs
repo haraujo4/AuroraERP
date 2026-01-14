@@ -68,6 +68,74 @@ namespace Aurora.Domain.Entities.BusinessPartners
         {
              LimiteCredito = limit;
         }
+
+        public void UpdateDetails(string razaoSocial, string nomeFantasia, string cpfCnpj, string? rgIe)
+        {
+            RazaoSocial = razaoSocial;
+            NomeFantasia = nomeFantasia;
+            CpfCnpj = cpfCnpj;
+            RgIe = rgIe;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void UpdateAddress(Guid addressId, string type, Address address, bool isPrincipal)
+        {
+            var existing = _addresses.FirstOrDefault(a => a.Id == addressId);
+            if (existing != null)
+            {
+                // Since properties are private set, and we don't have update methods on the child class (unless we add them), 
+                // we might need to remove and insert at specific index, OR add update methods to BusinessPartnerAddress.
+                // But BusinessPartnerAddress is defined below. I can update it there. Or here if I add methods to it.
+                // Let's add Update method to BusinessPartnerAddress class below first.
+                // existing.Update(type, address, isPrincipal);
+            }
+        }
+        
+        // Actually, since I don't have IDs from frontend, I will use Index-based update.
+        public void UpdateAddressAt(int index, string type, Address address, bool isPrincipal)
+        {
+            if (index >= 0 && index < _addresses.Count)
+            {
+                var existing = _addresses[index];
+                // Need to add Update method to BusinessPartnerAddress
+                existing.Update(type, address, isPrincipal);
+            }
+        }
+
+        public void RemoveAddressAt(int index)
+        {
+             if (index >= 0 && index < _addresses.Count)
+            {
+                _addresses.RemoveAt(index);
+            }
+        }
+
+        public void UpdateContactAt(int index, string name, string email, string phone, string role)
+        {
+            if (index >= 0 && index < _contacts.Count)
+            {
+                var existing = _contacts[index];
+                existing.Update(name, email, phone, role);
+            }
+        }
+
+        public void RemoveContactAt(int index)
+        {
+             if (index >= 0 && index < _contacts.Count)
+            {
+                _contacts.RemoveAt(index);
+            }
+        }
+    
+        public void ClearContacts()
+        {
+            _contacts.Clear();
+        }
+
+        public void ClearAddresses()
+        {
+            _addresses.Clear();
+        }
     }
 
     public class BusinessPartnerAddress
@@ -82,6 +150,13 @@ namespace Aurora.Domain.Entities.BusinessPartners
         public BusinessPartnerAddress(string type, Address address, bool isPrincipal)
         {
             Id = Guid.NewGuid();
+            Type = type;
+            Address = address;
+            IsPrincipal = isPrincipal;
+        }
+
+        public void Update(string type, Address address, bool isPrincipal)
+        {
             Type = type;
             Address = address;
             IsPrincipal = isPrincipal;
@@ -101,6 +176,14 @@ namespace Aurora.Domain.Entities.BusinessPartners
         public ContactPerson(string name, string email, string phone, string role)
         {
             Id = Guid.NewGuid();
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Role = role;
+        }
+
+        public void Update(string name, string email, string phone, string role)
+        {
             Name = name;
             Email = email;
             Phone = phone;

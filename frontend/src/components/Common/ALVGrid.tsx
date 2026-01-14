@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, Download } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 export interface Column<T> {
     key: keyof T | 'actions';
@@ -17,6 +18,7 @@ interface ALVGridProps<T> {
     loading?: boolean;
     onRowClick?: (item: T) => void;
     actions?: React.ReactNode;
+    hideExport?: boolean;
 }
 
 export function ALVGrid<T extends { id: string | number }>({
@@ -25,7 +27,8 @@ export function ALVGrid<T extends { id: string | number }>({
     searchTerm = '',
     loading,
     onRowClick,
-    actions
+    actions,
+    hideExport = false
 }: ALVGridProps<T>) {
     const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: 'asc' | 'desc' } | null>(null);
 
@@ -35,6 +38,30 @@ export function ALVGrid<T extends { id: string | number }>({
             direction = 'desc';
         }
         setSortConfig({ key, direction });
+    };
+
+    const handleExportExcel = () => {
+        // Filter out action columns
+        const exportColumns = columns.filter(c => c.key !== 'actions');
+
+        // Map data to export format
+        const exportData = filteredAndSortedData.map(item => {
+            const row: any = {};
+            exportColumns.forEach(col => {
+                // If there's a custom renderer, we ideally want the raw value or a text representation
+                // But for simplicity, we use the raw value. If it's an object, we might get [object Object]
+                // Improved logic: check if value is object, if so, try to find a name property or similar?
+                // For now, raw value is safest for most DTOs which are flat.
+                const val = item[col.key as keyof T];
+                row[col.label] = val;
+            });
+            return row;
+        });
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Dados");
+        XLSX.writeFile(wb, "exportacao_sistema.xlsx");
     };
 
     const filteredAndSortedData = useMemo(() => {
@@ -65,12 +92,22 @@ export function ALVGrid<T extends { id: string | number }>({
 
     return (
         <div className="flex flex-col h-full bg-bg-primary overflow-hidden border border-border-default shadow-sm rounded-lg">
-            {/* Optional Small Toolbar for Actions if provided */}
-            {actions && (
-                <div className="flex items-center justify-end px-3 py-1.5 bg-bg-secondary border-b border-border-default gap-2 text-xs">
-                    {actions}
-                </div>
-            )}
+            {/* Toolbar for Actions and Export */}
+            <div className="flex items-center justify-end px-3 py-1.5 bg-bg-secondary border-b border-border-default gap-2 text-xs">
+                {!hideExport && (
+                    <button
+                        onClick={handleExportExcel}
+                        className="flex items-center gap-1 text-text-secondary hover:text-brand-primary transition-colors"
+                        title="Exportar para Excel"
+                    >
+                        <Download size={14} />
+                        <span className="font-medium">EXPORTAR</span>
+                    </button>
+                )}
+                {/* Separator if actions exist */}
+                {!hideExport && actions && <div className="h-4 w-px bg-border-default mx-1"></div>}
+                {actions}
+            </div>
 
             {/* Grid Content */}
             <div className="flex-1 overflow-auto bg-white min-h-0 relative">

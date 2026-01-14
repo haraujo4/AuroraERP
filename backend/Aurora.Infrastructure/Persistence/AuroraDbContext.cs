@@ -5,6 +5,7 @@ using Aurora.Domain.Entities.Sales;
 using Aurora.Domain.Entities.Finance;
 using Aurora.Domain.Entities.Production;
 using Aurora.Domain.Entities.Security;
+using Aurora.Domain.Entities.Communication;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aurora.Infrastructure.Persistence
@@ -78,6 +79,7 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<EmailLog> EmailLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

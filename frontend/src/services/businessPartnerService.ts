@@ -15,5 +15,10 @@ export const BusinessPartnerService = {
     create: async (data: CreateBusinessPartnerDto) => {
         const response = await api.post<BusinessPartner>('/crm/business-partners', data);
         return response.data;
+    },
+
+    update: async (id: string, data: Partial<CreateBusinessPartnerDto>) => {
+        const response = await api.put<BusinessPartner>(`/crm/business-partners/${id}`, data);
+        return response.data;
     }
 };

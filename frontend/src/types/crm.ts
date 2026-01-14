@@ -19,6 +19,14 @@ export interface CreateBusinessPartnerDto {
     cpfCnpj: string;
     rgIe: string;
     addresses: CreateAddressDto[];
+    contacts: CreateContactDto[];
+}
+
+export interface CreateContactDto {
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
 }
 
 export interface BusinessPartnerAddress {

@@ -54,6 +54,10 @@ namespace Aurora.Application.Services.Logistics
 
             await _deliveryRepository.AddAsync(delivery);
 
+            // Update Order Status to Processing
+            order.UpdateStatus(SalesOrderStatus.Processing);
+            await _salesOrderRepository.UpdateAsync(order);
+
             return await MapToDto(delivery);
         }
 

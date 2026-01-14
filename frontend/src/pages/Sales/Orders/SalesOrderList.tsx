@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, Eye, Truck, RefreshCw, CheckCircle } from 'lucide-react';
+import { Plus, Eye, Truck, RefreshCw, CheckCircle, Loader2 } from 'lucide-react';
 import { ALVGrid } from '../../../components/Common/ALVGrid';
 import type { Column } from '../../../components/Common/ALVGrid';
 import { salesOrderService } from '../../../services/salesOrderService';
@@ -11,6 +11,7 @@ export function SalesOrderList() {
     const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [orders, setOrders] = useState<SalesOrder[]>([]);
     const [loading, setLoading] = useState(true);
+    const [processingId, setProcessingId] = useState<string | null>(null);
 
     useEffect(() => {
         loadOrders();
@@ -32,8 +33,10 @@ export function SalesOrderList() {
         switch (status) {
             case 'Draft': return 'bg-gray-100 text-gray-800';
             case 'Confirmed': return 'bg-green-100 text-green-800';
+            case 'Processing': return 'bg-orange-100 text-orange-800';
+            case 'Shipped': return 'bg-blue-100 text-blue-800';
             case 'Cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-blue-100 text-blue-800';
+            default: return 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -69,7 +72,7 @@ export function SalesOrderList() {
             width: '120px',
             render: (val) => (
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(val)}`}>
-                    {val.toUpperCase()}
+                    {val === 'Processing' ? 'AGUARD. EXPEDIÇÃO' : val.toUpperCase()}
                 </span>
             )
         },
@@ -84,6 +87,7 @@ export function SalesOrderList() {
                         onClick={(e) => { e.stopPropagation(); navigate(`/sales/orders/${order.id}`); }}
                         className="text-brand-primary hover:text-brand-secondary p-1 transition-colors"
                         title="Visualizar"
+                        disabled={!!processingId}
                     >
                         <Eye size={16} />
                     </button>
@@ -92,19 +96,23 @@ export function SalesOrderList() {
                             onClick={async (e) => {
                                 e.stopPropagation();
                                 if (confirm('Confirmar este pedido?')) {
+                                    setProcessingId(order.id);
                                     try {
                                         await salesOrderService.updateStatus(order.id, 'Confirmed');
                                         loadOrders();
                                     } catch (err) {
                                         alert('Erro ao confirmar pedido');
                                         console.error(err);
+                                    } finally {
+                                        setProcessingId(null);
                                     }
                                 }
                             }}
                             className="text-green-600 hover:text-green-800 p-1 transition-colors"
                             title="Confirmar Pedido"
+                            disabled={!!processingId}
                         >
-                            <CheckCircle size={16} />
+                            {processingId === order.id ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />}
                         </button>
                     )}
                     {order.status === 'Confirmed' && (
@@ -112,6 +120,7 @@ export function SalesOrderList() {
                             onClick={async (e) => {
                                 e.stopPropagation();
                                 if (confirm('Gerar entrega para este pedido?')) {
+                                    setProcessingId(order.id);
                                     try {
                                         const service = await import('../../../services/deliveryService').then(m => m.deliveryService);
                                         await service.createFromOrder(order.id);
@@ -119,13 +128,16 @@ export function SalesOrderList() {
                                         navigate('/logistics/deliveries');
                                     } catch (err: any) {
                                         alert('Erro ao criar entrega: ' + (err.response?.data || err.message));
+                                    } finally {
+                                        setProcessingId(null);
                                     }
                                 }
                             }}
                             className="text-green-600 hover:text-green-800 p-1 transition-colors"
                             title="Gerar Entrega"
+                            disabled={!!processingId}
                         >
-                            <Truck size={16} />
+                            {processingId === order.id ? <Loader2 size={16} className="animate-spin" /> : <Truck size={16} />}
                         </button>
                     )}
                 </div>

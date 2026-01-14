@@ -6,6 +6,8 @@ using Aurora.Application.DTOs.Sales;
 using Aurora.Application.Interfaces.Repositories;
 using Aurora.Application.Interfaces.Sales;
 using Aurora.Domain.Entities.Sales;
+using Aurora.Application.Interfaces.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Aurora.Application.Services.Sales
 {
@@ -16,19 +18,25 @@ namespace Aurora.Application.Services.Sales
         private readonly IBusinessPartnerRepository _bpRepository;
         private readonly Aurora.Application.Interfaces.Fiscal.ITaxService _taxService;
         private readonly IPricingService _pricingService;
+        private readonly IEmailQueue _emailQueue;
+        private readonly Microsoft.Extensions.Logging.ILogger<SalesOrderService> _logger;
 
         public SalesOrderService(
             ISalesOrderRepository repository, 
             ISalesQuoteRepository quoteRepository,
             IBusinessPartnerRepository bpRepository,
             Aurora.Application.Interfaces.Fiscal.ITaxService taxService,
-            IPricingService pricingService)
+            IPricingService pricingService,
+            IEmailQueue emailQueue,
+            Microsoft.Extensions.Logging.ILogger<SalesOrderService> logger)
         {
             _repository = repository;
             _quoteRepository = quoteRepository;
             _bpRepository = bpRepository;
             _taxService = taxService;
             _pricingService = pricingService;
+            _emailQueue = emailQueue;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<SalesOrderDto>> GetAllAsync()
@@ -120,6 +128,9 @@ namespace Aurora.Application.Services.Sales
             quote.UpdateStatus(SalesQuoteStatus.Converted);
             await _quoteRepository.UpdateAsync(quote);
 
+            // Send Email Notification
+            await SendOrderEmailAsync(createDto.BusinessPartnerId, orderDto, "Novo Pedido de Venda Criado");
+
             return orderDto;
         }
 
@@ -132,10 +143,66 @@ namespace Aurora.Application.Services.Sales
             {
                 order.UpdateStatus(newStatus);
                 await _repository.UpdateAsync(order);
+                
+                // If Confirmed, send email
+                if (newStatus == SalesOrderStatus.Confirmed)
+                {
+                    // Need to map to DTO to reuse email logic or just pass ID
+                    var dto = MapToDto(order);
+                    await SendOrderEmailAsync(order.BusinessPartnerId, dto, "Pedido de Venda Confirmado");
+                }
             }
             else
             {
                 throw new Exception("Invalid Status");
+            }
+        }
+
+        private async Task SendOrderEmailAsync(Guid bpId, SalesOrderDto order, string subject)
+        {
+            try
+            {
+                _logger.LogInformation($"[Email] Enqueueing email for Order {order.Number} to BP {bpId}");
+                var bp = await _bpRepository.GetByIdAsync(bpId, b => b.Contacts);
+                
+                if (bp == null)
+                {
+                     _logger.LogWarning($"[Email] BP {bpId} not found.");
+                     return;
+                }
+
+                var email = bp.Contacts.FirstOrDefault()?.Email;
+                _logger.LogInformation($"[Email] Found email: {email ?? "NULL"}");
+
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var body = $@"
+                        <h1>{subject}</h1>
+                        <p>Olá <strong>{bp.RazaoSocial}</strong>,</p>
+                        <p>O pedido de venda <strong>{order.Number}</strong> foi processado.</p>
+                        <p><strong>Valor Total:</strong> {order.TotalValue:C}</p>
+                        <p>Status: {order.Status}</p>
+                        <br/>
+                        <p>Atenciosamente,<br/>Equipe Aurora ERP</p>
+                    ";
+
+                    await _emailQueue.EnqueueAsync(new Aurora.Domain.Models.EmailMessage
+                    {
+                        To = email,
+                        Subject = $"{subject} - {order.Number}",
+                        Body = body,
+                        IsHtml = true
+                    });
+                    _logger.LogInformation($"[Email] Email enqueued successfully.");
+                }
+                else
+                {
+                    _logger.LogWarning($"[Email] No valid email found for BP {bp.RazaoSocial}. Contacts count: {bp.Contacts.Count}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"[Email] Failed to enqueue email: {ex.Message}");
             }
         }
 

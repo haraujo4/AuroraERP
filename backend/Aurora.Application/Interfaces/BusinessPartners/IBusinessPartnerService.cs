@@ -10,6 +10,6 @@ namespace Aurora.Application.Interfaces.BusinessPartners
         Task<IEnumerable<BusinessPartnerDto>> GetAllAsync();
         Task<BusinessPartnerDto?> GetByIdAsync(Guid id);
         Task<BusinessPartnerDto> CreateAsync(CreateBusinessPartnerDto dto);
-        // Task UpdateAsync(Guid id, UpdateBusinessPartnerDto dto);
+        Task<BusinessPartnerDto> UpdateAsync(Guid id, CreateBusinessPartnerDto dto);
     }
 }

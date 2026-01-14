@@ -46,5 +46,19 @@ namespace Aurora.API.Controllers.BusinessPartners
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BusinessPartnerDto>> Update(Guid id, CreateBusinessPartnerDto dto)
+        {
+            try 
+            {
+                var result = await _service.UpdateAsync(id, dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

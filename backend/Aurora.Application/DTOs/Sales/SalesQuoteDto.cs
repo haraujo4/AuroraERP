@@ -11,6 +11,7 @@ namespace Aurora.Application.DTOs.Sales
         public string BusinessPartnerName { get; set; }
         public Guid? OpportunityId { get; set; }
         public string? OpportunityTitle { get; set; }
+        public DateTime QuoteDate { get; set; }
         public DateTime ValidUntil { get; set; }
         public string Status { get; set; }
         public decimal TotalValue { get; set; }

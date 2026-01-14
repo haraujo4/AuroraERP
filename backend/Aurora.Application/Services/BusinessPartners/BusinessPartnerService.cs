@@ -29,9 +29,8 @@ namespace Aurora.Application.Services.BusinessPartners
 
         public async Task<BusinessPartnerDto?> GetByIdAsync(Guid id)
         {
-            // Note: Repository.GetByIdAsync usually finds generic, might not include owned collections eagerly strictly depending on EF config.
-            // For owned types, EF Core loads them automatically by default if they are owned.
-            var bp = await _repository.GetByIdAsync(id);
+            // Explicitly include Contacts and Addresses
+            var bp = await _repository.GetByIdAsync(id, b => b.Addresses, b => b.Contacts);
             return bp == null ? null : MapToDto(bp);
         }
 
@@ -51,6 +50,7 @@ namespace Aurora.Application.Services.BusinessPartners
                 dto.NomeFantasia,
                 dto.CpfCnpj
             );
+            entity.SetCreditLimit(0); // Default
 
             // Add Addresses
             foreach (var addr in dto.Addresses)
@@ -68,9 +68,88 @@ namespace Aurora.Application.Services.BusinessPartners
                 entity.AddAddress(addr.Type, address, addr.IsPrincipal);
             }
 
+            // Add Contacts
+            foreach (var c in dto.Contacts)
+            {
+                entity.AddContact(c.Name, c.Email, c.Phone, c.Role);
+            }
+
             await _repository.AddAsync(entity);
 
             return MapToDto(entity);
+        }
+
+        public async Task<BusinessPartnerDto> UpdateAsync(Guid id, CreateBusinessPartnerDto dto)
+        {
+             // Standard Tracked Update with Smart List Merging
+             var entity = await _repository.GetByIdAsync(id, b => b.Addresses, b => b.Contacts);
+             
+             if (entity == null) throw new Exception("BusinessPartner not found");
+
+             entity.UpdateDetails(dto.RazaoSocial, dto.NomeFantasia, dto.CpfCnpj, dto.RgIe);
+             
+             // --- Smart Update Addresses (Match by Index) ---
+             int existingAddrCount = entity.Addresses.Count;
+             int newAddrCount = dto.Addresses.Count;
+             int maxAddr = Math.Max(existingAddrCount, newAddrCount);
+
+             // Modify existing / Add new
+             for (int i = 0; i < newAddrCount; i++)
+             {
+                 var addrDto = dto.Addresses[i];
+                 var address = new Address(
+                    addrDto.Street,
+                    addrDto.Number,
+                    addrDto.Complement,
+                    addrDto.Neighborhood,
+                    addrDto.City,
+                    addrDto.State,
+                    addrDto.Country,
+                    addrDto.ZipCode
+                 );
+
+                 if (i < existingAddrCount)
+                 {
+                     entity.UpdateAddressAt(i, addrDto.Type, address, addrDto.IsPrincipal);
+                 }
+                 else
+                 {
+                     entity.AddAddress(addrDto.Type, address, addrDto.IsPrincipal);
+                 }
+             }
+
+             // Remove extras (reverse loop to avoid index issues)
+             for (int i = existingAddrCount - 1; i >= newAddrCount; i--)
+             {
+                 entity.RemoveAddressAt(i);
+             }
+
+             // --- Smart Update Contacts (Match by Index) ---
+             int existingContactCount = entity.Contacts.Count;
+             int newContactCount = dto.Contacts.Count;
+
+             // Modify existing / Add new
+             for (int i = 0; i < newContactCount; i++)
+             {
+                 var c = dto.Contacts[i];
+                 if (i < existingContactCount)
+                 {
+                     entity.UpdateContactAt(i, c.Name, c.Email, c.Phone, c.Role);
+                 }
+                 else
+                 {
+                     entity.AddContact(c.Name, c.Email, c.Phone, c.Role);
+                 }
+             }
+
+             // Remove extras
+             for (int i = existingContactCount - 1; i >= newContactCount; i--)
+             {
+                 entity.RemoveContactAt(i);
+             }
+             
+             await _repository.UpdateAsync(entity);
+             return MapToDto(entity);
         }
 
         private BusinessPartnerDto MapToDto(BusinessPartner bp)
@@ -92,8 +171,12 @@ namespace Aurora.Application.Services.BusinessPartners
                     IsPrincipal = a.IsPrincipal,
                     Street = a.Address.Street,
                     Number = a.Address.Number,
-                    City = a.Address.City
-                    // Map other fields...
+                    City = a.Address.City,
+                    State = a.Address.State,
+                    Complement = a.Address.Complement,
+                    Neighborhood = a.Address.Neighborhood,
+                    Country = a.Address.Country,
+                    ZipCode = a.Address.ZipCode
                 }).ToList(),
                 Contacts = bp.Contacts.Select(c => new ContactPersonDto
                 {

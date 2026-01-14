@@ -26,6 +26,15 @@ namespace Aurora.Application.DTOs.BusinessPartners
         public string CpfCnpj { get; set; }
         public string RgIe { get; set; }
         public List<CreateAddressDto> Addresses { get; set; } = new();
+        public List<CreateContactDto> Contacts { get; set; } = new();
+    }
+
+    public class CreateContactDto
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Role { get; set; }
     }
 
     public class BusinessPartnerAddressDto
@@ -36,7 +45,11 @@ namespace Aurora.Application.DTOs.BusinessPartners
         public string Street { get; set; }
         public string Number { get; set; }
         public string City { get; set; }
-         // ... other fields
+        public string State { get; set; }
+        public string? Complement { get; set; }
+        public string? Neighborhood { get; set; }
+        public string? Country { get; set; }
+        public string ZipCode { get; set; }
     }
 
      public class CreateAddressDto
@@ -45,11 +58,11 @@ namespace Aurora.Application.DTOs.BusinessPartners
         public bool IsPrincipal { get; set; }
         public string Street { get; set; }
         public string Number { get; set; }
-        public string Complement { get; set; }
-        public string Neighborhood { get; set; }
+        public string? Complement { get; set; }
+        public string? Neighborhood { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Country { get; set; }
+        public string? Country { get; set; }
         public string ZipCode { get; set; }
     }
 

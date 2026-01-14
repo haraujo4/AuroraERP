@@ -19,6 +19,7 @@ namespace Aurora.Application.Services.Finance
         private readonly Aurora.Application.Interfaces.Repositories.IPurchasingRepository _purchasingRepository;
         private readonly Aurora.Application.Interfaces.Repositories.ISalesOrderRepository _salesOrderRepository;
         private readonly IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> _bpRepository;
+        private readonly Aurora.Application.Interfaces.Events.IEventBus _eventBus;
 
         public InvoiceService(
             IRepository<Invoice> invoiceRepository,
@@ -27,7 +28,8 @@ namespace Aurora.Application.Services.Finance
             IAccountService accountService,
             Aurora.Application.Interfaces.Repositories.IPurchasingRepository purchasingRepository,
             Aurora.Application.Interfaces.Repositories.ISalesOrderRepository salesOrderRepository,
-            IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> bpRepository)
+            IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> bpRepository,
+            Aurora.Application.Interfaces.Events.IEventBus eventBus)
         {
             _invoiceRepository = invoiceRepository;
             _itemRepository = itemRepository;
@@ -36,6 +38,7 @@ namespace Aurora.Application.Services.Finance
             _purchasingRepository = purchasingRepository;
             _salesOrderRepository = salesOrderRepository;
             _bpRepository = bpRepository;
+            _eventBus = eventBus;
         }
 
         public async Task<IEnumerable<InvoiceDto>> GetAllAsync()
@@ -128,6 +131,26 @@ namespace Aurora.Application.Services.Finance
 
             // 2. GL Integration
             await CreateJournalEntryForInvoice(invoice);
+
+            // 3. Trigger Event
+            if (invoice.Type == InvoiceType.Outbound)
+            {
+                var bp = await _bpRepository.GetByIdAsync(invoice.BusinessPartnerId, b => b.Contacts);
+                var contactEmail = bp?.Contacts.FirstOrDefault()?.Email;
+
+                if (!string.IsNullOrEmpty(contactEmail))
+                {
+                    var evt = new Aurora.Application.Events.Finance.InvoicePostedEvent(
+                        invoice.Id,
+                        invoice.Number,
+                        bp?.RazaoSocial ?? "Cliente",
+                        contactEmail,
+                        invoice.GrossAmount,
+                        invoice.DueDate
+                    );
+                    await _eventBus.PublishAsync(evt);
+                }
+            }
         }
 
         public async Task CancelAsync(Guid id)

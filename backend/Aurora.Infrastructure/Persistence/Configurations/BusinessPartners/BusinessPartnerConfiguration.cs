@@ -41,11 +41,11 @@ namespace Aurora.Infrastructure.Persistence.Configurations.BusinessPartners
                 {
                     nav.Property(p => p.Street).HasColumnName("Street").HasMaxLength(150);
                     nav.Property(p => p.Number).HasColumnName("Number").HasMaxLength(20);
-                    nav.Property(p => p.Complement).HasColumnName("Complement").HasMaxLength(50);
-                    nav.Property(p => p.Neighborhood).HasColumnName("Neighborhood").HasMaxLength(100);
+                    nav.Property(p => p.Complement).HasColumnName("Complement").HasMaxLength(50).IsRequired(false);
+                    nav.Property(p => p.Neighborhood).HasColumnName("Neighborhood").HasMaxLength(100).IsRequired(false);
                     nav.Property(p => p.City).HasColumnName("City").HasMaxLength(100);
                     nav.Property(p => p.State).HasColumnName("State").HasMaxLength(2);
-                    nav.Property(p => p.Country).HasColumnName("Country").HasMaxLength(50);
+                    nav.Property(p => p.Country).HasColumnName("Country").HasMaxLength(50).IsRequired(false);
                     nav.Property(p => p.ZipCode).HasColumnName("ZipCode").HasMaxLength(20);
                 });
             });

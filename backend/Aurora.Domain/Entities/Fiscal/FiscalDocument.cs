@@ -15,6 +15,13 @@ namespace Aurora.Domain.Entities.Fiscal
         public FiscalDocumentStatus Status { get; private set; }
         public DateTime IssuedAt { get; private set; }
         public string XmlContent { get; private set; } // Stub for XML storage
+        
+        // Integration Fields
+        public string? ProviderReference { get; private set; } // ID in Nuvem Fiscal
+        public string? Protocol { get; private set; }
+        public string? AuthorizationUrl { get; private set; } // PDF/DANFE
+        public string? XmlUrl { get; private set; }
+        public string? ErrorMessage { get; private set; }
 
         public FiscalDocument(Guid invoiceId, string documentNumber, string series, string accessKey)
         {
@@ -24,29 +31,52 @@ namespace Aurora.Domain.Entities.Fiscal
             AccessKey = accessKey;
             Status = FiscalDocumentStatus.Draft;
             IssuedAt = DateTime.Now;
-            XmlContent = "<nfeProc>Mock XML Content</nfeProc>";
+            XmlContent = "";
         }
 
         private FiscalDocument() { }
 
-        public void Authorize()
+        public void SetProviderReference(string reference)
         {
-            if (Status != FiscalDocumentStatus.Draft)
-                throw new InvalidOperationException("Only draft documents can be authorized.");
+            ProviderReference = reference;
+            Status = FiscalDocumentStatus.Processing;
+        }
+
+        public void Authorize(string protocol, string xmlContent, string authUrl, string xmlUrl)
+        {
             Status = FiscalDocumentStatus.Authorized;
+            Protocol = protocol;
+            XmlContent = xmlContent;
+            AuthorizationUrl = authUrl;
+            XmlUrl = xmlUrl;
+            ErrorMessage = null;
+        }
+
+        public void Reject(string errorMessage)
+        {
+            Status = FiscalDocumentStatus.Rejected;
+            ErrorMessage = errorMessage;
         }
 
         public void Cancel()
         {
             Status = FiscalDocumentStatus.Cancelled;
         }
+        
+        public void Error(string error)
+        {
+             Status = FiscalDocumentStatus.Error;
+             ErrorMessage = error;
+        }
     }
 
     public enum FiscalDocumentStatus
     {
         Draft,
+        Processing,
         Authorized,
         Cancelled,
-        Rejected
+        Rejected,
+        Error
     }
 }

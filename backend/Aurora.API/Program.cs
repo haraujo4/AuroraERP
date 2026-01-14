@@ -71,6 +71,11 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<Aurora.Application.Interfaces.Events.IEventBus, Aurora.Infrastructure.Events.InMemoryEventBus>();
 // Communication
 builder.Services.AddScoped<Aurora.Application.Interfaces.Communication.INotificationService, Aurora.API.Services.Communication.NotificationService>();
+// Email Service
+builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IEmailService, Aurora.Infrastructure.Services.SmtpEmailService>();
+builder.Services.AddSingleton<Aurora.Application.Interfaces.Services.IEmailQueue, Aurora.Infrastructure.Services.EmailQueue>();
+builder.Services.AddHostedService<Aurora.Infrastructure.Services.EmailBackgroundService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IPdfService, Aurora.Infrastructure.Services.PdfService>();
 
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
@@ -123,6 +128,8 @@ builder.Services.AddDbContext<AuroraDbContext>((sp, options) => {
 // Event Handlers
 builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.Identity.UserCreatedEvent>, Aurora.Application.EventHandlers.Identity.UserCreatedEventHandler>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.HR.EmployeeAdmittedEvent>, Aurora.Application.EventHandlers.HR.EmployeeAdmittedEventHandler>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.Sales.SalesQuoteApprovedEvent>, Aurora.Application.EventHandlers.Sales.SalesQuoteApprovedEventHandler>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Events.IIntegrationEventHandler<Aurora.Application.Events.Finance.InvoicePostedEvent>, Aurora.Application.EventHandlers.Finance.InvoicePostedEventHandler>();
 
 // HR Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.HR.IEmployeeService, Aurora.Application.Services.HR.EmployeeService>();
@@ -130,6 +137,8 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.HR.IEmployeeService, Au
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalDocumentService, Aurora.Application.Services.Fiscal.FiscalDocumentService>();
+builder.Services.AddHttpClient<Aurora.Application.Interfaces.Fiscal.IFiscalProvider, Aurora.Infrastructure.Integrations.NuvemFiscal.NuvemFiscalProvider>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.IFiscalService, Aurora.Application.Services.Fiscal.FiscalService>();
 
 // ... (existing code)
 

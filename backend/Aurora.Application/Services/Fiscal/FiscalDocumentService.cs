@@ -42,7 +42,7 @@ namespace Aurora.Application.Services.Fiscal
             var doc = new FiscalDocument(invoiceId, docNumber, series, accessKey);
             
             // Mock implicit authorization for MVP
-            doc.Authorize();
+            doc.Authorize("MOCK-PROTOCOL", "<nfe>Mock</nfe>", "http://mock-url.com/danfe.pdf", "http://mock-url.com/nfe.xml");
 
             await _repository.AddAsync(doc);
             return MapToDto(doc);
