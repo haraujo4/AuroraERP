@@ -69,6 +69,7 @@ export const MENU_ITEMS: MenuItem[] = [
         subItems: [
             { id: 'materials', label: 'Gestão de Materiais (MM01)', path: '/logistics/materials' },
             { id: 'inventory', label: 'Gestão de Estoques (MMBE)', path: '/logistics/inventory' },
+            { id: 'migo', label: 'Movimentação de Mercadorias (MIGO)', path: '/logistics/migo' },
             { id: 'inventory-in', label: 'Entrada (MB01)', path: '/logistics/inventory/in' },
             { id: 'inventory-out', label: 'Saída de Estoque (MB1A)', path: '/logistics/inventory/out' },
             { id: 'inventory-transfer', label: 'Transferência (MB1B)', path: '/logistics/inventory/transfer' },
