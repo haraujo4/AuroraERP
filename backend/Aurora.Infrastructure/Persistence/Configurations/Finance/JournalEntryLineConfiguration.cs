@@ -11,6 +11,8 @@ namespace Aurora.Infrastructure.Persistence.Configurations.Finance
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Amount).IsRequired().HasPrecision(18, 4);
             builder.Property(x => x.Type).IsRequired().HasConversion<string>();
+            builder.Property(x => x.BusinessPartnerId);
+            builder.Property(x => x.ClearingId);
             
             builder.HasOne(x => x.Account)
                 .WithMany()

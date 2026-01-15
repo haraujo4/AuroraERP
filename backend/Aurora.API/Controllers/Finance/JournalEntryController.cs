@@ -62,5 +62,24 @@ namespace Aurora.API.Controllers.Finance
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("{id}/reverse")]
+        public async Task<IActionResult> Reverse(Guid id, [FromBody] ReverseRequest request)
+        {
+            try
+            {
+                await _service.ReverseAsync(id, request.Reason);
+                return Ok(new { message = "Document reversed successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public class ReverseRequest
+        {
+            public string Reason { get; set; } = string.Empty;
+        }
     }
 }

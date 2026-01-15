@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Plus, CheckCircle, XCircle, FileText, Loader2 } from 'lucide-react';
+import { Plus, CheckCircle, XCircle, FileText, Loader2, RotateCcw } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
 import { BASE_URL } from '../../../services/api';
 
@@ -43,15 +43,17 @@ export function InvoiceList() {
         }
     };
 
-    const handleCancel = async (id: string, reason?: string) => {
-        if (!confirm('Deseja realmente cancelar esta fatura?')) return;
+    const handleReverse = async (id: string) => {
+        const reason = prompt("Motivo do Estorno (FB08) - Obrigatório para anulação fiscal/contábil:");
+        if (!reason) return;
+
         setProcessingId(id);
         try {
-            await financeService.cancelInvoice(id, reason);
+            await financeService.reverseInvoice(id, reason);
             await loadInvoices();
         } catch (error) {
             console.error(error);
-            alert('Erro ao cancelar fatura');
+            alert(error instanceof Error ? error.message : 'Erro ao realizar estorno FB08');
         } finally {
             setProcessingId(null);
         }
@@ -187,15 +189,12 @@ export function InvoiceList() {
                                                         <FileText size={16} />
                                                     </button>
                                                     <button
-                                                        onClick={() => {
-                                                            const reason = prompt("Motivo do cancelamento:");
-                                                            if (reason) handleCancel(invoice.id, reason);
-                                                        }}
+                                                        onClick={() => handleReverse(invoice.id)}
                                                         disabled={processingId === invoice.id}
-                                                        className="text-red-600 hover:text-red-700 p-1 disabled:opacity-50"
-                                                        title="Cancelar Nota"
+                                                        className="text-orange-600 hover:text-orange-700 p-1 disabled:opacity-50"
+                                                        title="Estorno FB08 (Anulação)"
                                                     >
-                                                        {processingId === invoice.id ? <Loader2 size={16} className="animate-spin" /> : <XCircle size={16} />}
+                                                        {processingId === invoice.id ? <Loader2 size={16} className="animate-spin" /> : <RotateCcw size={16} />}
                                                     </button>
                                                 </>
                                             )}

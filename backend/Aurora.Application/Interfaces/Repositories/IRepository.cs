@@ -13,6 +13,7 @@ namespace Aurora.Application.Interfaces.Repositories
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
+        Task UpdateRangeAsync(IEnumerable<T> entities);
         Task DeleteAsync(Guid id);
     }
 }

@@ -85,6 +85,8 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'journal-entries', label: 'Lançamentos (FB50)', path: '/finance/journal-entries' },
             { id: 'invoices', label: 'Faturas (MIRO)', path: '/finance/invoices' },
             { id: 'payments', label: 'Pagamentos (F110)', path: '/finance/payments' },
+            { id: 'clearing', label: 'Compensação (F-32)', path: '/finance/clearing' },
+            { id: 'reversal', label: 'Estorno (FB08)', path: '/finance/reversal' },
             { id: 'reports', label: 'Relatórios Analíticos (KE30)', path: '/finance/reports' },
         ]
     },

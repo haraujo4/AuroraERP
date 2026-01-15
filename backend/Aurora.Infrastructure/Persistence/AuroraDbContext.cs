@@ -32,6 +32,7 @@ namespace Aurora.Infrastructure.Persistence
 
         // Logistics
         public DbSet<Material> Materials { get; set; }
+        public DbSet<Batch> Batches { get; set; }
         public DbSet<StockLevel> StockLevels { get; set; }
         public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }

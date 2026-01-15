@@ -60,8 +60,14 @@ export const financeService = {
     postInvoice: async (id: string): Promise<void> => {
         await api.post(`/finance/invoices/${id}/post`);
     },
-    cancelInvoice: async (id: string, reason?: string): Promise<void> => {
-        await api.post(`/finance/invoices/${id}/cancel`, { reason });
+    cancelInvoice: async (id: string): Promise<void> => {
+        await api.post(`/finance/invoices/${id}/cancel`);
+    },
+    reverseInvoice: async (id: string, reason: string): Promise<void> => {
+        await api.post(`/finance/invoices/${id}/reverse`, { reason });
+    },
+    reverseJournalEntry: async (id: string, reason: string): Promise<void> => {
+        await api.post(`/finance/journalentry/${id}/reverse`, { reason });
     },
     deleteInvoice: async (id: string): Promise<void> => {
         await api.delete(`/finance/invoices/${id}`);

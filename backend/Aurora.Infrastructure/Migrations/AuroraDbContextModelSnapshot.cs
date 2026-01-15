@@ -515,6 +515,9 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -538,6 +541,15 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)");
+
+                    b.Property<Guid?>("BusinessPartnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ClearedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid?>("ClearingId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("CostCenterId")
                         .HasColumnType("uuid");
@@ -570,6 +582,8 @@ namespace Aurora.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("BusinessPartnerId");
 
                     b.HasIndex("CostCenterId");
 
@@ -2797,6 +2811,10 @@ namespace Aurora.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Aurora.Domain.Entities.BusinessPartners.BusinessPartner", "BusinessPartner")
+                        .WithMany()
+                        .HasForeignKey("BusinessPartnerId");
+
                     b.HasOne("Aurora.Domain.Entities.Organization.CentroCusto", "CostCenter")
                         .WithMany()
                         .HasForeignKey("CostCenterId")
@@ -2813,6 +2831,8 @@ namespace Aurora.Infrastructure.Migrations
                         .HasForeignKey("ProfitCenterId");
 
                     b.Navigation("Account");
+
+                    b.Navigation("BusinessPartner");
 
                     b.Navigation("CostCenter");
 

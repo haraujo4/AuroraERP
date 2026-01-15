@@ -23,6 +23,7 @@ namespace Aurora.Application.Interfaces.Logistics
         public Guid DepositoId { get; set; }
         public string DepositoName { get; set; }
         public string? BatchNumber { get; set; }
+        public Guid? BatchId { get; set; }
         public decimal Quantity { get; set; }
         public decimal AverageUnitCost { get; set; }
         public DateTime LastUpdated { get; set; }
@@ -36,6 +37,9 @@ namespace Aurora.Application.Interfaces.Logistics
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public string? BatchNumber { get; set; }
+        public Guid? BatchId { get; set; }
+        public DateTime? ManufacturingDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public string ReferenceDocument { get; set; }
     }
 }

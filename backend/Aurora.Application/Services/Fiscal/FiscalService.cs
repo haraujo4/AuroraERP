@@ -228,7 +228,10 @@ namespace Aurora.Application.Services.Fiscal
                 await _invoiceRepository.UpdateAsync(invoice);
 
                 // 2. Financial Reversal
-                var je = await _journalEntryService.GetByReferenceAsync(invoice.Id.ToString());
+                // Standardization: Try Number, then ID for legacy
+                var je = await _journalEntryService.GetByReferenceAsync(invoice.Number) 
+                         ?? await _journalEntryService.GetByReferenceAsync(invoice.Id.ToString());
+
                 if (je != null && je.Status == "Posted")
                 {
                     await _journalEntryService.ReverseAsync(je.Id, reason);

@@ -49,6 +49,27 @@ export function JournalEntryList() {
         { key: 'reference', label: 'Nr. Doc', sortable: true, width: '120px' },
         { key: 'description', label: 'Descrição', sortable: true },
         {
+            key: 'type',
+            label: 'Tipo',
+            width: '120px',
+            render: (val) => (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700`}>
+                    {val === 'Standard' ? 'Normal' : val === 'Reversal' ? 'Estorno' : val === 'Clearing' ? 'Compensação' : val}
+                </span>
+            )
+        },
+        {
+            key: 'id',
+            label: 'Parceiro(s)',
+            width: '150px',
+            render: (_, entry) => {
+                const partnerNames = Array.from(new Set(entry.lines.map(l => l.businessPartnerName).filter(n => !!n)));
+                if (partnerNames.length === 0) return '-';
+                if (partnerNames.length === 1) return partnerNames[0];
+                return `${partnerNames[0]} (+${partnerNames.length - 1})`;
+            }
+        },
+        {
             key: 'status',
             label: 'Status',
             width: '100px',

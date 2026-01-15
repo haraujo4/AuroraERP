@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { financeService } from '../../../services/financeService';
+import { BusinessPartnerService } from '../../../services/businessPartnerService';
 import type { Account, CreateJournalEntry, JournalEntry } from '../../../types/finance';
+import type { BusinessPartner } from '../../../types/crm';
 
 export function JournalEntryForm() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [accounts, setAccounts] = useState<Account[]>([]);
+    const [partners, setPartners] = useState<BusinessPartner[]>([]);
     const [isReadOnly, setIsReadOnly] = useState(false);
     const [entryStatus, setEntryStatus] = useState<string>('');
 
@@ -23,17 +26,29 @@ export function JournalEntryForm() {
         type: 'Debit' | 'Credit';
         amount: number;
         costCenterId?: string;
+        businessPartnerId?: string;
+        businessPartnerName?: string;
     }[]>([
-        { id: 1, accountId: '', type: 'Debit', amount: 0 },
-        { id: 2, accountId: '', type: 'Credit', amount: 0 }
+        { id: 1, accountId: '', type: 'Debit', amount: 0, businessPartnerId: '' },
+        { id: 2, accountId: '', type: 'Credit', amount: 0, businessPartnerId: '' }
     ]);
 
     useEffect(() => {
         loadAccounts();
+        loadPartners();
         if (id) {
             loadEntry(id);
         }
     }, [id]);
+
+    const loadPartners = async () => {
+        try {
+            const data = await BusinessPartnerService.getAll();
+            setPartners(data);
+        } catch (error) {
+            console.error('Failed to load partners:', error);
+        }
+    };
 
     const loadAccounts = async () => {
         try {
@@ -92,7 +107,9 @@ export function JournalEntryForm() {
                 accountName: l.accountName,
                 type: l.type as 'Debit' | 'Credit',
                 amount: l.amount,
-                costCenterId: l.costCenterId
+                costCenterId: l.costCenterId,
+                businessPartnerId: l.businessPartnerId,
+                businessPartnerName: l.businessPartnerName
             })));
 
             if (entry.status === 'Posted' || entry.status === 'Cancelled') {
@@ -121,7 +138,7 @@ export function JournalEntryForm() {
     const addLine = () => {
         if (isReadOnly) return;
         const newId = lines.length > 0 ? Math.max(...lines.map(l => l.id)) + 1 : 1;
-        setLines(prev => [...prev, { id: newId, accountId: '', type: 'Debit', amount: 0 }]);
+        setLines(prev => [...prev, { id: newId, accountId: '', type: 'Debit', amount: 0, businessPartnerId: '' }]);
     };
 
     const removeLine = (id: number) => {
@@ -166,7 +183,8 @@ export function JournalEntryForm() {
                     accountId: l.accountId,
                     amount: Number(l.amount),
                     type: l.type,
-                    costCenterId: l.costCenterId
+                    costCenterId: l.costCenterId,
+                    businessPartnerId: l.businessPartnerId || undefined
                 }))
             };
 
@@ -271,8 +289,9 @@ export function JournalEntryForm() {
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">Conta (Plano de Contas)</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Tipo</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">Conta (Plano de Contas)</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">Parceiro</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Tipo</th>
                                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Débito</th>
                                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Crédito</th>
                                         {!isReadOnly && <th className="px-4 py-2 text-right w-1/12"></th>}
@@ -297,6 +316,26 @@ export function JournalEntryForm() {
                                                         {accounts.map(account => (
                                                             <option key={account.id} value={account.id}>
                                                                 {account.code} - {account.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                )}
+                                            </td>
+                                            <td className="p-2">
+                                                {isReadOnly ? (
+                                                    <span className="text-sm text-gray-600">
+                                                        {line.businessPartnerName || 'N/A'}
+                                                    </span>
+                                                ) : (
+                                                    <select
+                                                        value={line.businessPartnerId}
+                                                        onChange={(e) => handleLineChange(line.id, 'businessPartnerId', e.target.value)}
+                                                        className="w-full p-2 border border-gray-300 rounded focus:border-brand-primary text-sm"
+                                                    >
+                                                        <option value="">Opcional...</option>
+                                                        {partners.map(p => (
+                                                            <option key={p.id} value={p.id}>
+                                                                {p.razaoSocial}
                                                             </option>
                                                         ))}
                                                     </select>

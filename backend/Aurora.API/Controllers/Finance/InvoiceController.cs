@@ -105,22 +105,11 @@ namespace Aurora.API.Controllers.Finance
         }
 
         [HttpPost("{id}/cancel")]
-        public async Task<IActionResult> Cancel(Guid id, [FromBody] CancelInvoiceRequest request)
+        public async Task<IActionResult> Cancel(Guid id)
         {
             try
             {
-                // We need to determine if we should just cancel the invoice (Draft) or specific fiscal cancellation (Posted)
-                // For simplicity, let's assume the frontend calls this for Fiscal Cancellation if status is Posted.
-                // But wait, the existing Cancel endpoint might be used for Drafts.
-                // Let's rely on Service logic or check status here?
-                // Ideally, FiscalService handles it.
-                // I need to inject IFiscalService.
-                
-                // Oops, I need to add IFiscalService to constructor first.
-                // I will use a separate ReplaceFileContent for constructor.
-                // Here I am just replacing the method.
-                
-                await _fiscalService.CancelInvoiceAsync(id, request.Reason); 
+                await _invoiceService.CancelAsync(id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -129,9 +118,23 @@ namespace Aurora.API.Controllers.Finance
             }
         }
 
-        public class CancelInvoiceRequest
+        [HttpPost("{id}/reverse")]
+        public async Task<IActionResult> Reverse(Guid id, [FromBody] ReversalRequest request)
         {
-            public string Reason { get; set; }
+            try
+            {
+                await _invoiceService.ReverseAsync(id, request.Reason);
+                return Ok(new { message = "Invoice reversed successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        public class ReversalRequest
+        {
+            public string Reason { get; set; } = string.Empty;
         }
         
         [HttpDelete("{id}")]

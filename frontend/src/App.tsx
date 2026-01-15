@@ -45,6 +45,7 @@ import { WarehouseList } from './pages/Logistics/Warehouses/WarehouseList';
 import { WarehouseForm } from './pages/Logistics/Warehouses/WarehouseForm';
 import { StorageLocationList } from './pages/Logistics/Warehouses/StorageLocationList';
 import { StorageLocationForm } from './pages/Logistics/Warehouses/StorageLocationForm';
+import MigoPage from './pages/Logistics/Migo/MigoPage';
 
 // Finance
 import { AccountList } from './pages/Finance/Accounts/AccountList';
@@ -57,6 +58,8 @@ import { BillingForm } from './pages/Finance/Invoices/BillingForm';
 import { MiroForm } from './pages/Finance/Invoices/MiroForm';
 import { PaymentList } from './pages/Finance/Payments/PaymentList';
 import PaymentForm from './pages/Finance/Payments/PaymentForm';
+import { ClearingPage } from './pages/Finance/Clearing/ClearingPage';
+import ReversalPage from './pages/Finance/Clearing/ReversalPage';
 
 // Production
 import { WorkCenterList } from './pages/Production/WorkCenters/WorkCenterList';
@@ -158,6 +161,7 @@ function App() {
             <Route path="logistics/materials/new" element={<MaterialForm />} />
             <Route path="logistics/materials/:id" element={<MaterialForm />} />
             <Route path="logistics/inventory" element={<StockList />} />
+            <Route path="logistics/migo" element={<MigoPage />} />
             <Route path="logistics/inventory/movement" element={<StockAdjustmentForm />} />
             <Route path="logistics/inventory/in" element={<GoodsReceiptForm />} />
             <Route path="logistics/inventory/out" element={<GoodsIssueForm />} />
@@ -228,6 +232,8 @@ function App() {
             <Route path="finance/payments" element={<PaymentList />} />
             <Route path="finance/payments/new" element={<PaymentForm />} />
             <Route path="finance/payments/:id" element={<PaymentForm />} />
+            <Route path="finance/clearing" element={<ClearingPage />} />
+            <Route path="finance/reversal" element={<ReversalPage />} />
             <Route path="finance/reports" element={<FinancialReports />} />
 
             {/* Analytics */}

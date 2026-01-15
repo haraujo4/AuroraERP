@@ -41,6 +41,9 @@ export const TRANSACTION_REGISTRY: Transaction[] = [
     { code: 'FB50', label: 'Lançamento Contábil', path: '/finance/journal-entries' },
     { code: 'MIRO', label: 'Revisão de Faturas', path: '/finance/invoices' },
     { code: 'F110', label: 'Pagamentos', path: '/finance/payments' },
+    { code: 'F-32', label: 'Compensação de Clientes', path: '/finance/clearing' },
+    { code: 'F-44', label: 'Compensação de Fornecedores', path: '/finance/clearing' },
+    { code: 'FB08', label: 'Estorno de Documento', path: '/finance/reversal' },
     { code: 'KE30', label: 'Relatórios Analíticos (DRE)', path: '/finance/reports' },
 
     // Production

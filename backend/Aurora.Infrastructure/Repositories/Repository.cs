@@ -76,6 +76,12 @@ namespace Aurora.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
+        {
+            _dbSet.UpdateRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             var entity = await GetByIdAsync(id);

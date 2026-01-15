@@ -157,10 +157,33 @@ namespace Aurora.Application.Services.Finance
         {
              var invoice = await _invoiceRepository.GetByIdAsync(id);
              if (invoice == null) throw new Exception("Invoice not found");
+             
+             if (invoice.Status == InvoiceStatus.Posted)
+                 throw new Exception("Cannot cancel a posted invoice. Use Reverse (FB08) instead.");
+
              invoice.Cancel();
              await _invoiceRepository.UpdateAsync(invoice);
-             
-             // Reverse GL entry? Future work.
+        }
+
+        public async Task ReverseAsync(Guid id, string reason)
+        {
+            var invoice = await _invoiceRepository.GetByIdAsync(id);
+            if (invoice == null) throw new Exception("Invoice not found");
+
+            if (invoice.Status != InvoiceStatus.Posted)
+                throw new Exception("Only posted invoices can be reversed.");
+
+            // Find GL entry by reference (Standardization: try Number first, then ID for legacy)
+            var entry = await _journalEntryService.GetByReferenceAsync(invoice.Number)
+                       ?? await _journalEntryService.GetByReferenceAsync(invoice.Id.ToString());
+
+            if (entry != null)
+            {
+                await _journalEntryService.ReverseAsync(entry.Id, reason);
+            }
+
+            invoice.Cancel(); // Reuse Canceled status for now, or we could add Reversed
+            await _invoiceRepository.UpdateAsync(invoice);
         }
 
         public async Task<InvoiceDto> CreateFromPurchaseOrderAsync(Guid purchaseOrderId, DateTime issueDate, DateTime dueDate)
@@ -309,10 +332,11 @@ namespace Aurora.Application.Services.Finance
 
             var jeParams = new CreateJournalEntryDto
             {
+                Type = JournalEntryType.Invoice.ToString(),
                 PostingDate = invoice.IssueDate,
                 DocumentDate = invoice.IssueDate,
-                Description = $"Invoice #{invoice.Id.ToString().Substring(0,8)} - {invoice.BusinessPartner?.RazaoSocial ?? "Partner"}",
-                Reference = invoice.Id.ToString(),
+                Description = $"Fatura {invoice.Number} - {invoice.BusinessPartner?.RazaoSocial ?? "Parceiro"}",
+                Reference = invoice.Number,
                 Lines = new List<CreateJournalEntryLineDto>()
             };
 
@@ -323,7 +347,8 @@ namespace Aurora.Application.Services.Finance
                 {
                     AccountId = receivableAccount?.Id ?? Guid.Empty, // Fail if null
                     Amount = invoice.GrossAmount, // receivable is gross (incl tax usually, but depend on tax setup)
-                    Type = JournalEntryLineType.Debit.ToString()
+                    Type = JournalEntryLineType.Debit.ToString(),
+                    BusinessPartnerId = invoice.BusinessPartnerId
                 });
                 
                 // Cr Revenue
@@ -331,7 +356,8 @@ namespace Aurora.Application.Services.Finance
                 {
                     AccountId = revenueAccount?.Id ?? Guid.Empty,
                     Amount = invoice.GrossAmount, 
-                    Type = JournalEntryLineType.Credit.ToString()
+                    Type = JournalEntryLineType.Credit.ToString(),
+                    BusinessPartnerId = invoice.BusinessPartnerId
                 });
             }
             else
@@ -342,15 +368,17 @@ namespace Aurora.Application.Services.Finance
                 {
                     AccountId = expenseAccount?.Id ?? Guid.Empty,
                     Amount = invoice.GrossAmount,
-                    Type = JournalEntryLineType.Debit.ToString()
+                    Type = JournalEntryLineType.Debit.ToString(),
+                    BusinessPartnerId = invoice.BusinessPartnerId
                 });
-
+ 
                 // Cr Payable
                 jeParams.Lines.Add(new CreateJournalEntryLineDto
                 {
                     AccountId = payableAccount?.Id ?? Guid.Empty,
                     Amount = invoice.GrossAmount,
-                    Type = JournalEntryLineType.Credit.ToString()
+                    Type = JournalEntryLineType.Credit.ToString(),
+                    BusinessPartnerId = invoice.BusinessPartnerId
                 });
             }
 

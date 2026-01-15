@@ -148,7 +148,8 @@ namespace Aurora.Application.Services.Finance
                     {
                         AccountId = controlAccount.Id,
                         Amount = payment.Amount,
-                        Type = controlLineType.ToString()
+                        Type = controlLineType.ToString(),
+                        BusinessPartnerId = payment.BusinessPartnerId
                     }
                 }
             };

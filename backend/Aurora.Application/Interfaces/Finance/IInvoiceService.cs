@@ -14,6 +14,7 @@ namespace Aurora.Application.Interfaces.Finance
         Task DeleteAsync(Guid id); // Only if draft
         Task PostAsync(Guid id); // Finalize and create GL entries
         Task CancelAsync(Guid id);
+        Task ReverseAsync(Guid id, string reason);
         Task<InvoiceDto> CreateFromPurchaseOrderAsync(Guid purchaseOrderId, DateTime issueDate, DateTime dueDate);
         Task<InvoiceDto> CreateFromSalesOrderAsync(Guid salesOrderId, DateTime issueDate, DateTime dueDate);
     }

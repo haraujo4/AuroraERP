@@ -61,6 +61,7 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IAccountService
 builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IJournalEntryService, Aurora.Application.Services.Finance.JournalEntryService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IInvoiceService, Aurora.Application.Services.Finance.InvoiceService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IPaymentService, Aurora.Application.Services.Finance.PaymentService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Finance.IClearingService, Aurora.Application.Services.Finance.ClearingService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Production.IProductionService, Aurora.Application.Services.Production.ProductionService>();
 // Purchasing Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Purchasing.IPurchasingService, Aurora.Application.Services.Purchasing.PurchasingService>();
@@ -87,6 +88,7 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Analytics.IProfitabilit
 builder.Services.AddScoped<Aurora.Application.Interfaces.Analytics.IControladoriaService, Aurora.Application.Services.Analytics.ControladoriaService>();
 
 // Logistics Services
+builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IBatchService, Aurora.Application.Services.Logistics.BatchService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IInventoryService, Aurora.Application.Services.Logistics.InventoryService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IDeliveryService, Aurora.Application.Services.Logistics.DeliveryService>();
 

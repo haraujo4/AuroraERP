@@ -12,20 +12,25 @@ namespace Aurora.Domain.Entities.Logistics
         public Guid DepositoId { get; private set; }
         public Deposito Deposito { get; private set; }
 
-        public string? BatchNumber { get; private set; }
+        public string? BatchNumber { get; private set; } // Legacy/Display
+        
+        public Guid? BatchId { get; private set; }
+        public Batch? Batch { get; private set; }
+
         public decimal Quantity { get; private set; }
         public decimal AverageUnitCost { get; private set; }
         public DateTime LastUpdated { get; private set; }
 
         private StockLevel() { }
 
-        public StockLevel(Guid materialId, Guid depositoId, decimal quantity, decimal averageUnitCost = 0, string? batchNumber = null)
+        public StockLevel(Guid materialId, Guid depositoId, decimal quantity, decimal averageUnitCost = 0, string? batchNumber = null, Guid? batchId = null)
         {
             MaterialId = materialId;
             DepositoId = depositoId;
             Quantity = quantity;
             AverageUnitCost = averageUnitCost;
             BatchNumber = batchNumber;
+            BatchId = batchId;
             LastUpdated = DateTime.UtcNow;
         }
 

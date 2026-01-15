@@ -31,6 +31,7 @@ export interface JournalEntry {
     description: string;
     reference: string;
     status: JournalEntryStatus;
+    type: string;
     lines: JournalEntryLine[];
 }
 
@@ -39,10 +40,15 @@ export type JournalEntryLineType = 'Debit' | 'Credit';
 export interface JournalEntryLine {
     id: string;
     accountId: string;
+    accountName?: string;
     amount: number;
     type: JournalEntryLineType;
     costCenterId?: string;
-    accountName?: string; // Optional if needed for display
+    businessPartnerId?: string;
+    businessPartnerName?: string;
+    clearingId?: string;
+    clearedAt?: string;
+    isCleared: boolean;
 }
 
 export interface CreateJournalEntry {
@@ -55,6 +61,7 @@ export interface CreateJournalEntry {
         amount: number;
         type: JournalEntryLineType;
         costCenterId?: string;
+        businessPartnerId?: string;
     }[];
 }
 

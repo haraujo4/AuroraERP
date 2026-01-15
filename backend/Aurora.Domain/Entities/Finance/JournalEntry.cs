@@ -12,6 +12,7 @@ namespace Aurora.Domain.Entities.Finance
         public string Description { get; private set; }
         public string? Reference { get; private set; }
         public JournalEntryStatus Status { get; private set; }
+        public JournalEntryType Type { get; private set; }
         public Guid? ReversedEntryId { get; private set; }
         public bool IsReversal { get; private set; }
         
@@ -20,21 +21,22 @@ namespace Aurora.Domain.Entities.Finance
 
         private JournalEntry() { }
 
-        public JournalEntry(DateTime postingDate, DateTime documentDate, string description, string? reference = null)
+        public JournalEntry(DateTime postingDate, DateTime documentDate, string description, string? reference = null, JournalEntryType type = JournalEntryType.Standard)
         {
             PostingDate = postingDate;
             DocumentDate = documentDate;
             Description = description;
             Reference = reference;
             Status = JournalEntryStatus.Draft;
+            Type = type;
         }
 
-        public void AddLine(Guid accountId, decimal amount, JournalEntryLineType type, Guid? costCenterId = null)
+        public void AddLine(Guid accountId, decimal amount, JournalEntryLineType type, Guid? costCenterId = null, Guid? businessPartnerId = null)
         {
             if (Status != JournalEntryStatus.Draft)
                 throw new InvalidOperationException("Cannot modify lines of a non-draft journal entry.");
 
-            _lines.Add(new JournalEntryLine(Id, accountId, amount, type, costCenterId));
+            _lines.Add(new JournalEntryLine(Id, accountId, amount, type, costCenterId, null, businessPartnerId));
         }
 
         public void Post()
@@ -67,13 +69,13 @@ namespace Aurora.Domain.Entities.Finance
             if (ReversedEntryId != null)
                 throw new InvalidOperationException("Entry is already reversed.");
 
-            var reversal = new JournalEntry(DateTime.Now, DateTime.Now, $"Estorno de {Description} - Motivo: {reason}", Reference);
+            var reversal = new JournalEntry(DateTime.Now, DateTime.Now, $"Estorno de {Description} - Motivo: {reason}", Reference, JournalEntryType.Reversal);
             reversal.IsReversal = true;
 
             foreach (var line in _lines)
             {
                 var reversedType = line.Type == JournalEntryLineType.Debit ? JournalEntryLineType.Credit : JournalEntryLineType.Debit;
-                reversal.AddLine(line.AccountId, line.Amount, reversedType, line.CostCenterId);
+                reversal.AddLine(line.AccountId, line.Amount, reversedType, line.CostCenterId, line.BusinessPartnerId);
             }
 
             ReversedEntryId = reversal.Id;
@@ -88,5 +90,14 @@ namespace Aurora.Domain.Entities.Finance
         Draft,
         Posted,
         Cancelled
+    }
+
+    public enum JournalEntryType
+    {
+        Standard,
+        Reversal,
+        Clearing,
+        Payment,
+        Invoice
     }
 }

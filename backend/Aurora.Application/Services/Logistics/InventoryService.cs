@@ -19,6 +19,7 @@ namespace Aurora.Application.Services.Logistics
         private readonly IRepository<Aurora.Domain.Entities.Organization.Deposito> _depositoRepo;
         private readonly IRepository<Aurora.Domain.Entities.Finance.Account> _accountRepo;
         private readonly IJournalEntryService _journalEntryService;
+        private readonly IBatchService _batchService;
 
         public InventoryService(
             IRepository<StockLevel> stockLevelRepo,
@@ -26,7 +27,8 @@ namespace Aurora.Application.Services.Logistics
             IRepository<Aurora.Domain.Entities.Logistics.Material> materialRepo,
             IRepository<Aurora.Domain.Entities.Organization.Deposito> depositoRepo,
             IRepository<Aurora.Domain.Entities.Finance.Account> accountRepo,
-            IJournalEntryService journalEntryService)
+            IJournalEntryService journalEntryService,
+            IBatchService batchService)
         {
             _stockLevelRepo = stockLevelRepo;
             _stockMovementRepo = stockMovementRepo;
@@ -34,10 +36,12 @@ namespace Aurora.Application.Services.Logistics
             _depositoRepo = depositoRepo;
             _accountRepo = accountRepo;
             _journalEntryService = journalEntryService;
+            _batchService = batchService;
         }
 
         public async Task<decimal> GetStockLevelAsync(Guid materialId, Guid depositoId, string? batchNumber = null)
         {
+            // TODO: Update to use BatchId lookup if possible, for now keeping string compat
             var levels = await _stockLevelRepo.GetAllAsync();
             var level = levels.FirstOrDefault(x => 
                 x.MaterialId == materialId && 
@@ -63,6 +67,7 @@ namespace Aurora.Application.Services.Logistics
                     DepositoId = x.DepositoId,
                     DepositoName = depositos.FirstOrDefault(d => d.Id == x.DepositoId)?.Descricao ?? "Unknown",
                     BatchNumber = x.BatchNumber,
+                    BatchId = x.BatchId,
                     Quantity = x.Quantity,
                     AverageUnitCost = x.AverageUnitCost,
                     LastUpdated = x.UpdatedAt ?? x.CreatedAt
@@ -83,6 +88,7 @@ namespace Aurora.Application.Services.Logistics
                 DepositoId = x.DepositoId,
                 DepositoName = depositos.FirstOrDefault(d => d.Id == x.DepositoId)?.Descricao ?? "Unknown",
                 BatchNumber = x.BatchNumber,
+                BatchId = x.BatchId,
                 Quantity = x.Quantity,
                 AverageUnitCost = x.AverageUnitCost,
                 LastUpdated = x.UpdatedAt ?? x.CreatedAt
@@ -91,16 +97,49 @@ namespace Aurora.Application.Services.Logistics
 
         public async Task AddStockMovementAsync(CreateStockMovementDto dto)
         {
-            // 1. Update Stock Level & Recalculate Cost
+            var material = await _materialRepo.GetByIdAsync(dto.MaterialId);
+            if (material == null) throw new Exception("Material not found");
+
+            Guid? resolvedBatchId = dto.BatchId;
+
+            // 1. Resolve Batch Logic
+            if (material.IsBatchManaged)
+            {
+                if (string.IsNullOrEmpty(dto.BatchNumber))
+                    throw new Exception($"Material {material.Code} is managed by Batch. Batch Number is required.");
+
+                // Check if Batch exists or Create it
+                // For Goods Receipt, we typically allow creating. For Issue, it must exist.
+                // Assuming "In" creates/updates, "Out" validates.
+                
+                var batch = await _batchService.GetByMaterialAndNumberAsync(dto.MaterialId, dto.BatchNumber);
+                
+                if (batch == null)
+                {
+                    if (IsOutgoing(dto.Type))
+                         throw new Exception($"Batch {dto.BatchNumber} not found for material {material.Code}. Cannot issue stock.");
+                    
+                    // Create Batch (Auto-create logic for MVP)
+                    batch = await _batchService.CreateAsync(dto.MaterialId, dto.BatchNumber, dto.ManufacturingDate, dto.ExpirationDate);
+                }
+                resolvedBatchId = batch.Id;
+            }
+
+            // 2. Update Stock Level & Recalculate Cost
             var levels = await _stockLevelRepo.GetAllAsync();
+            
+            // Find stock level by BatchId if available, matching logic
+            // Note: Currently StockLevel has BatchNumber string. We should migrate/match on BatchId ideally.
+            // For now, matching on BatchNumber string AND resolvedBatchId if present to be safe.
+            
             var level = levels.FirstOrDefault(x => 
                 x.MaterialId == dto.MaterialId && 
                 x.DepositoId == dto.DepositoId && 
-                x.BatchNumber == dto.BatchNumber);
+                (resolvedBatchId.HasValue ? x.BatchId == resolvedBatchId : x.BatchNumber == dto.BatchNumber));
 
             if (level == null)
             {
-                level = new StockLevel(dto.MaterialId, dto.DepositoId, 0, dto.UnitPrice, dto.BatchNumber);
+                level = new StockLevel(dto.MaterialId, dto.DepositoId, 0, dto.UnitPrice, dto.BatchNumber, resolvedBatchId);
                 await _stockLevelRepo.AddAsync(level);
             }
 
@@ -112,7 +151,6 @@ namespace Aurora.Application.Services.Logistics
                 {
                     movementUnitPrice = level.AverageUnitCost;
                 }
-                // Else: keep movementUnitPrice as dto.UnitPrice (which has the fallback)
                 
                 level.RemoveQuantity(dto.Quantity);
             }
@@ -124,7 +162,7 @@ namespace Aurora.Application.Services.Logistics
 
             await _stockLevelRepo.UpdateAsync(level);
 
-            // 2. Register Movement
+            // 3. Register Movement
             var movement = new StockMovement(
                 dto.MaterialId, 
                 dto.DepositoId, 
@@ -132,11 +170,12 @@ namespace Aurora.Application.Services.Logistics
                 dto.Quantity, 
                 movementUnitPrice,
                 dto.ReferenceDocument, 
-                dto.BatchNumber);
+                dto.BatchNumber,
+                resolvedBatchId);
             
             await _stockMovementRepo.AddAsync(movement);
 
-            // 3. Automated Accounting Integration (Bookkeeping)
+            // 4. Automated Accounting Integration (Bookkeeping)
             await CreateAccountingEntryAsync(dto, movementUnitPrice);
         }
 

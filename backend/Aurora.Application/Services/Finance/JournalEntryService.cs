@@ -21,12 +21,18 @@ namespace Aurora.Application.Services.Finance
 
         public async Task<JournalEntryDto> CreateAsync(CreateJournalEntryDto dto)
         {
-            var entry = new JournalEntry(dto.PostingDate, dto.DocumentDate, dto.Description, dto.Reference);
+            var entryType = JournalEntryType.Standard;
+            if (!string.IsNullOrEmpty(dto.Type))
+            {
+                Enum.TryParse<JournalEntryType>(dto.Type, out entryType);
+            }
+
+            var entry = new JournalEntry(dto.PostingDate, dto.DocumentDate, dto.Description, dto.Reference, entryType);
             
             foreach (var line in dto.Lines)
             {
                 var type = Enum.Parse<JournalEntryLineType>(line.Type);
-                entry.AddLine(line.AccountId, line.Amount, type, line.CostCenterId);
+                entry.AddLine(line.AccountId, line.Amount, type, line.CostCenterId, line.BusinessPartnerId);
             }
 
             await _entryRepo.AddAsync(entry);
@@ -79,8 +85,25 @@ namespace Aurora.Application.Services.Finance
             // Post the reversal entry immediately
             reversal.Post();
 
-            await _entryRepo.UpdateAsync(entry); // Updates original entry status and link
-            await _entryRepo.UpdateAsync(reversal); // Updates reversal status to Posted
+            // AUTOMATIC CLEARING: Match lines with BusinessPartnerId
+            var clearingId = Guid.NewGuid();
+            foreach (var originalLine in entry.Lines.Where(l => l.BusinessPartnerId != null && !l.IsCleared))
+            {
+                var matchingReversalLine = reversal.Lines.FirstOrDefault(rl => 
+                    rl.BusinessPartnerId == originalLine.BusinessPartnerId && 
+                    rl.AccountId == originalLine.AccountId &&
+                    rl.Amount == originalLine.Amount &&
+                    rl.Type != originalLine.Type &&
+                    !rl.IsCleared);
+
+                if (matchingReversalLine != null)
+                {
+                    originalLine.Clear(clearingId);
+                    matchingReversalLine.Clear(clearingId);
+                }
+            }
+
+            await _entryRepo.UpdateRangeAsync(new[] { entry, reversal });
         }
 
         public async Task<JournalEntryDto> GetByReferenceAsync(string reference)
@@ -111,6 +134,7 @@ namespace Aurora.Application.Services.Finance
                 Description = entry.Description,
                 Reference = entry.Reference,
                 Status = entry.Status.ToString(),
+                Type = entry.Type.ToString(),
                 Lines = entry.Lines.Select(l => 
                 {
                     string accountName = "N/A";
@@ -121,9 +145,14 @@ namespace Aurora.Application.Services.Finance
                     {
                         AccountId = l.AccountId,
                         AccountName = accountName,
+                        BusinessPartnerId = l.BusinessPartnerId,
+                        BusinessPartnerName = l.BusinessPartner?.RazaoSocial ?? (l.BusinessPartnerId != null ? "Assigned" : null),
                         Amount = l.Amount,
                         Type = l.Type.ToString(),
-                        CostCenterId = l.CostCenterId
+                        CostCenterId = l.CostCenterId,
+                        ClearingId = l.ClearingId,
+                        ClearedAt = l.ClearedAt,
+                        IsCleared = l.IsCleared
                     };
                 }).ToList()
             };
