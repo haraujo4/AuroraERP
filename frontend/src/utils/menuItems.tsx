@@ -40,6 +40,7 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'branches', label: 'Filiais (ORG03)', path: '/admin/branches' },
             { id: 'cost-centers', label: 'Centros de Custo (KS01)', path: '/admin/cost-centers' },
             { id: 'profit-centers', label: 'Centros de Lucro (KE51)', path: '/admin/profit-centers' },
+            { id: 'access-control', label: 'Controle de Acessos (SU01)', path: '/admin/access-control' },
         ]
     },
     {
@@ -87,7 +88,8 @@ export const MENU_ITEMS: MenuItem[] = [
             { id: 'accounts', label: 'Plano de Contas (FI01)', path: '/finance/accounts' },
             { id: 'journal-entries', label: 'Lançamentos (FB50)', path: '/finance/journal-entries' },
             { id: 'invoices', label: 'Faturas (MIRO)', path: '/finance/invoices' },
-            { id: 'payments', label: 'Pagamentos (F110)', path: '/finance/payments' },
+            { id: 'payments', label: 'Pagamentos (F-53)', path: '/finance/payments' },
+            { id: 'payment-run', label: 'Pagamento Automático (F110)', path: '/finance/payment-run' },
             { id: 'clearing', label: 'Compensação (F-32)', path: '/finance/clearing' },
             { id: 'reversal', label: 'Estorno (FB08)', path: '/finance/reversal' },
             { id: 'reports', label: 'Relatórios Analíticos (KE30)', path: '/finance/reports' },
@@ -117,7 +119,8 @@ export const MENU_ITEMS: MenuItem[] = [
         label: 'Fiscal',
         icon: Percent,
         subItems: [
-            { id: 'tax-rules', label: 'Regras Fiscais (FIS01)', path: '/fiscal/tax-rules' }
+            { id: 'tax-rules', label: 'Regras Fiscais (FIS01/J1BTAX)', path: '/fiscal/tax-rules' },
+            { id: 'nfe-monitor', label: 'Monitor NFe (J1BNFE)', path: '/fiscal/nfe-monitor' },
         ]
     },
     {
@@ -134,6 +137,8 @@ export const MENU_ITEMS: MenuItem[] = [
         icon: Users,
         subItems: [
             { id: 'employees', label: 'Colaboradores (PA30)', path: '/hr/employees' },
+            { id: 'personnel-actions', label: 'Medidas de Pessoal (PA40)', path: '/hr/personnel-actions' },
+            { id: 'time-management', label: 'Gestão de Tempos (PA61)', path: '/hr/time-records' },
         ]
     },
     { id: 'expedition', label: 'Expedição', icon: Truck, subItems: [{ id: 'deliveries', label: 'Entregas (VL01N)', path: '/logistics/deliveries' }] },

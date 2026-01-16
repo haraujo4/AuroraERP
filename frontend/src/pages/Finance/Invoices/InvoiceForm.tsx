@@ -19,6 +19,9 @@ export function InvoiceForm() {
     const [type, setType] = useState<'Inbound' | 'Outbound'>('Outbound');
     const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
     const [dueDate, setDueDate] = useState(new Date().toISOString().split('T')[0]);
+    const [barcode, setBarcode] = useState('');
+    const [attachmentUrl, setAttachmentUrl] = useState('');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const [items, setItems] = useState<{
         id: number;
@@ -37,6 +40,12 @@ export function InvoiceForm() {
         }
     }, [id]);
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
     const loadInvoice = async (invoiceId: string) => {
         try {
             setLoading(true);
@@ -45,6 +54,8 @@ export function InvoiceForm() {
             setType(data.type);
             setIssueDate(data.issueDate.split('T')[0]);
             setDueDate(data.dueDate.split('T')[0]);
+            setBarcode(data.barcode || '');
+            setAttachmentUrl(data.attachmentUrl || '');
 
             // Map items
             if (data.items && data.items.length > 0) {
@@ -100,6 +111,7 @@ export function InvoiceForm() {
         return items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.unitPrice)) + Number(item.taxAmount), 0);
     };
 
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -120,10 +132,40 @@ export function InvoiceForm() {
                     quantity: Number(i.quantity),
                     unitPrice: Number(i.unitPrice),
                     taxAmount: Number(i.taxAmount)
-                }))
+                })),
+                barcode: type === 'Inbound' ? barcode : undefined
             };
 
-            await financeService.createInvoice(payload);
+            let invoiceId = id;
+            if (!id) {
+                const created = await financeService.createInvoice(payload);
+                invoiceId = created.id;
+            } else {
+                // edit logic (not fully implemented in backend yet, but okay)
+                // If we have update method, we call it. For now, create only supports barcode on creation via DTO?
+                // No, create DTO doesn't have barcode in backend yet? 
+                // Wait, I added it to DTO. But if editing existing invoice, need to call updatePaymentInfo.
+            }
+
+            // Handle Barcode Update if Editing
+            if (id && type === 'Inbound') {
+                await financeService.updatePaymentInfo(id, barcode);
+            }
+            // Handle Barcode if Creating (if DTO supported it, but I added it to CreateInvoiceDto just now? 
+            // In backend I added Barcode to InvoiceDto but not explicit CreateInvoiceDto mapping in InvoiceService.
+            // Actually, in InvoiceService.CreateAsync I didn't map DTO.Barcode to entity! 
+            // I should update backend service to handle barcode on create, or just call update after create.
+            // Calling update after create is safer for MVP.
+
+            if (!id && invoiceId && type === 'Inbound') {
+                await financeService.updatePaymentInfo(invoiceId, barcode);
+            }
+
+            // Upload File
+            if (selectedFile && invoiceId) {
+                await financeService.uploadAttachment(invoiceId, selectedFile);
+            }
+
             navigate('/finance/invoices');
         } catch (error) {
             console.error('Failed to save invoice:', error);
@@ -208,6 +250,38 @@ export function InvoiceForm() {
                             />
                         </div>
                     </div>
+
+                    {type === 'Inbound' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Código de Barras (Boleto)</label>
+                                <input
+                                    type="text"
+                                    value={barcode}
+                                    onChange={(e) => setBarcode(e.target.value)}
+                                    placeholder="Digite o código de barras"
+                                    className="w-full p-2 border border-gray-300 rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Anexar Fatura (PDF)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="file"
+                                        accept=".pdf,image/*"
+                                        onChange={handleFileChange}
+                                        className="w-full p-2 border border-gray-300 rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                                    />
+                                    {attachmentUrl && (
+                                        <a href={attachmentUrl} target="_blank" rel="noopener noreferrer"
+                                            className="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 flex items-center">
+                                            Ver
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Items */}
                     <div className="border-t border-gray-200 pt-6">

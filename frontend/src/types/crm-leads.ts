@@ -1,5 +1,13 @@
 
 
+
+export interface LeadInteraction {
+    id: string;
+    type: 'IncomingEmail' | 'OutgoingEmail' | 'Note' | 'Call';
+    body: string;
+    sentAt: string;
+}
+
 export interface Lead {
     id: string;
     title: string;
@@ -12,6 +20,8 @@ export interface Lead {
     estimatedValue?: number;
     notes?: string;
     createdAt: string;
+    isCustomer: boolean;
+    interactions: LeadInteraction[];
 }
 
 export interface CreateLeadDto {
@@ -24,3 +34,4 @@ export interface CreateLeadDto {
     estimatedValue?: number;
     notes?: string;
 }
+

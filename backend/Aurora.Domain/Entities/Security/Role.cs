@@ -8,6 +8,9 @@ namespace Aurora.Domain.Entities.Security
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
+        
+        private readonly List<Permission> _permissions = new();
+        public IReadOnlyCollection<Permission> Permissions => _permissions.AsReadOnly();
 
         public Role(string name, string description)
         {
@@ -17,5 +20,11 @@ namespace Aurora.Domain.Entities.Security
 
         // EF Core Constructor
         private Role() { }
+
+        public void SetPermissions(List<Permission> permissions)
+        {
+            _permissions.Clear();
+            _permissions.AddRange(permissions);
+        }
     }
 }

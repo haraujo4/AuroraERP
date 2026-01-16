@@ -21,5 +21,9 @@ export const LeadService = {
         await api.patch(`/crm/leads/${id}/status`, JSON.stringify(status), {
             headers: { 'Content-Type': 'application/json' }
         });
+    },
+
+    addInteraction: async (id: string, body: string, type: string) => {
+        await api.post(`/crm/leads/${id}/interactions`, { body, type });
     }
 };

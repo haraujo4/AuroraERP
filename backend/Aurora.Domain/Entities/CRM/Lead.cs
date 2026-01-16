@@ -23,6 +23,10 @@ namespace Aurora.Domain.Entities.CRM
         public LeadStatus Status { get; private set; }
         public decimal? EstimatedValue { get; private set; }
         public string? Notes { get; private set; }
+        public bool IsCustomer { get; private set; }
+
+        private readonly List<LeadInteraction> _interactions = new();
+        public IReadOnlyCollection<LeadInteraction> Interactions => _interactions.AsReadOnly();
 
         private Lead() { }
 
@@ -34,11 +38,27 @@ namespace Aurora.Domain.Entities.CRM
             Email = email;
             CompanyName = companyName;
             Status = LeadStatus.New;
+            IsCustomer = false;
         }
 
         public void UpdateStatus(LeadStatus status)
         {
             Status = status;
+            if (status == LeadStatus.Converted)
+            {
+                IsCustomer = true;
+            }
+        }
+
+        public void ConvertToCustomer()
+        {
+            Status = LeadStatus.Converted;
+            IsCustomer = true;
+        }
+
+        public void AddInteraction(LeadInteraction interaction)
+        {
+            _interactions.Add(interaction);
         }
 
         public void SetEstimatedValue(decimal value)

@@ -17,6 +17,8 @@ namespace Aurora.Application.Interfaces.Finance
         Task ReverseAsync(Guid id, string reason);
         Task<InvoiceDto> CreateFromPurchaseOrderAsync(Guid purchaseOrderId, DateTime issueDate, DateTime dueDate);
         Task<InvoiceDto> CreateFromSalesOrderAsync(Guid salesOrderId, DateTime issueDate, DateTime dueDate);
+        Task UploadAttachmentAsync(Guid invoiceId, Stream fileStream, string fileName, string contentType);
+        Task UpdatePaymentInfoAsync(Guid id, string barcode);
     }
 
     public class InvoiceDto
@@ -32,6 +34,8 @@ namespace Aurora.Application.Interfaces.Finance
         public decimal GrossAmount { get; set; }
         public decimal TaxAmount { get; set; }
         public decimal NetAmount { get; set; }
+        public string? Barcode { get; set; }
+        public string? AttachmentUrl { get; set; }
         public Guid? PurchaseOrderId { get; set; }
         public Guid? SalesOrderId { get; set; }
         public List<InvoiceItemDto> Items { get; set; } = new();
@@ -59,6 +63,8 @@ namespace Aurora.Application.Interfaces.Finance
         public InvoiceType Type { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
+        public string? Barcode { get; set; }
+        // Items...
         public List<CreateInvoiceItemDto> Items { get; set; } = new();
     }
 
@@ -74,7 +80,6 @@ namespace Aurora.Application.Interfaces.Finance
     {
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
-        // For simplicity, we might just allow updating items by replacing them or separate method
-        // But for MVP, let's assume valid only for Draft
+        public string? Barcode { get; set; }
     }
 }

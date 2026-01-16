@@ -77,6 +77,9 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IEmailService,
 builder.Services.AddSingleton<Aurora.Application.Interfaces.Services.IEmailQueue, Aurora.Infrastructure.Services.EmailQueue>();
 builder.Services.AddHostedService<Aurora.Infrastructure.Services.EmailBackgroundService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IPdfService, Aurora.Infrastructure.Services.PdfService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IFileStorageService, Aurora.Infrastructure.Services.MinioFileStorageService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Services.IImapService, Aurora.Infrastructure.Services.ImapService>();
+builder.Services.AddHostedService<Aurora.Infrastructure.Services.EmailPollingBackgroundService>();
 
 // Fiscal Services
 builder.Services.AddScoped<Aurora.Application.Interfaces.Fiscal.ITaxService, Aurora.Application.Services.Fiscal.TaxService>();
@@ -96,6 +99,8 @@ builder.Services.AddScoped<Aurora.Application.Interfaces.Logistics.IDeliveryServ
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IAuthService, Aurora.Application.Services.Security.AuthService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.ICurrentUserService, Aurora.API.Services.CurrentUserService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IUserService, Aurora.Application.Services.Security.UserService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IPermissionService, Aurora.Application.Services.Security.PermissionService>();
+builder.Services.AddScoped<Aurora.Application.Interfaces.Security.IRoleService, Aurora.Application.Services.Security.RoleService>();
 builder.Services.AddScoped<Aurora.Application.Interfaces.Common.ICodeGenerationService, Aurora.Application.Services.Common.CodeGenerationService>();
 builder.Services.AddScoped<Aurora.Infrastructure.Persistence.Interceptors.AuditInterceptor>();
 

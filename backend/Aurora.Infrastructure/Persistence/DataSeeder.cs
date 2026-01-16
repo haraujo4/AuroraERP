@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Aurora.Application.Interfaces.Security;
 using Aurora.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore; // Added for FirstOrDefaultAsync
 
 namespace Aurora.Infrastructure.Persistence
 {
@@ -73,6 +74,57 @@ namespace Aurora.Infrastructure.Persistence
             {
                 var receivableAcct = new Aurora.Domain.Entities.Finance.Account("1.1.02", "Clientes", Aurora.Domain.Enums.AccountType.Asset, Aurora.Domain.Enums.AccountNature.Debit, 3);
                 context.Accounts.Add(receivableAcct);
+                await context.SaveChangesAsync();
+            }
+
+            // 5. Seed Permissions
+            if (!context.Permissions.Any())
+            {
+                var permissions = new List<Aurora.Domain.Entities.Security.Permission>
+                {
+                    // Logistics
+                    new("LO_PO_CREATE", "Create Purchase Order", "Logistics", "ME21N", "Allows creating purchase orders"),
+                    new("LO_PO_APPROVE", "Approve Purchase Order", "Logistics", "ME29N", "Allows approving purchase orders"),
+                    new("LO_MIGO_VIEW", "View Goods Movement", "Logistics", "MIGO", "Allows viewing goods movements"),
+                    new("LO_MIGO_POST", "Post Goods Movement", "Logistics", "MIGO", "Allows posting goods movements"),
+                    
+                    // Finance
+                    new("FI_INV_CREATE", "Create Invoice", "Finance", "MIRO", "Allows creating supplier invoices"),
+                    new("FI_INV_POST", "Post Invoice", "Finance", "MIRO", "Allows posting supplier invoices"),
+                    new("FI_PAY_RUN", "Execute Payment Run", "Finance", "F110", "Allows executing payment runs"),
+                    new("FI_JE_CREATE", "Create Journal Entry", "Finance", "FB50", "Allows creating journal entries"),
+                
+                    // Sales
+                    new("SD_SO_CREATE", "Create Sales Order", "Sales", "VA01", "Allows creating sales orders"),
+                    new("SD_SO_APPROVE", "Approve Sales Order", "Sales", "VA02", "Allows approving sales orders"),
+
+                    // HR
+                    new("HR_EMP_VIEW", "View Employee", "Human Resources", "PA30", "Allows viewing employee data"),
+                    new("HR_PA40", "Personnel Actions", "Human Resources", "PA40", "Allows performing personnel actions (Hiring, Firing)"),
+                    new("HR_PA61", "Time Management", "Human Resources", "PA61", "Allows managing time records"),
+
+                    // Fiscal
+                    new("FIS_TAX_VIEW", "View Tax Rules", "Fiscal", "J1BTAX", "Allows viewing tax rules"),
+                    new("FIS_TAX_EDIT", "Edit Tax Rules", "Fiscal", "J1BTAX", "Allows editing tax rules"),
+                    new("FIS_NFE_VIEW", "View NFe", "Fiscal", "J1BNFE", "Allows viewing NFe monitor"),
+                    new("FIS_NFE_CANCEL", "Cancel NFe", "Fiscal", "J1BNFE", "Allows cancelling NFes"),
+
+                    // Admin
+                    new("ADM_ACCESS_MANAGE", "Manage Access", "Administration", "SU01", "Allows managing users, roles and permissions"),
+                };
+
+                context.Permissions.AddRange(permissions);
+                await context.SaveChangesAsync();
+
+                // Assign all permissions to ADMIN role
+                var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "ADMIN");
+                if (adminRole == null)
+                {
+                    adminRole = new Aurora.Domain.Entities.Security.Role("ADMIN", "Administrator");
+                    context.Roles.Add(adminRole);
+                }
+                
+                adminRole.SetPermissions(permissions);
                 await context.SaveChangesAsync();
             }
         }

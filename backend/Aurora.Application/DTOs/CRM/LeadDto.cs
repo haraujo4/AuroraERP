@@ -14,7 +14,9 @@ namespace Aurora.Application.DTOs.CRM
         public string Status { get; set; }
         public decimal? EstimatedValue { get; set; }
         public string? Notes { get; set; }
+        public bool IsCustomer { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<LeadInteractionDto> Interactions { get; set; } = new();
     }
 
     public class CreateLeadDto

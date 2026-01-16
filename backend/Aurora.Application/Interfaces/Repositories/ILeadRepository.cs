@@ -5,5 +5,6 @@ namespace Aurora.Application.Interfaces.Repositories
 {
     public interface ILeadRepository : IRepository<Lead>
     {
+        Task AddInteractionAsync(Lead lead, LeadInteraction interaction);
     }
 }

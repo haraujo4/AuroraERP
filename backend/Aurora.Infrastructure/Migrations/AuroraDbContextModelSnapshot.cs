@@ -122,6 +122,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsCustomer")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -154,6 +157,50 @@ namespace Aurora.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Leads", "commercial");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.CRM.LeadInteraction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MessageId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeadId");
+
+                    b.ToTable("LeadInteractions");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.CRM.Opportunity", b =>
@@ -321,6 +368,12 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Barcode")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("BusinessPartnerId")
                         .HasColumnType("uuid");
@@ -629,6 +682,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Guid?>("PaymentRunId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Reference")
                         .IsRequired()
                         .HasColumnType("text");
@@ -648,7 +704,48 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.HasIndex("InvoiceId");
 
+                    b.HasIndex("PaymentRunId");
+
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Finance.PaymentRun", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ExecutionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Identification")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("RunDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentRuns");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Fiscal.FiscalDocument", b =>
@@ -924,6 +1021,140 @@ namespace Aurora.Infrastructure.Migrations
                     b.ToTable("JobTitles");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.HR.PersonnelAction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("PersonnelActions");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.HR.TimeRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Hours")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("TimeRecords");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.Batch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BatchNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ManufacturingDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("MaterialId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SupplierBatchNumber")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("Batches");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.Delivery", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1009,6 +1240,103 @@ namespace Aurora.Infrastructure.Migrations
                     b.HasIndex("DeliveryId");
 
                     b.ToTable("DeliveryItems", "logistics");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.InventoryDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DepositoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("PlanDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("PostingBlock")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepositoId");
+
+                    b.ToTable("InventoryDocuments");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.InventoryDocumentItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("CountedQuantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("Difference")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("InventoryDocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsZeroCount")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("MaterialId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("SnapshotQuantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("InventoryDocumentId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("InventoryDocumentItems");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.Material", b =>
@@ -1154,9 +1482,15 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<decimal>("AverageUnitCost")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid?>("BatchId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("BatchNumber")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("BlockedQuantity")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -1166,6 +1500,9 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.Property<Guid>("DepositoId")
                         .HasColumnType("uuid");
+
+                    b.Property<decimal>("InTransitQuantity")
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -1188,6 +1525,8 @@ namespace Aurora.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BatchId");
+
                     b.HasIndex("DepositoId");
 
                     b.HasIndex("MaterialId", "DepositoId", "BatchNumber");
@@ -1199,6 +1538,9 @@ namespace Aurora.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("BatchNumber")
@@ -1223,6 +1565,9 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<DateTime>("MovementDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("MovementTypeCode")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("Quantity")
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)");
@@ -1246,6 +1591,8 @@ namespace Aurora.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
 
                     b.HasIndex("DepositoId");
 
@@ -1615,11 +1962,20 @@ namespace Aurora.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Nivel")
+                        .HasColumnType("text");
+
                     b.Property<bool>("PermiteInventario")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("PermitePicking")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Prateleira")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Rua")
+                        .HasColumnType("text");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
@@ -2495,6 +2851,62 @@ namespace Aurora.Infrastructure.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Security.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Transaction")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Permissions");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Security.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2742,6 +3154,17 @@ namespace Aurora.Infrastructure.Migrations
                     b.Navigation("Contacts");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.CRM.LeadInteraction", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.CRM.Lead", "Lead")
+                        .WithMany("Interactions")
+                        .HasForeignKey("LeadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lead");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.CRM.Opportunity", b =>
                 {
                     b.HasOne("Aurora.Domain.Entities.BusinessPartners.BusinessPartner", "BusinessPartner")
@@ -2854,9 +3277,15 @@ namespace Aurora.Infrastructure.Migrations
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Aurora.Domain.Entities.Finance.PaymentRun", "PaymentRun")
+                        .WithMany("Payments")
+                        .HasForeignKey("PaymentRunId");
+
                     b.Navigation("BusinessPartner");
 
                     b.Navigation("Invoice");
+
+                    b.Navigation("PaymentRun");
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Fiscal.FiscalDocument", b =>
@@ -2959,6 +3388,39 @@ namespace Aurora.Infrastructure.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.HR.PersonnelAction", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.HR.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.HR.TimeRecord", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.HR.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.Batch", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.DeliveryItem", b =>
                 {
                     b.HasOne("Aurora.Domain.Entities.Logistics.Delivery", null)
@@ -2968,8 +3430,48 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.InventoryDocument", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.Organization.Deposito", "Deposito")
+                        .WithMany()
+                        .HasForeignKey("DepositoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deposito");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.InventoryDocumentItem", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId");
+
+                    b.HasOne("Aurora.Domain.Entities.Logistics.InventoryDocument", "InventoryDocument")
+                        .WithMany("Items")
+                        .HasForeignKey("InventoryDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("InventoryDocument");
+
+                    b.Navigation("Material");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.StockLevel", b =>
                 {
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId");
+
                     b.HasOne("Aurora.Domain.Entities.Organization.Deposito", "Deposito")
                         .WithMany()
                         .HasForeignKey("DepositoId")
@@ -2981,6 +3483,8 @@ namespace Aurora.Infrastructure.Migrations
                         .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Batch");
 
                     b.Navigation("Deposito");
 
@@ -2989,6 +3493,10 @@ namespace Aurora.Infrastructure.Migrations
 
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.StockMovement", b =>
                 {
+                    b.HasOne("Aurora.Domain.Entities.Logistics.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId");
+
                     b.HasOne("Aurora.Domain.Entities.Organization.Deposito", "Deposito")
                         .WithMany()
                         .HasForeignKey("DepositoId")
@@ -3000,6 +3508,8 @@ namespace Aurora.Infrastructure.Migrations
                         .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Batch");
 
                     b.Navigation("Deposito");
 
@@ -3633,6 +4143,17 @@ namespace Aurora.Infrastructure.Migrations
                     b.Navigation("Opportunity");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Security.Permission", b =>
+                {
+                    b.HasOne("Aurora.Domain.Entities.Security.Role", null)
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId");
+
+                    b.HasOne("Aurora.Domain.Entities.Security.User", null)
+                        .WithMany("Permissions")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Security.User", b =>
                 {
                     b.HasOne("Aurora.Domain.Entities.Organization.Empresa", "Empresa")
@@ -3665,6 +4186,11 @@ namespace Aurora.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.CRM.Lead", b =>
+                {
+                    b.Navigation("Interactions");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.Finance.Account", b =>
                 {
                     b.Navigation("Children");
@@ -3680,6 +4206,11 @@ namespace Aurora.Infrastructure.Migrations
                     b.Navigation("Lines");
                 });
 
+            modelBuilder.Entity("Aurora.Domain.Entities.Finance.PaymentRun", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
             modelBuilder.Entity("Aurora.Domain.Entities.HR.Department", b =>
                 {
                     b.Navigation("Employees");
@@ -3688,6 +4219,11 @@ namespace Aurora.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Aurora.Domain.Entities.Logistics.Delivery", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Logistics.InventoryDocument", b =>
                 {
                     b.Navigation("Items");
                 });
@@ -3740,6 +4276,16 @@ namespace Aurora.Infrastructure.Migrations
             modelBuilder.Entity("Aurora.Domain.Entities.Sales.SalesContract", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Security.Role", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("Aurora.Domain.Entities.Security.User", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

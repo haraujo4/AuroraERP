@@ -60,5 +60,19 @@ namespace Aurora.API.Controllers.CRM
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("{id}/interactions")]
+        public async Task<IActionResult> AddInteraction(Guid id, [FromBody] AddInteractionDto dto)
+        {
+            try
+            {
+                await _service.AddInteractionAsync(id, dto.Body, dto.Type);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

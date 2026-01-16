@@ -11,5 +11,6 @@ namespace Aurora.Application.Interfaces.CRM
         Task<LeadDto?> GetByIdAsync(Guid id);
         Task<LeadDto> CreateAsync(CreateLeadDto dto);
         Task UpdateStatusAsync(Guid id, string status);
+        Task AddInteractionAsync(Guid leadId, string body, string type);
     }
 }

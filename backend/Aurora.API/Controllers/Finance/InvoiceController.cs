@@ -137,6 +137,43 @@ namespace Aurora.API.Controllers.Finance
             public string Reason { get; set; } = string.Empty;
         }
         
+        [HttpPost("{id}/upload")]
+        public async Task<IActionResult> UploadAttachment(Guid id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            try
+            {
+                using var stream = file.OpenReadStream();
+                await _invoiceService.UploadAttachmentAsync(id, stream, file.FileName, file.ContentType);
+                return Ok(new { message = "File uploaded successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/payment-info")]
+        public async Task<IActionResult> UpdatePaymentInfo(Guid id, [FromBody] UpdatePaymentInfoRequest request)
+        {
+            try
+            {
+                await _invoiceService.UpdatePaymentInfoAsync(id, request.Barcode);
+                return Ok(new { message = "Payment info updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        public class UpdatePaymentInfoRequest
+        {
+            public string Barcode { get; set; } = string.Empty;
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

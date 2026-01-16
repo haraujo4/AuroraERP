@@ -15,9 +15,15 @@ export function LeadForm() {
         email: '',
         phone: '',
         companyName: '',
+        // status: 'New', // Status usually backend controlled but user asked to see it
         estimatedValue: 0,
         notes: ''
     });
+
+    const [status, setStatus] = useState<string>('New'); // Local state for status toggle if new lead allows it? 
+    // Usually new lead is 'New'. But user said "no formulario teremos... status". 
+    // If creating, maybe they want to set it immediately? 
+    // Let's assume for creation it is New, but I'll add the field.
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -97,6 +103,21 @@ export function LeadForm() {
                             <option value="LinkedIn">LinkedIn</option>
                             <option value="Feira/Evento">Feira/Evento</option>
                             <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="block text-sm font-medium text-text-secondary">Status</label>
+                        <select
+                            value={status}
+                            onChange={e => setStatus(e.target.value)}
+                            className="w-full p-2 border border-border-input rounded focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none bg-white"
+                        >
+                            <option value="New">Novo</option>
+                            <option value="Contacted">Contactado</option>
+                            <option value="Qualified">Qualificado</option>
+                            <option value="Lost">Perdido</option>
+                            <option value="Converted">Convertido (Parceiro)</option>
                         </select>
                     </div>
 

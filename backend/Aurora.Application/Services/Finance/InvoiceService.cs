@@ -20,6 +20,7 @@ namespace Aurora.Application.Services.Finance
         private readonly Aurora.Application.Interfaces.Repositories.ISalesOrderRepository _salesOrderRepository;
         private readonly IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> _bpRepository;
         private readonly Aurora.Application.Interfaces.Events.IEventBus _eventBus;
+        private readonly Aurora.Application.Interfaces.Services.IFileStorageService _fileStorageService;
 
         public InvoiceService(
             IRepository<Invoice> invoiceRepository,
@@ -29,7 +30,8 @@ namespace Aurora.Application.Services.Finance
             Aurora.Application.Interfaces.Repositories.IPurchasingRepository purchasingRepository,
             Aurora.Application.Interfaces.Repositories.ISalesOrderRepository salesOrderRepository,
             IRepository<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> bpRepository,
-            Aurora.Application.Interfaces.Events.IEventBus eventBus)
+            Aurora.Application.Interfaces.Events.IEventBus eventBus,
+            Aurora.Application.Interfaces.Services.IFileStorageService fileStorageService)
         {
             _invoiceRepository = invoiceRepository;
             _itemRepository = itemRepository;
@@ -39,6 +41,7 @@ namespace Aurora.Application.Services.Finance
             _salesOrderRepository = salesOrderRepository;
             _bpRepository = bpRepository;
             _eventBus = eventBus;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<InvoiceDto>> GetAllAsync()
@@ -269,6 +272,33 @@ namespace Aurora.Application.Services.Finance
             return dto;
         }
 
+        public async Task UploadAttachmentAsync(Guid invoiceId, System.IO.Stream fileStream, string fileName, string contentType)
+        {
+             var invoice = await _invoiceRepository.GetByIdAsync(invoiceId);
+             if (invoice == null) throw new Exception("Invoice not found");
+
+             var uniqueFileName = $"{invoice.Number}_{DateTime.Now.Ticks}_{fileName}";
+             var key = await _fileStorageService.UploadFileAsync(fileStream, uniqueFileName, contentType);
+             
+             // Construct full URL (assuming public access or proxy)
+             // In dev: http://localhost:9000/invoices/{key}
+             // We can store just the key or full URL. Storing Full URL is easier for frontend for now.
+             // Assume Gateway or Direct access.
+             var url = $"http://localhost:9000/invoices/{key}";
+             
+             invoice.SetPaymentInfo(invoice.Barcode ?? "", url);
+             await _invoiceRepository.UpdateAsync(invoice);
+        }
+
+        public async Task UpdatePaymentInfoAsync(Guid id, string barcode)
+        {
+            var invoice = await _invoiceRepository.GetByIdAsync(id);
+            if (invoice == null) throw new Exception("Invoice not found");
+
+            invoice.SetPaymentInfo(barcode, invoice.AttachmentUrl ?? "");
+            await _invoiceRepository.UpdateAsync(invoice);
+        }
+
         private InvoiceDto MapToDto(Invoice entity)
         {
             return new InvoiceDto
@@ -286,6 +316,8 @@ namespace Aurora.Application.Services.Finance
                 NetAmount = entity.NetAmount,
                 PurchaseOrderId = entity.PurchaseOrderId,
                 SalesOrderId = entity.SalesOrderId,
+                Barcode = entity.Barcode,
+                AttachmentUrl = entity.AttachmentUrl,
                 Items = entity.Items.Select(i => new InvoiceItemDto
                 {
                     Id = i.Id,

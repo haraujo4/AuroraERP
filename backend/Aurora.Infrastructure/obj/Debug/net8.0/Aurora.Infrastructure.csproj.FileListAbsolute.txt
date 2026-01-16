@@ -35,3 +35,5 @@
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/LatoFont/Lato-Thin.ttf
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/LatoFont/Lato-ThinItalic.ttf
 /home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/LatoFont/OFL.txt
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/bin/Debug/net8.0/Aurora.Infrastructure.runtimeconfig.json
+/home/helisson/Projetos/AurroraERP/backend/Aurora.Infrastructure/obj/Debug/net8.0/Aurora.Infrastructure.genruntimeconfig.cache

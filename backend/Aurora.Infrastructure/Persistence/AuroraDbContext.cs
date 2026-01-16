@@ -28,6 +28,7 @@ namespace Aurora.Infrastructure.Persistence
         // Commercial
         public DbSet<Aurora.Domain.Entities.BusinessPartners.BusinessPartner> BusinessPartners { get; set; }
         public DbSet<Aurora.Domain.Entities.CRM.Lead> Leads { get; set; }
+        public DbSet<Aurora.Domain.Entities.CRM.LeadInteraction> LeadInteractions { get; set; }
         public DbSet<Aurora.Domain.Entities.CRM.Opportunity> Opportunities { get; set; }
 
         // Logistics
@@ -73,6 +74,11 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<Aurora.Domain.Entities.HR.Department> Departments { get; set; }
         public DbSet<Aurora.Domain.Entities.HR.JobTitle> JobTitles { get; set; }
         public DbSet<Aurora.Domain.Entities.HR.Employee> Employees { get; set; }
+        public DbSet<Aurora.Domain.Entities.HR.PersonnelAction> PersonnelActions { get; set; }
+        public DbSet<Aurora.Domain.Entities.HR.TimeRecord> TimeRecords { get; set; }
+        
+        // Finance Additions
+        public DbSet<PaymentRun> PaymentRuns { get; set; }
 
         // Fiscal
         public DbSet<Aurora.Domain.Entities.Fiscal.TaxRule> TaxRules { get; set; }
@@ -81,6 +87,7 @@ namespace Aurora.Infrastructure.Persistence
         // Security
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<EmailLog> EmailLogs { get; set; }
 

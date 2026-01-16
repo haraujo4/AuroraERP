@@ -98,6 +98,15 @@ namespace Aurora.Domain.Entities.Finance
             Status = InvoiceStatus.Cancelled;
         }
 
+        public string? Barcode { get; private set; }
+        public string? AttachmentUrl { get; private set; }
+
+        public void SetPaymentInfo(string barcode, string attachmentUrl)
+        {
+            Barcode = barcode;
+            AttachmentUrl = attachmentUrl;
+        }
+
         public void SetReferences(Guid? purchaseOrderId, Guid? salesOrderId)
         {
             PurchaseOrderId = purchaseOrderId;

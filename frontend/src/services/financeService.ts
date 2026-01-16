@@ -80,6 +80,18 @@ export const financeService = {
         const response = await api.post('/finance/invoices/from-sales-order', data);
         return response.data;
     },
+    uploadAttachment: async (id: string, file: File): Promise<void> => {
+        const formData = new FormData();
+        formData.append('file', file);
+        await api.post(`/finance/invoices/${id}/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    },
+    updatePaymentInfo: async (id: string, barcode: string): Promise<void> => {
+        await api.put(`/finance/invoices/${id}/payment-info`, { barcode });
+    },
 
     // Payments
     getPayments: async (): Promise<Payment[]> => {

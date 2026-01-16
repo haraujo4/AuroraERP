@@ -2,11 +2,11 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Aurora.Application.Interfaces.Fiscal;
 using Aurora.Domain.Entities.Fiscal;
 using Aurora.Domain.Entities.Finance;
 using Aurora.Domain.Entities.BusinessPartners;
+using Aurora.Domain.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -32,11 +32,9 @@ namespace Aurora.Infrastructure.Integrations.Mock
             var providerRef = Guid.NewGuid().ToString();
             var company = (await _empresaRepository.GetAllAsync()).FirstOrDefault();
             
-            // Generate PDF
             var pdfBytes = GeneratePdf(invoice, bp, company);
             _cache.Set($"pdf_{providerRef}", pdfBytes, TimeSpan.FromHours(1));
 
-            // Generate XML
             var xmlContent = GenerateXml(invoice, bp, company);
             _cache.Set($"xml_{providerRef}", xmlContent, TimeSpan.FromHours(1));
 
@@ -45,7 +43,6 @@ namespace Aurora.Infrastructure.Integrations.Mock
 
         public Task<FiscalDocumentStatusResponse> ConsultarNfeAsync(string providerReference)
         {
-            // Always authorized
             return Task.FromResult(new FiscalDocumentStatusResponse
             {
                 Status = "Authorized",
@@ -92,187 +89,195 @@ namespace Aurora.Infrastructure.Integrations.Mock
 
         public Task CancelarNfeAsync(FiscalDocument document, string reason)
         {
-            // Mock: Just Task.CompletedTask as we handle status update in service
-            // Or we could log it.
             return Task.CompletedTask;
         }
 
         private byte[] GeneratePdf(Invoice invoice, BusinessPartner bp, Aurora.Domain.Entities.Organization.Empresa company)
         {
-            // Determine type: Service (NFS-e) or Product (NF-e)
-            // Simplistic rule: If any item seems like service? Or just rely on Type.
-            // Assuming Product for now unless explicitly Service.
-            // Let's look at Invoice or Items. Material 'Type' property?
-            // For now, I'll default to Product (DANFE) style but include Service fields if needed.
-            // Actually, user gave TWO images. One for Service, one for Product.
-            // We need to pick one.
-            // Let's assume generic "Product" layout for now, or check first item.
-            // Ideally: Invoice type should say.
-            
-            bool isService = false; // logic to detect service
-            
-            var doc = Document.Create(container =>
+            // Determine Service vs Product based on item description content for now
+            var isService = invoice.Items.Any(i => i.Description.Contains("Serviço") || i.Description.Contains("Consultoria"));
+            // Fallback to Inbound invoice meaning we received a service? Or Outbound (we provided service). 
+            // In typical billing, we bill Outbound. 
+            // If Inbound, it's a "Nota de Entrada".
+            // Let's assume layout works for both, just Title changes.
+
+            var title = isService ? "NOTA FISCAL DE SERVIÇO" : "NOTA FISCAL DE PRODUTO";
+            var number = invoice.Number.PadLeft(9, '0');
+            var issueDate = invoice.IssueDate.ToString("dd/MM/yyyy");
+
+            return Document.Create(container =>
             {
                 container.Page(page =>
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(1, Unit.Centimetre);
-                    page.DefaultTextStyle(x => x.FontSize(9)); // Small text for invoices
+                    page.DefaultTextStyle(x => x.FontSize(9).FontFamily(Fonts.Arial));
 
-                    page.Header().Element(header => 
+                    page.Background().Element(watermark => 
                     {
-                        header.Column(col => 
-                        {
-                           col.Item().Row(row => 
-                           {
-                               row.RelativeItem().Column(c => 
-                               {
-                                   c.Item().Text(isService ? "PREFEITURA MUNICIPAL - NOTA FISCAL DE SERVIÇOS" : "DANFE - DOCUMENTO AUXILIAR DA NOTA FISCAL ELETRÔNICA").Bold().FontSize(14);
-                                   c.Item().Text("CONSULTA DE AUTENTICIDADE NO PORTAL NACIONAL").FontSize(8);
-                               });
-                               row.ConstantItem(100).Text("[QR CODE]").FontSize(8).AlignCenter();
-                           });
-                           
-                           col.Item().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                           
-                           col.Item().Text("SEM VALOR FISCAL - AMBIENTE DE HOMOLOGAÇÃO")
-                               .FontSize(20).FontColor(Colors.Red.Medium).Bold().AlignCenter();
-                           
-                           col.Item().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                        });
+                         watermark.TranslateX(50).TranslateY(300).Rotate(-45).Text("SEM VALOR FISCAL")
+                            .FontSize(80).FontColor(Colors.Grey.Lighten3).Bold();
                     });
 
-                    page.Content().Column(col =>
+                    page.Header().Column(col => 
                     {
-                        // Emitente
-                        col.Item().Border(1).Padding(5).Column(c => 
-                        {
-                            c.Item().Text("EMITENTE / PRESTADOR").Bold();
-                            c.Item().Text(company?.RazaoSocial ?? "EMPRESA MODELO LTDA").FontSize(10).Bold();
-                            c.Item().Text($"{company?.CNPJ} - {company?.InscricaoEstadual}");
-                            c.Item().Text($"{company?.EnderecoFiscal?.Street}, {company?.EnderecoFiscal?.Number} - {company?.EnderecoFiscal?.City}/{company?.EnderecoFiscal?.State}");
-                        });
+                         col.Item().Border(1).BorderColor(Colors.Black).Padding(10).Row(row => 
+                         {
+                            row.RelativeItem().Column(c => 
+                            {
+                                c.Item().Text(company?.RazaoSocial?.ToUpper() ?? "SOFTLAB SOLUÇÕES DIGITAIS").FontSize(14).Bold().AlignCenter();
+                                c.Item().Text($"{title} - N° {number}").FontSize(10).Bold().AlignCenter();
+                                c.Item().Text($"DATA DE EMISSÃO: {issueDate}").FontSize(10).Bold().AlignCenter();
+                            });
+                         });
+                    });
 
-                        col.Item().Height(5);
-
-                        // Destinatario
-                        col.Item().Border(1).Padding(5).Column(c => 
+                    page.Content().PaddingTop(10).Column(col => 
+                    {
+                        // Section 1: Provider / Issuer
+                        col.Item().Border(1).BorderColor(Colors.Black).Padding(5).Column(c =>
                         {
-                            c.Item().Text("DESTINATÁRIO / TOMADOR").Bold();
-                            c.Item().Text(bp?.RazaoSocial ?? "CLIENTE CONSUMIDOR").FontSize(10).Bold();
-                            c.Item().Text(bp?.CpfCnpj);
-                            // c.Item().Text(bp?.Addresses...);
+                            var roleTitle = isService ? "PRESTADOR DE SERVIÇOS" : "EMITENTE";
+                            c.Item().Text(roleTitle).Bold().FontSize(8);
+                            c.Item().Text($"RAZÃO SOCIAL: {company?.RazaoSocial}").FontSize(9);
+                            c.Item().Text($"CNPJ: {company?.CNPJ}").FontSize(9);
+                            c.Item().Text($"INSCRIÇÃO MUNICIPAL: {company?.InscricaoMunicipal ?? "N/A"}").FontSize(9); // Fixed Property
+                            c.Item().Text($"ENDEREÇO: {FormatAddress(company?.EnderecoFiscal)}").FontSize(9);
                         });
 
                         col.Item().Height(10);
 
-                        // Items
-                        col.Item().Table(table =>
+                        // Section 2: Receiver / Taker
+                        col.Item().Border(1).BorderColor(Colors.Black).Padding(5).Column(c =>
+                        {
+                            var roleTitle = isService ? "TOMADOR DE SERVIÇOS" : "DESTINATÁRIO / REMETENTE";
+                            c.Item().Text(roleTitle).Bold().FontSize(8);
+                            c.Item().Text($"RAZÃO SOCIAL: {bp?.RazaoSocial}").FontSize(9);
+                            c.Item().Text($"CNPJ/CPF: {bp?.CpfCnpj}").FontSize(9);
+                            if (!isService) c.Item().Text($"INSCRIÇÃO ESTADUAL: {bp?.RgIe ?? "ISENTO"}").FontSize(9); // Fixed Property
+                            
+                            var address = bp?.Addresses?.FirstOrDefault()?.Address;
+                            c.Item().Text($"ENDEREÇO: {FormatAddress(address)}").FontSize(9);
+                        });
+
+                        col.Item().Height(10);
+
+                        // Items Table
+                        col.Item().Border(1).BorderColor(Colors.Black).Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.ConstantColumn(30); // Seq
-                                columns.RelativeColumn();   // Desc
-                                columns.ConstantColumn(40); // Qtd
-                                columns.ConstantColumn(60); // Unit
-                                columns.ConstantColumn(60); // Total
+                                columns.ConstantColumn(30); // Item
+                                columns.RelativeColumn();   // Descricao
+                                columns.ConstantColumn(50); // Qty
+                                columns.ConstantColumn(50); // Unit
+                                columns.ConstantColumn(70); // Unit Price
+                                columns.ConstantColumn(70); // Total Price
+                                if (!isService)
+                                {
+                                    columns.ConstantColumn(40); // ICMS
+                                    columns.ConstantColumn(40); // IPI
+                                }
                             });
 
                             table.Header(header =>
                             {
-                                header.Cell().Text("#").Bold();
-                                header.Cell().Text("DESCRIÇÃO").Bold();
-                                header.Cell().Text("QTD").Bold();
-                                header.Cell().Text("VL. UNIT").Bold();
-                                header.Cell().Text("TOTAL").Bold();
+                                header.Cell().BorderBottom(1).Padding(2).Text("ITEM").Bold().FontSize(8).AlignCenter();
+                                header.Cell().BorderBottom(1).Padding(2).Text(isService ? "DESCRIÇÃO DO SERVIÇO" : "DESCRIÇÃO DO PRODUTO").Bold().FontSize(8);
+                                header.Cell().BorderBottom(1).Padding(2).Text(isService ? "QTD" : "QUANT").Bold().FontSize(8).AlignCenter();
+                                header.Cell().BorderBottom(1).Padding(2).Text("UNID").Bold().FontSize(8).AlignCenter();
+                                header.Cell().BorderBottom(1).Padding(2).Text("VALOR UNIT").Bold().FontSize(8).AlignCenter();
+                                header.Cell().BorderBottom(1).Padding(2).Text("TOTAL").Bold().FontSize(8).AlignCenter();
+                                if(!isService)
+                                {
+                                    header.Cell().BorderBottom(1).Padding(2).Text("ICMS").Bold().FontSize(8).AlignCenter();
+                                    header.Cell().BorderBottom(1).Padding(2).Text("IPI").Bold().FontSize(8).AlignCenter();
+                                }
                             });
 
-                            foreach (var item in invoice.Items.Select((x, i) => new { x, i }))
+                            int index = 1;
+                            foreach(var item in invoice.Items)
                             {
-                                table.Cell().Text((item.i + 1).ToString());
-                                table.Cell().Text(item.x.Description);
-                                table.Cell().Text(item.x.Quantity.ToString("F2"));
-                                table.Cell().Text($"R$ {item.x.UnitPrice:F2}");
-                                table.Cell().Text($"R$ {item.x.TotalAmount:F2}");
+                                table.Cell().BorderBottom(1).Padding(2).Text(index.ToString()).FontSize(8).AlignCenter();
+                                table.Cell().BorderBottom(1).Padding(2).Text(item.Description).FontSize(8);
+                                table.Cell().BorderBottom(1).Padding(2).Text(item.Quantity.ToString("F0")).FontSize(8).AlignCenter();
+                                table.Cell().BorderBottom(1).Padding(2).Text("UN").FontSize(8).AlignCenter();
+                                table.Cell().BorderBottom(1).Padding(2).Text(item.UnitPrice.ToString("N2")).FontSize(8).AlignRight();
+                                table.Cell().BorderBottom(1).Padding(2).Text(item.TotalAmount.ToString("N2")).FontSize(8).AlignRight();
+                                
+                                if (!isService)
+                                {
+                                    table.Cell().BorderBottom(1).Padding(2).Text("18%").FontSize(8).AlignCenter();
+                                    table.Cell().BorderBottom(1).Padding(2).Text("5%").FontSize(8).AlignCenter();
+                                }
+                                index++;
+                            }
+
+                            // Fill Empty Rows
+                            for(int i = 0; i < 5 - invoice.Items.Count; i++)
+                            {
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                table.Cell().BorderBottom(1).Padding(5).Text("");
+                                if (!isService)
+                                {
+                                    table.Cell().BorderBottom(1).Padding(5).Text("");
+                                    table.Cell().BorderBottom(1).Padding(5).Text("");
+                                }
                             }
                         });
                         
-                        col.Item().PaddingTop(10).LineHorizontal(1);
-
                         // Totals
-                        col.Item().Row(row => 
+                        col.Item().PaddingTop(2).Column(c => 
                         {
-                            row.RelativeItem().Text("Base Cálculo ICMS/ISS:").AlignRight();
-                            row.ConstantItem(80).Text($"R$ {invoice.GrossAmount:F2}").AlignRight();
-                        });
-                        col.Item().Row(row => 
-                        {
-                            row.RelativeItem().Text("Valor Total Impostos:").AlignRight();
-                            row.ConstantItem(80).Text($"R$ {invoice.TaxAmount:F2}").AlignRight();
-                        });
-                        col.Item().Row(row => 
-                        {
-                            row.RelativeItem().Text("VALOR TOTAL DA NOTA:").Bold().AlignRight();
-                            row.ConstantItem(80).Text($"R$ {invoice.NetAmount + invoice.TaxAmount:F2}").Bold().AlignRight();
+                            if (isService)
+                            {
+                                c.Item().PaddingTop(5).Text($"VALOR TOTAL DOS SERVIÇOS: R$ {invoice.GrossAmount:N2}").Bold().FontSize(9);
+                                c.Item().Text($"ISS (5%): R$ {(invoice.GrossAmount * 0.05m):N2}").Bold().FontSize(9);
+                            }
+                            else
+                            {
+                                c.Item().PaddingTop(5).Text($"VALOR TOTAL DOS PRODUTOS: R$ {invoice.GrossAmount:N2}").Bold().FontSize(9);
+                                c.Item().Text($"VALOR TOTAL DA NOTA: R$ {invoice.GrossAmount + invoice.TaxAmount:N2}").Bold().FontSize(9);
+                            }
                         });
 
-                    });
+                        col.Item().Height(10);
 
-                    page.Footer().AlignCenter().Text(x => 
-                    {
-                        x.Span("Gerado por Aurora ERP - Módulo Fiscal Mock");
-                        x.CurrentPageNumber();
+                        // Footer / Notes
+                        col.Item().Border(1).BorderColor(Colors.Black).Padding(5).Column(c => 
+                        {
+                            c.Item().Text("TRANSPORTADORA: JADLOG").FontSize(9); // Mock
+                            // removed invoice.Notes call
+                             c.Item().Text("OBSERVAÇÕES: Sem observações adicionais.").FontSize(9);
+                        });
+
                     });
                 });
-            });
+            })
+            .GeneratePdf();
+        }
 
-            return doc.GeneratePdf();
+        private string FormatAddress(Domain.ValueObjects.Address? addr)
+        {
+            if (addr == null) return "Endereço não informado";
+            return $"{addr.Street}, {addr.Number} - {addr.Neighborhood} - {addr.City}/{addr.State} - CEP: {addr.ZipCode}";
         }
 
         private string GenerateXml(Invoice invoice, BusinessPartner bp, Aurora.Domain.Entities.Organization.Empresa company)
         {
-            // Simple Mock XML
-            return $@"<?xml version=""1.0"" encoding=""UTF-8""?>
+             return $@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <nfeProc versao=""4.00"" xmlns=""http://www.portalfiscal.inf.br/nfe"">
     <NFe>
-        <infNFe Id=""NFe{new Random().Next(1000,9999)}"">
-            <ide>
-                <cUF>35</cUF>
-                <cNF>{new Random().Next(100000,999999)}</cNF>
-                <natOp>VENDA</natOp>
-                <mod>55</mod>
-                <serie>1</serie>
-                <nNF>{invoice.Number}</nNF>
-                <dhEmi>{DateTime.Now:yyyy-MM-ddTHH:mm:ss}</dhEmi>
-            </ide>
-            <emit>
-                <CNPJ>{company?.CNPJ}</CNPJ>
-                <xNome>{company?.RazaoSocial ?? "Empresa Mock"}</xNome>
-            </emit>
-            <dest>
-                <CNPJ>{bp?.CpfCnpj}</CNPJ>
-                <xNome>{bp?.RazaoSocial}</xNome>
-            </dest>
-            <det nItem=""1"">
-                <prod>
-                    <xProd>MOCK PRODUCT</xProd>
-                    <vProd>{invoice.GrossAmount}</vProd>
-                </prod>
-            </det>
-            <total>
-                <ICMSTot>
-                    <vNF>{invoice.GrossAmount}</vNF>
-                </ICMSTot>
-            </total>
+         <infNFe Id=""NFe{new Random().Next(1000,9999)}"">
+            <emit><xNome>{company?.RazaoSocial}</xNome></emit>
+            <dest><xNome>{bp?.RazaoSocial}</xNome></dest>
+            <total><ICMSTot><vNF>{invoice.GrossAmount}</vNF></ICMSTot></total>
         </infNFe>
     </NFe>
-    <protNFe>
-        <infProt>
-            <chNFe>{Guid.NewGuid()}</chNFe>
-            <dhRecbto>{DateTime.Now:yyyy-MM-ddTHH:mm:ss}</dhRecbto>
-            <xMotivo>Autorizado o uso da NF-e (Ambiente Mock)</xMotivo>
-        </infProt>
-    </protNFe>
 </nfeProc>";
         }
     }

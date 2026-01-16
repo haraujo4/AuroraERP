@@ -96,6 +96,8 @@ export interface Invoice {
     grossAmount: number;
     taxAmount: number;
     netAmount: number;
+    barcode?: string;
+    attachmentUrl?: string;
     purchaseOrderId?: string;
     salesOrderId?: string;
     items: InvoiceItem[];
@@ -113,6 +115,7 @@ export interface CreateInvoice {
     type: InvoiceType;
     issueDate: string;
     dueDate: string;
+    barcode?: string;
     items: CreateInvoiceItem[];
 }
 

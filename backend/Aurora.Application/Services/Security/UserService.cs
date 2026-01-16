@@ -12,11 +12,13 @@ namespace Aurora.Application.Services.Security
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Permission> _permissionRepo;
         private readonly IEventBus _eventBus;
 
-        public UserService(IRepository<User> userRepo, IEventBus eventBus)
+        public UserService(IRepository<User> userRepo, IRepository<Permission> permissionRepo, IEventBus eventBus)
         {
             _userRepo = userRepo;
+            _permissionRepo = permissionRepo;
             _eventBus = eventBus;
         }
 
@@ -33,6 +35,16 @@ namespace Aurora.Application.Services.Security
                 user.AddRole(new Role(roleName, $"Role {roleName}"));
             }
 
+            // Handle Permissions
+            if (request.Permissions.Any())
+            {
+                var allPermissions = await _permissionRepo.GetAllAsync(p => request.Permissions.Contains(p.Code));
+                foreach (var perm in allPermissions)
+                {
+                    user.AddPermission(perm);
+                }
+            }
+
             await _userRepo.AddAsync(user);
 
             // Publish Event (using the correct namespace if needed)
@@ -41,11 +53,9 @@ namespace Aurora.Application.Services.Security
             return MapToDto(user);
         }
 
-        // ... Method CreateAsync ends, UpdateAsync starts...
-
         public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto request)
         {
-            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Empresa, u => u.Filial);
+            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Permissions, u => u.Empresa, u => u.Filial);
             var user = users.FirstOrDefault(u => u.Id == id);
             if (user == null) return null;
 
@@ -59,6 +69,17 @@ namespace Aurora.Application.Services.Security
             // Update Roles
             var newRoles = request.Roles.Select(r => new Role(r, $"Role {r}")).ToList();
             user.SetRoles(newRoles);
+
+            // Update Permissions
+            if (request.Permissions.Any())
+            {
+                var allPermissions = await _permissionRepo.GetAllAsync(p => request.Permissions.Contains(p.Code));
+                user.SetPermissions(allPermissions.ToList());
+            }
+            else
+            {
+                user.SetPermissions(new List<Permission>());
+            }
 
             await _userRepo.UpdateAsync(user);
             return MapToDto(user);
@@ -96,19 +117,19 @@ namespace Aurora.Application.Services.Security
 
         public async Task<List<UserDto>> GetAllAsync()
         {
-            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Empresa, u => u.Filial);
+            var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Permissions, u => u.Empresa, u => u.Filial);
             return users.Select(MapToDto).ToList();
         }
 
         public async Task<UserDto?> GetByIdAsync(Guid id)
         {
-            var user = await _userRepo.GetByIdAsync(id, u => u.Roles, u => u.Empresa, u => u.Filial);
+            var user = await _userRepo.GetByIdAsync(id, u => u.Roles, u => u.Permissions, u => u.Empresa, u => u.Filial);
             return user == null ? null : MapToDto(user);
         }
 
         public async Task<UserDto?> GetByUsernameAsync(string username)
         {
-            var users = await _userRepo.FindAsync(u => u.Username == username, u => u.Roles);
+            var users = await _userRepo.FindAsync(u => u.Username == username, u => u.Roles, u => u.Permissions);
             var user = users.FirstOrDefault();
             return user == null ? null : MapToDto(user);
         }
@@ -121,6 +142,7 @@ namespace Aurora.Application.Services.Security
                 Username = user.Username,
                 Email = user.Email,
                 Roles = user.Roles.Select(r => r.Name).ToList(),
+                Permissions = user.Permissions.Select(p => p.Code).ToList(),
                 IsActive = user.IsActive,
                 LastLogin = user.LastLogin,
                 EmpresaId = user.EmpresaId,

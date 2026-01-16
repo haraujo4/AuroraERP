@@ -12,7 +12,10 @@ interface User {
     isActive: boolean;
     lastLogin?: string;
     empresaName?: string;
+    empresaId?: string;
     filialName?: string;
+    filialId?: string;
+    permissions?: string[];
 }
 
 export function UserList() {
@@ -20,6 +23,8 @@ export function UserList() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
         loadUsers();
@@ -43,12 +48,24 @@ export function UserList() {
             await api.put(`/users/${user.id}`, {
                 email: user.email,
                 isActive: !user.isActive,
-                roles: user.roles // Keep roles for now
+                roles: user.roles,
+                empresaId: user.empresaId, // Preserve context
+                filialId: user.filialId
             });
             loadUsers();
         } catch (error) {
             alert('Erro ao atualizar status do usuário');
         }
+    };
+
+    const handleEditUser = (user: User) => {
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
+
+    const handleCreateUser = () => {
+        setSelectedUser(undefined);
+        setIsModalOpen(true);
     };
 
     const filteredUsers = users.filter(user =>
@@ -70,7 +87,7 @@ export function UserList() {
                     />
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleCreateUser}
                     className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-primary/90 transition-colors"
                 >
                     <Plus size={18} />
@@ -139,7 +156,11 @@ export function UserList() {
                                             >
                                                 {user.isActive ? <ShieldAlert size={16} /> : <Shield size={16} />}
                                             </button>
-                                            <button className="p-1.5 text-gray-400 hover:text-brand-primary hover:bg-gray-100 rounded transition-colors">
+                                            <button
+                                                onClick={() => handleEditUser(user)}
+                                                className="p-1.5 text-gray-400 hover:text-brand-primary hover:bg-gray-100 rounded transition-colors"
+                                                title="Editar"
+                                            >
                                                 <Edit2 size={16} />
                                             </button>
                                         </div>
@@ -157,6 +178,7 @@ export function UserList() {
                 onSuccess={() => {
                     loadUsers();
                 }}
+                user={selectedUser}
             />
         </div>
     );

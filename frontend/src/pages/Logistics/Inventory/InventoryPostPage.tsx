@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle, Search, AlertTriangle, ArrowRight } from 'lucide-react';
+import { CheckCircle, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface DiffItem {
@@ -133,8 +133,8 @@ const InventoryPostPage: React.FC = () => {
                                             <td className="px-6 py-3 text-right font-medium">{item.countedQuantity} {item.unit}</td>
                                             <td className="px-6 py-3 text-right">
                                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.difference === 0 ? 'bg-gray-100 text-gray-800' :
-                                                        item.difference > 0 ? 'bg-green-100 text-green-800' :
-                                                            'bg-red-100 text-red-800'
+                                                    item.difference > 0 ? 'bg-green-100 text-green-800' :
+                                                        'bg-red-100 text-red-800'
                                                     }`}>
                                                     {item.difference > 0 ? '+' : ''}{item.difference} {item.unit}
                                                 </span>

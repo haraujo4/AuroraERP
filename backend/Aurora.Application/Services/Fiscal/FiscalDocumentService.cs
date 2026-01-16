@@ -37,7 +37,7 @@ namespace Aurora.Application.Services.Fiscal
 
         public async Task<IEnumerable<FiscalDocumentDto>> GetAllAsync()
         {
-            var docs = await _repository.GetAllAsync();
+            var docs = await _repository.GetAllAsync(d => d.Invoice, d => d.Invoice.BusinessPartner);
             return docs.Select(MapToDto);
         }
 
@@ -60,11 +60,14 @@ namespace Aurora.Application.Services.Fiscal
             {
                 Id = entity.Id,
                 InvoiceId = entity.InvoiceId,
+                InvoiceNumber = entity.Invoice?.Number,
                 DocumentNumber = entity.DocumentNumber,
                 Series = entity.Series,
                 AccessKey = entity.AccessKey,
                 Status = entity.Status.ToString(),
-                IssuedAt = entity.IssuedAt
+                IssuedAt = entity.IssuedAt,
+                PartnerName = entity.Invoice?.BusinessPartner?.RazaoSocial ?? "N/A",
+                Amount = entity.Invoice?.GrossAmount ?? 0
             };
         }
     }

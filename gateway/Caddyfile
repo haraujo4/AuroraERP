@@ -1,5 +1,6 @@
 auroraerp.softnexus.com.br {
-    tls /etc/caddy/certs/cert.pem /etc/caddy/certs/key.pem
+    # tls internal # Uncomment if testing locally without a real domain
+    # Automatic SSL is enabled by default for domain names
     # API requests (Backend)
     handle /api/* {
         reverse_proxy backend:8080

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Save, Search, CheckSquare } from 'lucide-react';
+import { Save, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Mock Data Types

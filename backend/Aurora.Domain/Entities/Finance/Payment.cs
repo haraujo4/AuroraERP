@@ -17,6 +17,9 @@ namespace Aurora.Domain.Entities.Finance
         public PaymentStatus Status { get; private set; }
         public string Reference { get; private set; }
 
+        public Guid? PaymentRunId { get; private set; }
+        public PaymentRun? PaymentRun { get; private set; }
+
         public decimal Amount { get; private set; }
         public DateTime PaymentDate { get; private set; }
         public PaymentMethod Method { get; private set; }

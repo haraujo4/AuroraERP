@@ -20,6 +20,7 @@ import { ProfitCenterForm } from "./pages/Organization/ProfitCenterForm";
 import { BusinessPartnerList } from "./pages/CRM/BusinessPartnerList";
 import { BusinessPartnerForm } from "./pages/CRM/BusinessPartnerForm";
 import { LeadList } from "./pages/CRM/Leads/LeadList";
+import { LeadDetail } from "./pages/CRM/Leads/LeadDetail";
 import { LeadForm } from "./pages/CRM/Leads/LeadForm";
 import { OpportunityList } from "./pages/CRM/Opportunities/OpportunityList";
 import { OpportunityForm } from "./pages/CRM/Opportunities/OpportunityForm";
@@ -81,10 +82,15 @@ import PurchaseOrderForm from './pages/Purchasing/Orders/PurchaseOrderForm';
 // HR
 import { EmployeeList } from "./pages/HR/Employees/EmployeeList";
 import { EmployeeForm } from "./pages/HR/Employees/EmployeeForm";
+import PersonnelActionPage from "./pages/HR/PersonnelActions/PersonnelActionPage";
+import TimeManagementPage from "./pages/HR/TimeManagement/TimeManagementPage";
 
 // Fiscal
 import TaxRuleList from "./pages/Fiscal/TaxRules/TaxRuleList";
 import TaxRuleForm from "./pages/Fiscal/TaxRules/TaxRuleForm";
+import NfeMonitorPage from './pages/Fiscal/NfeMonitor/NfeMonitorPage';
+import AccessControlPage from './pages/Admin/AccessControl/AccessControlPage';
+import PaymentRunPage from "./pages/Finance/PaymentRun/PaymentRunPage";
 
 // Planning
 import MRPRun from "./pages/Planning/MRPRun";
@@ -152,8 +158,7 @@ function App() {
 
             <Route path="crm/leads" element={<LeadList />} />
             <Route path="crm/leads/new" element={<LeadForm />} />
-            <Route path="crm/leads/:id" element={<LeadForm />} />
-            <Route path="crm/leads/:id" element={<LeadForm />} />
+            <Route path="crm/leads/:id" element={<LeadDetail />} />
 
             <Route path="crm/opportunities" element={<OpportunityList />} />
             <Route path="crm/opportunities/new" element={<OpportunityForm />} />
@@ -176,14 +181,14 @@ function App() {
             <Route path="logistics/warehouses/:id" element={<WarehouseForm />} />
             <Route path="logistics/storage-locations" element={<StorageLocationList />} />
             <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
-            <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
             <Route path="logistics/storage-locations/:id" element={<StorageLocationForm />} />
 
             <Route path="logistics/inventory/create" element={<InventoryCreatePage />} />
             <Route path="logistics/inventory/count" element={<InventoryCountPage />} />
             <Route path="logistics/inventory/post" element={<InventoryPostPage />} />
+            <Route path="/admin/access-control" element={<AccessControlPage />} />
 
-            {/* Sales */}
+            {/* Fallback */}
             <Route path="sales/quotes" element={<SalesQuoteList />} />
             <Route path="sales/quotes/new" element={<SalesQuoteForm />} />
             <Route path="sales/quotes" element={<SalesQuoteList />} />
@@ -240,6 +245,7 @@ function App() {
             <Route path="finance/payments" element={<PaymentList />} />
             <Route path="finance/payments/new" element={<PaymentForm />} />
             <Route path="finance/payments/:id" element={<PaymentForm />} />
+            <Route path="finance/payment-run" element={<PaymentRunPage />} />
             <Route path="finance/clearing" element={<ClearingPage />} />
             <Route path="finance/reversal" element={<ReversalPage />} />
             <Route path="finance/reports" element={<FinancialReports />} />
@@ -251,12 +257,14 @@ function App() {
             <Route path="fiscal/tax-rules" element={<TaxRuleList />} />
             <Route path="fiscal/tax-rules/new" element={<TaxRuleForm />} />
             <Route path="fiscal/tax-rules/:id" element={<TaxRuleForm />} />
-            <Route path="fiscal/tax-rules/:id" element={<TaxRuleForm />} />
+            <Route path="fiscal/nfe-monitor" element={<NfeMonitorPage />} />
 
             {/* HR */}
             <Route path="hr/employees" element={<EmployeeList />} />
             <Route path="hr/employees/new" element={<EmployeeForm />} />
             <Route path="hr/employees/:id" element={<EmployeeForm />} />
+            <Route path="hr/personnel-actions" element={<PersonnelActionPage />} />
+            <Route path="hr/time-records" element={<TimeManagementPage />} />
 
             {/* Use Profile & Settings */}
             <Route path="profile" element={<ProfilePage />} />

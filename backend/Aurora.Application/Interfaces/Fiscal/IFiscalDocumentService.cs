@@ -23,5 +23,7 @@ namespace Aurora.Application.Interfaces.Fiscal
         public string AccessKey { get; set; }
         public string Status { get; set; }
         public DateTime IssuedAt { get; set; }
+        public string PartnerName { get; set; }
+        public decimal Amount { get; set; }
     }
 }
