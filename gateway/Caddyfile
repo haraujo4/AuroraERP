@@ -1,6 +1,9 @@
 auroraerp.softnexus.com.br {
-    # tls internal # Uncomment if testing locally without a real domain
-    # Automatic SSL is enabled by default for domain names
+    # tls internal
+    # Using Let's Encrypt Staging to bypass Rate Limits (remove this line when ready for production after 1 week)
+    tls {
+        ca https://acme-staging-v02.api.letsencrypt.org/directory
+    }
     # API requests (Backend)
     handle /api/* {
         reverse_proxy backend:8080
