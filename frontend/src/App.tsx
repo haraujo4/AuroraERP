@@ -180,7 +180,6 @@ function App() {
             <Route path="logistics/storage-locations/:id" element={<StorageLocationForm />} />
 
             <Route path="logistics/inventory/create" element={<InventoryCreatePage />} />
-            <Route path="logistics/physical-inventory" element={<Navigate to="/logistics/inventory/create" replace />} />
             <Route path="logistics/inventory/count" element={<InventoryCountPage />} />
             <Route path="logistics/inventory/post" element={<InventoryPostPage />} />
 
