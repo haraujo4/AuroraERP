@@ -53,7 +53,7 @@ services:
     networks:
       - aurora_net
     entrypoint: >
-      /bin/sh -c " /usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin; /usr/bin/mc mb myminio/invoices; /usr/bin/mc anonymous set public myminio/invoices; exit 0; "
+      /bin/sh -c " /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin; /usr/bin/mc mb --ignore-existing myminio/invoices; /usr/bin/mc anonymous set public myminio/invoices; exit 0; "
 
   backend:
     build:
