@@ -46,6 +46,9 @@ import { WarehouseForm } from './pages/Logistics/Warehouses/WarehouseForm';
 import { StorageLocationList } from './pages/Logistics/Warehouses/StorageLocationList';
 import { StorageLocationForm } from './pages/Logistics/Warehouses/StorageLocationForm';
 import MigoPage from './pages/Logistics/Migo/MigoPage';
+import InventoryCreatePage from './pages/Logistics/Inventory/InventoryCreatePage';
+import InventoryCountPage from './pages/Logistics/Inventory/InventoryCountPage';
+import InventoryPostPage from './pages/Logistics/Inventory/InventoryPostPage';
 
 // Finance
 import { AccountList } from './pages/Finance/Accounts/AccountList';
@@ -173,7 +176,13 @@ function App() {
             <Route path="logistics/warehouses/:id" element={<WarehouseForm />} />
             <Route path="logistics/storage-locations" element={<StorageLocationList />} />
             <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
+            <Route path="logistics/storage-locations/new" element={<StorageLocationForm />} />
             <Route path="logistics/storage-locations/:id" element={<StorageLocationForm />} />
+
+            <Route path="logistics/inventory/create" element={<InventoryCreatePage />} />
+            <Route path="logistics/physical-inventory" element={<Navigate to="/logistics/inventory/create" replace />} />
+            <Route path="logistics/inventory/count" element={<InventoryCountPage />} />
+            <Route path="logistics/inventory/post" element={<InventoryPostPage />} />
 
             {/* Sales */}
             <Route path="sales/quotes" element={<SalesQuoteList />} />

@@ -36,6 +36,8 @@ namespace Aurora.Infrastructure.Persistence
         public DbSet<StockLevel> StockLevels { get; set; }
         public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<InventoryDocument> InventoryDocuments { get; set; }
+        public DbSet<InventoryDocumentItem> InventoryDocumentItems { get; set; }
 
         // Sales
         public DbSet<SalesQuote> SalesQuotes { get; set; }

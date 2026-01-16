@@ -126,8 +126,28 @@ const MigoPage: React.FC = () => {
                                     onChange={(e) => setOperation(e.target.value)}
                                     className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none bg-white text-text-primary"
                                 >
-                                    <option value="A01">A01 - Entrada de Mercadoria (Recebimento)</option>
-                                    <option value="A07">A07 - Saída de Mercadoria (Baixa)</option>
+                                    <option value="A01">A01 - Entrada de Mercadoria</option>
+                                    <option value="A07">A07 - Saída de Mercadoria</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-text-secondary mb-1">Tipo de Movimento</label>
+                                <select
+                                    className="w-full px-3 py-2 border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none bg-white text-text-primary"
+                                >
+                                    {operation === 'A01' ? (
+                                        <>
+                                            <option value="101">101 - Entrada por Pedido de Compra</option>
+                                            <option value="561">561 - Entrada Inicial de Estoque</option>
+                                            <option value="501">501 - Entrada sem Pedido</option>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <option value="201">201 - Baixa para Centro de Custo</option>
+                                            <option value="261">261 - Consumo para Ordem</option>
+                                            <option value="601">601 - Saída para Cliente (Remessa)</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
                             <div>

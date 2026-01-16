@@ -69,10 +69,19 @@ export const MENU_ITEMS: MenuItem[] = [
         subItems: [
             { id: 'materials', label: 'Gestão de Materiais (MM01)', path: '/logistics/materials' },
             { id: 'inventory', label: 'Gestão de Estoques (MMBE)', path: '/logistics/inventory' },
-            { id: 'migo', label: 'Movimentação de Mercadorias (MIGO)', path: '/logistics/migo' },
-            { id: 'inventory-in', label: 'Entrada (MB01)', path: '/logistics/inventory/in' },
-            { id: 'inventory-out', label: 'Saída de Estoque (MB1A)', path: '/logistics/inventory/out' },
-            { id: 'inventory-transfer', label: 'Transferência (MB1B)', path: '/logistics/inventory/transfer' },
+            { id: 'migo', label: 'Movimentação (MIGO)', path: '/logistics/migo' },
+            {
+                id: 'physical-inventory',
+                label: 'Inventário Físico',
+                path: '/logistics/physical-inventory', // This might be a parent route or just a grouping in UI
+                // In this structure subItems of subItems are not supported by the interface yet, 
+                // but flattening them or just listing them is fine for now as per user request hierarchy.
+                // However, I will flatten them under Logistics for now to match interface, or rename labels to indicate hierarchy.
+            },
+            { id: 'inv-create', label: 'Criar Doc. Inv. (MI01)', path: '/logistics/inventory/create' },
+            { id: 'inv-count', label: 'Inserir Contagem (MI04)', path: '/logistics/inventory/count' },
+            { id: 'inv-post', label: 'Lançar Diferenças (MI07)', path: '/logistics/inventory/post' },
+
             { id: 'warehouses', label: 'Depósitos (WR01)', path: '/logistics/warehouses' },
             { id: 'storage-locations', label: 'Locais de Estoque (SL01)', path: '/logistics/storage-locations' },
         ]

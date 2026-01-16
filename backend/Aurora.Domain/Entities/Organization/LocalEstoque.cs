@@ -13,13 +13,20 @@ namespace Aurora.Domain.Entities.Organization
         public bool PermitePicking { get; private set; }
         public bool PermiteInventario { get; private set; }
 
-        public LocalEstoque(string codigo, string tipo, bool permitePicking, bool permiteInventario, Guid depositoId)
+        public string? Rua { get; private set; }
+        public string? Prateleira { get; private set; }
+        public string? Nivel { get; private set; }
+
+        public LocalEstoque(string codigo, string tipo, bool permitePicking, bool permiteInventario, Guid depositoId, string? rua = null, string? prateleira = null, string? nivel = null)
         {
             Codigo = codigo;
             Tipo = tipo;
             PermitePicking = permitePicking;
             PermiteInventario = permiteInventario;
             DepositoId = depositoId;
+            Rua = rua;
+            Prateleira = prateleira;
+            Nivel = nivel;
         }
 
         private LocalEstoque() 

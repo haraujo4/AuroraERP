@@ -17,7 +17,9 @@ namespace Aurora.Domain.Entities.Logistics
         public Guid? BatchId { get; private set; }
         public Batch? Batch { get; private set; }
 
-        public decimal Quantity { get; private set; }
+        public decimal Quantity { get; private set; } // Unrestricted Use
+        public decimal BlockedQuantity { get; private set; } // Quality Inspection / Blocked
+        public decimal InTransitQuantity { get; private set; } // Stock in Transit
         public decimal AverageUnitCost { get; private set; }
         public DateTime LastUpdated { get; private set; }
 
