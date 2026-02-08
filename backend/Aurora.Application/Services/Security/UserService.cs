@@ -12,12 +12,14 @@ namespace Aurora.Application.Services.Security
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Role> _roleRepo;
         private readonly IRepository<Permission> _permissionRepo;
         private readonly IEventBus _eventBus;
 
-        public UserService(IRepository<User> userRepo, IRepository<Permission> permissionRepo, IEventBus eventBus)
+        public UserService(IRepository<User> userRepo, IRepository<Role> roleRepo, IRepository<Permission> permissionRepo, IEventBus eventBus)
         {
             _userRepo = userRepo;
+            _roleRepo = roleRepo;
             _permissionRepo = permissionRepo;
             _eventBus = eventBus;
         }
@@ -30,15 +32,19 @@ namespace Aurora.Application.Services.Security
             if (request.EmpresaId.HasValue)
                 user.SetContext(request.EmpresaId.Value, request.FilialId);
 
-            foreach (var roleName in request.Roles)
+            if (request.Roles.Any())
             {
-                user.AddRole(new Role(roleName, $"Role {roleName}"));
+                var roles = await _roleRepo.FindAsync(r => request.Roles.Contains(r.Name));
+                foreach (var role in roles)
+                {
+                    user.AddRole(role);
+                }
             }
 
             // Handle Permissions
             if (request.Permissions.Any())
             {
-                var allPermissions = await _permissionRepo.GetAllAsync(p => request.Permissions.Contains(p.Code));
+                var allPermissions = await _permissionRepo.FindAsync(p => request.Permissions.Contains(p.Code));
                 foreach (var perm in allPermissions)
                 {
                     user.AddPermission(perm);
@@ -67,13 +73,19 @@ namespace Aurora.Application.Services.Security
                 user.ClearContext();
 
             // Update Roles
-            var newRoles = request.Roles.Select(r => new Role(r, $"Role {r}")).ToList();
-            user.SetRoles(newRoles);
+            // Update Roles
+            var roles = await _roleRepo.FindAsync(r => request.Roles.Contains(r.Name));
+            
+            // Temporary Debug Logging
+            Console.WriteLine($"UpdateUser: Requested Roles: {string.Join(", ", request.Roles)}");
+            Console.WriteLine($"UpdateUser: Found Roles: {string.Join(", ", roles.Select(r => r.Name))}");
+            
+            user.SetRoles(roles.ToList());
 
             // Update Permissions
             if (request.Permissions.Any())
             {
-                var allPermissions = await _permissionRepo.GetAllAsync(p => request.Permissions.Contains(p.Code));
+                var allPermissions = await _permissionRepo.FindAsync(p => request.Permissions.Contains(p.Code));
                 user.SetPermissions(allPermissions.ToList());
             }
             else

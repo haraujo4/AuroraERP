@@ -120,7 +120,10 @@
       },
       "Aurora.Domain/1.0.0": {
         "runtime": {
-          "Aurora.Domain.dll": {}
+          "Aurora.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

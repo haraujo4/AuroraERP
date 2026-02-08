@@ -32,7 +32,7 @@ namespace Aurora.Application.Services.Security
         public async Task<AuthResponseDto?> LoginAsync(LoginRequestDto request)
         {
             var users = await _userRepo.GetAllAsync(u => u.Roles, u => u.Permissions, u => u.Empresa!, u => u.Filial!);
-            var user = users.FirstOrDefault(u => u.Username == request.Username);
+            var user = users.FirstOrDefault(u => u.Email == request.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
@@ -56,6 +56,8 @@ namespace Aurora.Application.Services.Security
 
         public async Task<bool> RegisterAsync(RegisterRequestDto request)
         {
+            var sb = new StringBuilder();
+            sb.AppendLine($"--- Login Attempt: {request.Email} at {DateTime.Now} ---");
             var users = await _userRepo.GetAllAsync();
             if (users.Any(u => u.Username == request.Username || u.Email == request.Email))
             {

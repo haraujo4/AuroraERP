@@ -923,12 +923,18 @@
           "System.IdentityModel.Tokens.Jwt": "8.15.0"
         },
         "runtime": {
-          "Aurora.Application.dll": {}
+          "Aurora.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Aurora.Domain/1.0.0": {
         "runtime": {
-          "Aurora.Domain.dll": {}
+          "Aurora.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Aurora.Infrastructure/1.0.0": {
@@ -943,7 +949,10 @@
           "QuestPDF": "2025.12.2"
         },
         "runtime": {
-          "Aurora.Infrastructure.dll": {}
+          "Aurora.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

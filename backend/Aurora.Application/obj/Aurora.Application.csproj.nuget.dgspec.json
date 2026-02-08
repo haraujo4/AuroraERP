@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj": {}
+    "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/Aurora.Application.csproj": {}
   },
   "projects": {
-    "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj": {
+    "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/Aurora.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj",
+        "projectUniqueName": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/Aurora.Application.csproj",
         "projectName": "Aurora.Application",
-        "projectPath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj",
+        "projectPath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/Aurora.Application.csproj",
         "packagesPath": "/home/helisson/.nuget/packages/",
-        "outputPath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/obj/",
+        "outputPath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/helisson/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/Aurora.Domain.csproj": {
-                "projectPath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/Aurora.Domain.csproj"
+              "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/Aurora.Domain.csproj": {
+                "projectPath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/Aurora.Domain.csproj"
               }
             }
           }
@@ -36,6 +36,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -75,18 +80,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/helisson/.asdf/installs/dotnet/8.0.417/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/Aurora.Domain.csproj": {
+    "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/Aurora.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/Aurora.Domain.csproj",
+        "projectUniqueName": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/Aurora.Domain.csproj",
         "projectName": "Aurora.Domain",
-        "projectPath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/Aurora.Domain.csproj",
+        "projectPath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/Aurora.Domain.csproj",
         "packagesPath": "/home/helisson/.nuget/packages/",
-        "outputPath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Domain/obj/",
+        "outputPath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/helisson/.nuget/NuGet/NuGet.Config"
@@ -107,6 +112,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -128,7 +138,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/helisson/.asdf/installs/dotnet/8.0.417/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

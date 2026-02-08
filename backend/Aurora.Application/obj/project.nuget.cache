@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jgb3gLlCfNdmjzH1HdDRwgkxzlpaln9gw3NzpVjcOeRkwECtDQTm9d2L0afpwiW2Ddd2Yl1vy0NqFOGeXH+/9A==",
+  "dgSpecHash": "xo0s0P1q2Bs=",
   "success": true,
-  "projectFilePath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.Application/Aurora.Application.csproj",
+  "projectFilePath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.Application/Aurora.Application.csproj",
   "expectedPackageFiles": [
     "/home/helisson/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/helisson/.nuget/packages/microsoft.extensions.configuration.abstractions/10.0.1/microsoft.extensions.configuration.abstractions.10.0.1.nupkg.sha512",

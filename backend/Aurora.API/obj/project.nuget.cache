@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4a14Ada7+gpyEm3YKa/fwF3yFk+d1IPnak2F6iRQKSJYgkSoevufUj2YDGUQDySBhN3oPy9t9wbDrOv03aLbKg==",
+  "dgSpecHash": "CEglW7ZVslw=",
   "success": true,
-  "projectFilePath": "/home/helisson/Projetos/AurroraERP/backend/Aurora.API/Aurora.API.csproj",
+  "projectFilePath": "/home/helisson/desenvolvimento/AuroraERP/backend/Aurora.API/Aurora.API.csproj",
   "expectedPackageFiles": [
     "/home/helisson/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/helisson/.nuget/packages/bouncycastle.cryptography/2.2.1/bouncycastle.cryptography.2.2.1.nupkg.sha512",
